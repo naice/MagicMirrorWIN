@@ -1,0 +1,33 @@
+﻿<Application
+    x:Class="MagicMirror.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MagicMirror"
+    xmlns:vm="using:MagicMirror.ViewModel"
+    RequestedTheme="Dark">
+    <Application.Resources>
+
+        <vm:MainViewModel x:Key="MainViewModel"/>
+
+        <SolidColorBrush x:Key="Foreground" Color="#ffffff"/>
+        <SolidColorBrush x:Key="ForegroundDimm" Color="#aaaaaa"/>
+
+        <Style TargetType="TextBlock" x:Key="FontWeatherIcons">
+            <Setter Property="FontFamily" Value="Assets/Font/weathericons-regular-webfont.ttf#Weather Icons"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="FontLight">
+            <Setter Property="FontFamily" Value="Assets/Font/HelveticaNeue-Light.ttf#HelveticaNeue"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="FontMedium">
+            <Setter Property="FontFamily" Value="Assets/Font/HelveticaNeue-Medium.ttf#HelveticaNeue"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="FontUltraLight">
+            <Setter Property="FontFamily" Value="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue"/>
+        </Style>
+
+
+
+
+
+    </Application.Resources>
+</Application>
