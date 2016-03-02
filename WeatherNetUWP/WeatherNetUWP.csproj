@@ -121,6 +121,7 @@
     <Compile Include="Util\Api\ApiClient.cs" />
     <Compile Include="Util\Data\Deserializer.cs" />
     <Compile Include="Util\Data\TimeHelper.cs" />
+    <None Include="LICENSE" />
     <Content Include="Properties\WeatherNetUWP.rd.xml" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
