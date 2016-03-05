@@ -96,7 +96,7 @@ namespace MagicMirror.Controls
             if (_items != null && _items.Length > 0)
             {
                 _currentIndex = _currentIndex % _items.Length;
-                CurrentItem = _items[_currentIndex++]; ItemsControl c;
+                CurrentItem = _items[_currentIndex++];
             }
         }
 

@@ -32,16 +32,16 @@
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
             <!-- DATE -->
             <Grid>
-                <TextBlock Style="{StaticResource FontMedium}" FontSize="16" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Calendar.CurrentDateString}"/>
+                <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeMedium}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Calendar.CurrentDateString}"/>
             </Grid>
             <!-- TIME -->
             <StackPanel Orientation="Horizontal" Margin="0,10">
-                <TextBlock Style="{StaticResource FontLight}" FontSize="30" Foreground="{StaticResource Foreground}" Text="{Binding Calendar.CurrentDateTimeMinuteString}"/>
-                <TextBlock Style="{StaticResource FontLight}" FontSize="12" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Calendar.CurrentDateTimeSecondString}"
+                <TextBlock Style="{StaticResource FontLight}" FontSize="{StaticResource FontSizeLarge}" Foreground="{StaticResource Foreground}" Text="{Binding Calendar.CurrentDateTimeMinuteString}"/>
+                <TextBlock Style="{StaticResource FontLight}" FontSize="{StaticResource FontSizeTimeSeconds}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Calendar.CurrentDateTimeSecondString}"
                            VerticalAlignment="Top" Margin="0,5,0,0"/>
             </StackPanel>
             <!-- CALENDAR -->
-            <ItemsControl ItemsSource="{Binding Calendar.CalendarItems}" Width="300" HorizontalContentAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding Calendar.CalendarItems}" Width="{StaticResource WidthCalendar}" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Opacity="{Binding Opacity}">
@@ -50,10 +50,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Style="{StaticResource FontMedium}" FontSize="10" TextTrimming="CharacterEllipsis"
+                            <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="CharacterEllipsis"
                                         Foreground="{Binding TextBrush}" Text="{Binding Text}"/>
 
-                            <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="10" TextTrimming="None" Margin="16,0,0,0"
+                            <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="None" Margin="16,0,0,0"
                                         Foreground="{StaticResource Foreground}" Text="{Binding Time}"/>
                         </Grid>
                     </DataTemplate>
@@ -64,18 +64,18 @@
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
             <!-- WEATHER CONDITION -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Style="{StaticResource FontWeatherIcons}" FontSize="14" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.BeaufortWindScale}" VerticalAlignment="Center"/>
-                <TextBlock Style="{StaticResource FontWeatherIcons}" FontSize="14" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.SunState}" Margin="5,0" VerticalAlignment="Center"/>
-                <TextBlock Style="{StaticResource FontMedium}" FontSize="16" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.SunStateTime}"/>
+                <TextBlock Style="{StaticResource FontWeatherIcons}" FontSize="{StaticResource FontSizeWeatherIconSmall}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.BeaufortWindScale}" VerticalAlignment="Center"/>
+                <TextBlock Style="{StaticResource FontWeatherIcons}" FontSize="{StaticResource FontSizeWeatherIconSmall}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.SunState}" Margin="5,0" VerticalAlignment="Center"/>
+                <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeMedium}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.SunStateTime}"/>
             </StackPanel>
             <!-- WEATHER TEMP -->
             <StackPanel Orientation="Horizontal" Margin="0,10" HorizontalAlignment="Right">
-                <TextBlock Style="{StaticResource FontWeatherIcons}" FontSize="20" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.WeatherIcon}"
+                <TextBlock Style="{StaticResource FontWeatherIcons}" FontSize="{StaticResource FontSizeWeatherIconLarge}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.WeatherIcon}"
                            VerticalAlignment="Center" Margin="5,0"/>
-                <TextBlock Style="{StaticResource FontLight}" FontSize="30" Foreground="{StaticResource Foreground}" Text="{Binding Weather.Temperature}"/>
+                <TextBlock Style="{StaticResource FontLight}" FontSize="{StaticResource FontSizeLarge}" Foreground="{StaticResource Foreground}" Text="{Binding Weather.Temperature}"/>
             </StackPanel>
             <!-- WEATHER FORECASTS -->
-            <ItemsControl ItemsSource="{Binding Weather.Forecasts}" Width="110" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right">
+            <ItemsControl ItemsSource="{Binding Weather.Forecasts}" Width="{StaticResource WidthWeather}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Opacity="{Binding Opacity}">
@@ -86,14 +86,14 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Style="{StaticResource FontMedium}" FontSize="12" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                            <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeWeatherItemText}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
                                         Foreground="{StaticResource ForegroundDimm}" Text="{Binding Day}"/>
 
-                            <TextBlock Grid.Column="1" Style="{StaticResource FontWeatherIcons}" FontSize="10" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Icon}" VerticalAlignment="Center" Margin="5,0"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource FontWeatherIcons}" FontSize="{StaticResource FontSizeWeatherItemIcon}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Icon}" VerticalAlignment="Center" Margin="5,0"/>
 
-                            <TextBlock Grid.Column="2" Style="{StaticResource FontMedium}" FontSize="12" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                            <TextBlock Grid.Column="2" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeWeatherItemText}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
                                         Foreground="{StaticResource Foreground}" Text="{Binding MaxTemp}"/>
-                            <TextBlock Grid.Column="3" Style="{StaticResource FontMedium}" FontSize="12" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                            <TextBlock Grid.Column="3" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeWeatherItemText}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
                                         Foreground="{StaticResource Foreground}" Text="{Binding MinTemp}"/>
                         </Grid>
                     </DataTemplate>
@@ -106,7 +106,7 @@
             <controls:ContentFadeItems Duration="600" SourceItems="{Binding Compliments.Items}">
                 <controls:ContentFadeItems.ContentTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="White" FontSize="30"
+                        <TextBlock Text="{Binding}" FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="White" FontSize="{StaticResource FontSizeLarge}"
                                    TextWrapping="Wrap" TextAlignment="Center"/>
                     </DataTemplate>
                 </controls:ContentFadeItems.ContentTemplate>
@@ -119,7 +119,7 @@
             <controls:ContentFadeItems Duration="10" SourceItems="{Binding News.Items}" CurrentItem="{Binding News.CurrentNews, Mode=TwoWay}" >
                 <controls:ContentFadeItems.ContentTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Title}" FontFamily="Assets/Font/HelveticaNeue-Light.ttf#HelveticaNeue" Foreground="White" FontSize="26"
+                        <TextBlock Text="{Binding Title}" FontFamily="Assets/Font/HelveticaNeue-Light.ttf#HelveticaNeue" Foreground="White" FontSize="{StaticResource FontSizeNews}"
                                    TextWrapping="Wrap" TextAlignment="Center"/>
                     </DataTemplate>
                 </controls:ContentFadeItems.ContentTemplate>
@@ -127,7 +127,7 @@
         </Grid>
 
         <!-- OVERLAY WEBVIEW FOR NEWS -->
-        <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="80">
+        <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="140">
             <controls:ContentSwitch Show="{Binding News.ShowDetail}">
                 <Border Background="Black" BorderBrush="{StaticResource ForegroundDimm}" BorderThickness="2">
                     <Grid>
@@ -138,6 +138,77 @@
                         <TextBlock Margin="30,10" Text="{Binding News.DetailNews.Title}" FontFamily="Assets/Font/HelveticaNeue-Light.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="20"
                                    TextWrapping="Wrap" TextAlignment="Center"/>
                         <WebView Grid.Row="1" controlExtensions:WebViewExtensions.HtmlSource="{Binding News.DetailNews.ContentRaw}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+                    </Grid>
+                </Border>
+            </controls:ContentSwitch>
+        </Border>
+        <!-- OVERLAY FOR WEATHER -->
+        <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="840" Height="1000" >
+            <controls:ContentSwitch Show="{Binding Weather.ShowDetail}">
+                <Border Background="Black" BorderBrush="{StaticResource ForegroundDimm}" BorderThickness="2">
+                    <Grid Margin="20,0">
+                        <ItemsControl ItemsSource="{Binding Weather.ForecastDetails}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Height="200">
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10,0">
+                                                <TextBlock Style="{StaticResource FontLight}" FontSize="48" TextTrimming="CharacterEllipsis"
+                                                        Foreground="{StaticResource Foreground}" Text="{Binding Day}"/>
+
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Grid.Column="1" Style="{StaticResource FontWeatherIcons}" FontSize="25" 
+                                                            Foreground="{StaticResource ForegroundDimm}" Text="{Binding Icon}" 
+                                                            VerticalAlignment="Center" />
+                                                    <TextBlock Grid.Column="2" Style="{StaticResource FontMedium}" FontSize="30" 
+                                                            TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                                                            Foreground="{StaticResource Foreground}" Text="{Binding MaxTemp}"
+                                                            Margin="10,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="3" Style="{StaticResource FontMedium}" FontSize="30" 
+                                                            TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                                                            Foreground="{StaticResource Foreground}" Text="{Binding MinTemp}"
+                                                            VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <ItemsControl Grid.Column="1" ItemsSource="{Binding Details}" HorizontalAlignment="Stretch"
+                                                          Margin="10,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Width="60" Margin="5,0">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition/>
+                                                                <RowDefinition/>
+                                                            </Grid.RowDefinitions>
+
+                                                            <TextBlock Style="{StaticResource FontLight}" FontSize="24" Foreground="{StaticResource ForegroundDimm}" 
+                                                                       Text="{Binding Time}" HorizontalAlignment="Center"/>
+
+                                                            <TextBlock Grid.Row="1" Style="{StaticResource FontMedium}" FontSize="20"  
+                                                                Foreground="{StaticResource Foreground}" Text="{Binding Temp}"
+                                                                Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                            <TextBlock Grid.Row="2" Style="{StaticResource FontWeatherIcons}" FontSize="16" 
+                                                                Foreground="{StaticResource ForegroundDimm}" Text="{Binding Icon}" 
+                                                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </Grid>
                 </Border>
             </controls:ContentSwitch>

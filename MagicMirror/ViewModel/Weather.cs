@@ -78,7 +78,58 @@ namespace MagicMirror.ViewModel
             }
         }
 
+        private bool _ShowDetail;
+        public bool ShowDetail
+        {
+            get { return _ShowDetail; }
+            set
+            {
+                if (value != _ShowDetail)
+                {
+                    _ShowDetail = value;
+                    RaisePropertyChanged("ShowDetail");
+                }
+            }
+        }
+
         public ObservableCollection<WeatherForecast> Forecasts { get; set; } = new ObservableCollection<WeatherForecast>();
+        public ObservableCollection<WeatherForecast> ForecastDetails { get; set; } = new ObservableCollection<WeatherForecast>();
+
+        private Timeout _hideDetailTimeout;
+
+        public Weather()
+        {
+            try
+            {
+                _hideDetailTimeout = new Timeout(() => HideDetail());
+                _hideDetailTimeout.Duration = TimeSpan.FromMinutes(5);
+            }
+            catch
+            {
+                // Also used in background thread.
+            }
+
+        }
+
+        public async void HideDetail()
+        {
+            if (_ShowDetail)
+            {
+                _hideDetailTimeout.Stop();
+                ShowDetail = false;
+                await Task.Delay(900);
+            }
+        }
+        public async void ViewDetail()
+        {
+            if (!_ShowDetail)
+            {
+                ShowDetail = true;
+                await Task.Delay(900);
+
+                _hideDetailTimeout.Start();
+            }
+        }
 
         #region UPDATE MECHANISM
         private WeatherFactory _weatherFactory = new WeatherFactory();
@@ -117,6 +168,25 @@ namespace MagicMirror.ViewModel
                     foreach (var item in weather.Forecasts)
                     {
                         this.Forecasts.Add(item);
+                        item.Opacity = opacity;
+                        opacity -= 0.155;
+                    }
+                }
+
+                if (this.ForecastDetails.Count == weather.ForecastDetails.Count)
+                {
+                    for (int i = 0; i < weather.ForecastDetails.Count; i++)
+                    {
+                        this.ForecastDetails[i].Update(weather.ForecastDetails[i]);
+                    }
+                }
+                else
+                {
+                    double opacity = 1;
+                    this.ForecastDetails.Clear();
+                    foreach (var item in weather.ForecastDetails)
+                    {
+                        this.ForecastDetails.Add(item);
                         item.Opacity = opacity;
                         opacity -= 0.155;
                     }

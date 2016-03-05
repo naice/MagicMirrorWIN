@@ -139,8 +139,10 @@
     <Compile Include="ViewModel\News.cs" />
     <Compile Include="ViewModel\NewsItem.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\Timeout.cs" />
     <Compile Include="ViewModel\Weather.cs" />
     <Compile Include="ViewModel\WeatherForecast.cs" />
+    <Compile Include="ViewModel\WeatherForecastDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

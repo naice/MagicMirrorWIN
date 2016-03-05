@@ -115,7 +115,6 @@ namespace MagicMirror.Factory
                 string[] cal_array = icsStr.Split(new string[] { "\r\n", "\n", }, StringSplitOptions.RemoveEmptyEntries);
                 var in_event = false;
                 var in_alarm = false;
-                var is_summary_set = false;
                 //Use as a holder for the current event being proccessed.
                 ViewModel.CalendarItem cur_event = null;
                 for (var i = 0; i < cal_array.Length; i++)
@@ -134,7 +133,6 @@ namespace MagicMirror.Factory
                         //If we encounter end event, complete the object and add it to our events array then clear it for reuse.
                         if (in_event && ln == "END:VEVENT")
                         {
-                            is_summary_set = false;
                             in_event = false;
 
 

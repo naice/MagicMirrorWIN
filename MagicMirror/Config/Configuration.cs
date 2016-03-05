@@ -65,7 +65,7 @@ namespace MagicMirror.Configuration
 
         public string WeatherAPIKey { get; set; } = "43de1514340bfa4096d38ec09fb74e79";
         public string WeatherAPIUrl { get; set; } = "http://api.openweathermap.org/data/2.5";
-        public string WeatherCity { get; set; } = "Dortmund-Wickede";
+        public string WeatherCity { get; set; } = "Dortmund";
         public string WeatherCountry { get; set; } = "Germany";
         public string WeatherUnits { get; set; } = "metric";
         public string WeatherLanguage { get; set; } = "de";

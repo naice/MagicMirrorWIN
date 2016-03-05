@@ -58,10 +58,10 @@ namespace MagicMirror.ViewModel
             };
             // this commadn is for testing purpose if no microphone or whatsoever
             Clicked = new RelayCommand<object>(() => {
-                if (this.News.ShowDetail)
-                    this.News.HideDetail();
+                if (this.Weather.ShowDetail)
+                    this.Weather.HideDetail();
                 else
-                    this.News.ViewDetail();
+                    this.Weather.ViewDetail();
             });
 
             Initzialize = new RelayCommand<object>(() =>
@@ -178,7 +178,7 @@ namespace MagicMirror.ViewModel
             recognizer = new SpeechRecognizer();
             recognizer.Constraints.Add(new SpeechRecognitionListConstraint(new string[] 
             {
-                "Show", "News", "Detail",
+                "Show", "News", "Detail", "Weather", 
                 "Hide", "Close", "Weather", "Time", "Back", "Escape"
             }));
 
@@ -221,7 +221,11 @@ namespace MagicMirror.ViewModel
                     }
                     else if (text == "HIDE" || text == "CLOSE" || text == "WEATHER" || text == "TIME" || text == "BACK" || text == "ESCAPE")
                     {
-                        await EnsureOnUI(() => this.News.HideDetail());
+                        await EnsureOnUI(() => { this.News.HideDetail(); this.Weather.HideDetail(); });
+                    }
+                    else if (text == "WEATHER")
+                    {
+                        await EnsureOnUI(() => this.Weather.ViewDetail());
                     }
                 }
             }

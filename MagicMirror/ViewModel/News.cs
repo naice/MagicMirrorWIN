@@ -72,12 +72,28 @@ namespace MagicMirror.ViewModel
             }
         }
 
-        private DispatcherTimer DetailNewsTimer;
+
+        private Timeout _hideDetailTimeout;
+
+        public News()
+        {
+            try
+            {
+                _hideDetailTimeout = new Timeout(() => HideDetail());
+                _hideDetailTimeout.Duration = TimeSpan.FromMinutes(5);
+            }
+            catch
+            {
+                // Also used in background thread.
+            }
+        }
+
+
         public async void HideDetail()
         {
             if (_ShowDetail)
             {
-                DetailNewsTimer.Stop();
+                _hideDetailTimeout.Stop();
                 ShowDetail = false;
                 await Task.Delay(900);
                 DetailNews = null;
@@ -85,15 +101,6 @@ namespace MagicMirror.ViewModel
         }
         public async void ViewDetail()
         {
-            if (DetailNewsTimer == null)
-            {
-                DetailNewsTimer = new DispatcherTimer();
-                DetailNewsTimer.Interval = TimeSpan.FromMinutes(5);
-                DetailNewsTimer.Tick += DetailNewsTimer_Tick;
-            }
-            else
-                DetailNewsTimer.Stop();
-
             if (!_ShowDetail)
             {
                 if (CurrentNews != null)
@@ -104,7 +111,7 @@ namespace MagicMirror.ViewModel
                         ShowDetail = true;
                         await Task.Delay(900);
 
-                        DetailNewsTimer.Start();
+                        _hideDetailTimeout.Start();
                     }
                     else
                     {
@@ -112,10 +119,6 @@ namespace MagicMirror.ViewModel
                     }
                 }
             }
-        }
-        private void DetailNewsTimer_Tick(object sender, object e)
-        {
-            HideDetail();
         }
 
         #region UPDATE MECHANISM

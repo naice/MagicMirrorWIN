@@ -104,18 +104,51 @@ namespace MagicMirror.Factory
             weather.Temperature = string.Format("{0:0.0}°", currentWeather.Item.Temp);
             weather.WeatherIcon = WIWeather.IconTable[currentWeather.Item.Icon];
 
-            var currentForecast = await WeatherNet.Clients.FiveDaysForecast.GetByCityNameAsync(config.WeatherCity, config.WeatherCountry, config.WeatherLanguage, config.WeatherUnits);
+            var forecastDaily = await WeatherNet.Clients.FiveDaysForecast.GetByCityNameDailyAsync(config.WeatherCity, config.WeatherCountry, config.WeatherLanguage, config.WeatherUnits);
+            var forecastDetail = await WeatherNet.Clients.FiveDaysForecast.GetByCityNameAsync(config.WeatherCity, config.WeatherCountry, config.WeatherLanguage, config.WeatherUnits);
 
-            if (currentForecast.Success)
+
+            if (forecastDaily.Success)
             {
-                foreach (var item in currentForecast.Items)
+                foreach (var item in forecastDaily.Items)
                 {
                     var forecast = new ViewModel.WeatherForecast();
                     forecast.Icon = WIWeather.IconTable[item.Icon];
                     forecast.Day = item.Date.ToString("ddd.");
                     forecast.MaxTemp = string.Format("{0:0.0}°", item.TempMax);
                     forecast.MinTemp = string.Format("{0:0.0}°", item.TempMin);
+                    forecast.Temp = string.Format("{0:0.0}°", item.Temp);
+                    forecast.DMaxTemp = item.TempMax;
+                    forecast.DMinTemp = item.TempMin;
+                    forecast.DateTime = item.Date.Date;
                     weather.Forecasts.Add(forecast);
+
+                    if (forecastDaily.Success)
+                    {
+                        var detailForecast = new ViewModel.WeatherForecast();
+                        detailForecast.Update(forecast);
+
+                        if (detailForecast.DateTime.Day == now.Day)
+                            detailForecast.Day = "Heute";
+                        else
+                            detailForecast.Day = forecast.DateTime.ToString("dddd");
+
+                        var dtBegin = detailForecast.DateTime.Date;
+                        var dtEnd = dtBegin.AddDays(1);
+                        foreach (var itemdetail in forecastDetail.Items.Where(A => A.Date >= dtBegin && A.Date < dtEnd))
+                        {
+                            ViewModel.WeatherForecastDetail detail = new ViewModel.WeatherForecastDetail();
+                            detail.DateTime = itemdetail.Date;
+                            detail.Time = itemdetail.Date.ToString("HH:mm");
+                            detail.Icon = WIWeather.IconTable[itemdetail.Icon];
+                            detail.Temp = string.Format("{0:0.0}°", itemdetail.Temp);
+                            // TODO: MORE WEATHER INFO??
+
+                            detailForecast.Details.Add(detail);
+                        }
+
+                        weather.ForecastDetails.Add(detailForecast);
+                    }
                 }
 
                 if (weather.Forecasts.Count > 0)

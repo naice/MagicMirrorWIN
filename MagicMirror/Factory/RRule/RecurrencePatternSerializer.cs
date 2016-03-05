@@ -914,7 +914,7 @@ namespace MagicMirror.Factory.RRule
                                         }
                                         catch (Exception ex)
                                         {
-                                            //Log.e(ex);
+                                            Log.e(ex);
                                         }                                        
                                     } break;
                                 case "COUNT": r.Count = Convert.ToInt32(keyValue); break;

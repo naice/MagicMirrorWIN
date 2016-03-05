@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,6 +61,19 @@ namespace MagicMirror.ViewModel
                 }
             }
         }
+        private string _Temp;
+        public string Temp
+        {
+            get { return _Temp; }
+            set
+            {
+                if (value != _Temp)
+                {
+                    _Temp = value;
+                    RaisePropertyChanged("Temp");
+                }
+            }
+        }
         private double _Opacity;
         public double Opacity
         {
@@ -74,12 +88,51 @@ namespace MagicMirror.ViewModel
             }
         }
 
+        private DateTime _DateTime;
+        public DateTime DateTime
+        {
+            get { return _DateTime; }
+            set
+            {
+                if (value != _DateTime)
+                {
+                    _DateTime = value;
+                    RaisePropertyChanged("DateTime");
+                }
+            }
+        }
+
+        public double DMaxTemp { get; set; }
+        public double DMinTemp { get; set; }
+
+        public ObservableCollection<WeatherForecastDetail> Details { get; set; } = new ObservableCollection<WeatherForecastDetail>();
+
         public void Update(WeatherForecast wf)
         {
             this.Day = wf.Day;
             this.Icon = wf.Icon;
             this.MaxTemp = wf.MaxTemp;
             this.MinTemp = wf.MinTemp;
+            this.DMaxTemp = wf.DMaxTemp;
+            this.DMinTemp = wf.DMinTemp;
+            this.DateTime = wf.DateTime;
+            this.Temp = wf.Temp;
+
+            if (this.Details.Count == wf.Details.Count)
+            {
+                for (int i = 0; i < wf.Details.Count; i++)
+                {
+                    this.Details[i].Update(wf.Details[i]);
+                }
+            }
+            else
+            {
+                this.Details.Clear();
+                foreach (var item in wf.Details)
+                {
+                    this.Details.Add(item);
+                }
+            }
         }
     }
 }

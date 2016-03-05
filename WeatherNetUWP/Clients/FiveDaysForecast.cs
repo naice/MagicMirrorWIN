@@ -83,13 +83,28 @@ namespace WeatherNet.Clients
         /// <param name="language">The language of the information returned (example: English - en, Russian - ru, Italian - it, Spanish - sp, Ukrainian - ua, German - de, Portuguese - pt, Romanian - ro, Polish - pl, Finnish - fi, Dutch - nl, French - fr, Bulgarian - bg, Swedish - se, Chinese Traditional - zh_tw, Chinese Simplified - zh_cn, Turkish - tr , Czech - cz, Galician - gl, Vietnamese - vi, Arabic - ar, Macedonian - mk, Slovak - sk).</param>
         /// <param name="units">The units of the date (metric or imperial).</param>
         /// <returns> The forecast information.</returns>
-        public static async Task<Result<FiveDaysForecastResult>> GetByCityNameAsync(String city, String country, String language, String units)
+        public static async Task<Result<FiveDaysForecastResult>> GetByCityNameDailyAsync(String city, String country, String language, String units)
         {
             try
             {
                 if (String.IsNullOrWhiteSpace(city) || String.IsNullOrEmpty(country))
                     return new Result<FiveDaysForecastResult>(null, false, "City and/or Country cannot be empty.");
                 var response = ApiClient.GetResponse("/forecast/daily?q=" + city + "," + country + "&lang=" + language + "&units=" + units);
+
+                return Deserializer.GetWeatherForecast(await response);
+            }
+            catch (Exception ex)
+            {
+                return new Result<FiveDaysForecastResult> { Items = null, Success = false, Message = ex.Message + " - " + ex.StackTrace };
+            }
+        }
+        public static async Task<Result<FiveDaysForecastResult>> GetByCityNameAsync(String city, String country, String language, String units)
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(city) || String.IsNullOrEmpty(country))
+                    return new Result<FiveDaysForecastResult>(null, false, "City and/or Country cannot be empty.");
+                var response = ApiClient.GetResponse("/forecast?q=" + city + "," + country + "&lang=" + language + "&units=" + units);
 
                 return Deserializer.GetWeatherForecast(await response);
             }
