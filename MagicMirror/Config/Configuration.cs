@@ -16,6 +16,13 @@ namespace MagicMirror.Configuration
         public string Foreground { get; set; }
     }
 
+    public class RadioConfig
+    {
+        public string Name { get; set; }
+        public string PhoneticName { get; set; }
+        public string URL { get; set; }
+    }
+
     public class Configuration
     {
         public Dictionary<DayTime, List<string>> DayTimeCompliments { get; set; } = new Dictionary<DayTime, List<string>>() {
@@ -76,6 +83,18 @@ namespace MagicMirror.Configuration
         {
             new Factory.RSSFeed.RSSCreatorGolem(),
             new Factory.RSSFeed.RSSCreatorT3N(),
+        };
+
+        // RADIO CONFIG
+
+        public List<RadioConfig> Radios { get; set; } = new List<RadioConfig>()
+        {
+            // EINS LIVE
+            new RadioConfig() {
+                Name = "1Live",
+                PhoneticName = "ICELIVE",
+                URL = "http://www.wdr.de/wdrlive/media/einslive.m3u",
+            },
         };
     }
 }

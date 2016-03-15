@@ -26,5 +26,11 @@ namespace MagicMirror
         {
             this.InitializeComponent();
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            ViewModel.Playback.Instance.MediaElement = mediaElementPlayback;
+            base.OnNavigatedTo(e);
+        }
     }
 }

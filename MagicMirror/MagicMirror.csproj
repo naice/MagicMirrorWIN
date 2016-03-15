@@ -138,6 +138,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\News.cs" />
     <Compile Include="ViewModel\NewsItem.cs" />
+    <Compile Include="ViewModel\Playback.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\Timeout.cs" />
     <Compile Include="ViewModel\Weather.cs" />

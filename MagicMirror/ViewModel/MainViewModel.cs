@@ -58,10 +58,14 @@ namespace MagicMirror.ViewModel
             };
             // this commadn is for testing purpose if no microphone or whatsoever
             Clicked = new RelayCommand<object>(() => {
-                if (this.Weather.ShowDetail)
-                    this.Weather.HideDetail();
-                else
-                    this.Weather.ViewDetail();
+                //if (this.Weather.ShowDetail)
+                //    this.Weather.HideDetail();
+                //else
+                //    this.Weather.ViewDetail();
+
+                var radio = new Configuration.Configuration().Radios.FirstOrDefault();
+                if (radio != null)
+                    Playback.Instance.LoadAndPlay(radio);
             });
 
             Initzialize = new RelayCommand<object>(() =>
@@ -176,11 +180,20 @@ namespace MagicMirror.ViewModel
 
             // init recognizer
             recognizer = new SpeechRecognizer();
-            recognizer.Constraints.Add(new SpeechRecognitionListConstraint(new string[] 
+            var listConstraint = new SpeechRecognitionListConstraint(new string[]
             {
-                "Show", "News", "Detail", "Weather", 
-                "Hide", "Close", "Weather", "Time", "Back", "Escape"
-            }));
+                "Show", "News", "Detail", "Weather",
+                "Hide", "Close", "Time", "Back", "Escape",
+                "Stop", "Pause", "Radio",
+                "Louder", "Quieter",
+            });
+
+            foreach (var item in new Configuration.Configuration().Radios)
+            {
+                listConstraint.Commands.Add(item.PhoneticName);
+            }
+
+            recognizer.Constraints.Add(listConstraint);
 
             recognizer.StateChanged += RecognizerStateChanged;
             recognizer.ContinuousRecognitionSession.ResultGenerated += RecognizerResultGenerated;
@@ -205,9 +218,11 @@ namespace MagicMirror.ViewModel
         private async void RecognizerResultGenerated(SpeechContinuousRecognitionSession session, SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
             Log.i(args.Result.Status.ToString());
-            Log.i(args.Result.Text);
+            Log.i(args.Result.Confidence.ToString());
+            Log.i(string.IsNullOrEmpty(args.Result.Text) ? "[NOTEXT]" : args.Result.Text);
 
-            if (args.Result.Status == SpeechRecognitionResultStatus.Success)
+            int confidence = (int)args.Result.Confidence;
+            if (args.Result.Status == SpeechRecognitionResultStatus.Success && confidence < 2)
             {
                 string text = args.Result.Text;
 
@@ -219,13 +234,37 @@ namespace MagicMirror.ViewModel
                     {
                         await EnsureOnUI(() => this.News.ViewDetail());
                     }
-                    else if (text == "HIDE" || text == "CLOSE" || text == "WEATHER" || text == "TIME" || text == "BACK" || text == "ESCAPE")
+                    else if (text == "HIDE" || text == "CLOSE" || text == "TIME" || text == "BACK" || text == "ESCAPE")
                     {
                         await EnsureOnUI(() => { this.News.HideDetail(); this.Weather.HideDetail(); });
                     }
                     else if (text == "WEATHER")
                     {
                         await EnsureOnUI(() => this.Weather.ViewDetail());
+                    }
+                    else if (text == "STOP" || text == "PAUSE")
+                    {
+                        await EnsureOnUI(() => Playback.Instance.Pause());
+                    }
+                    else if (text == "LOUDER")
+                    {
+                        await EnsureOnUI(() => Playback.Instance.Louder());
+                    }
+                    else if (text == "QUIETER")
+                    {
+                        await EnsureOnUI(() => Playback.Instance.Quieter());
+                    }
+                    else if (text == "RADIO")
+                    {
+                        var radio = new Configuration.Configuration().Radios.FirstOrDefault();
+                        if (radio != null)
+                            await EnsureOnUI(()=>Playback.Instance.LoadAndPlay(radio));
+                    }
+                    else
+                    {
+                        var radio = new Configuration.Configuration().Radios.Where(A => A.PhoneticName == text).FirstOrDefault();
+                        if (radio != null)
+                            await EnsureOnUI(()=>Playback.Instance.LoadAndPlay(radio));
                     }
                 }
             }
