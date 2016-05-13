@@ -34,7 +34,7 @@ namespace MagicMirror.ViewModel
         {
             await Task.Delay(100); // Maybe fetch from service? 
 
-            var hour = DateTime.Now.Hour;
+            var hour = Factory.DateTimeFactory.Instance.Now.Hour;
 
             List<string> compliments = new List<string>();
 

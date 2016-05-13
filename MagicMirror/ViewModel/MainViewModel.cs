@@ -79,6 +79,8 @@ namespace MagicMirror.ViewModel
 
         async void StartUpdateTask()
         {
+            await DateTimeFactory.Instance.UpdateTimeAsync();
+
             await Task.Factory.StartNew(async() => {
                 while (true)
                 {
@@ -86,6 +88,7 @@ namespace MagicMirror.ViewModel
                     {
                         await Process();
                         await Task.Delay(60000);
+                        await DateTimeFactory.Instance.UpdateTimeAsync();
                     }
                     catch (Exception ex)
                     {
@@ -96,17 +99,13 @@ namespace MagicMirror.ViewModel
         }
 
         #region DATA Processing
-        //              TIMEOUTS
-        DateTime _dtUpdateCalendar = DateTime.MinValue;
-        DateTime _dtUpdateWeather = DateTime.MinValue;
-        DateTime _dtUpdateNews = DateTime.MinValue;
         private async Task Process()
         {
             var config = new Configuration.Configuration();
 
             foreach (var updateViewModel in _updateViewModels)
             {
-                var now = DateTime.Now;
+                var now = DateTimeFactory.Instance.Now;
                 if ((now - updateViewModel.LastUpdate) > updateViewModel.UpdateTimeout)
                 {
                     updateViewModel.LastUpdate = now;

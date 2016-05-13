@@ -112,7 +112,9 @@
     <Compile Include="Controls\ContentFadeItems.cs" />
     <Compile Include="Controls\ContentSwitch.cs" />
     <Compile Include="Factory\CalendarFactory.cs" />
+    <Compile Include="Factory\DateTimeFactory.cs" />
     <Compile Include="Factory\NewsFactory.cs" />
+    <Compile Include="Factory\Ntp\NtpClient.cs" />
     <Compile Include="Factory\RRule\Constants.cs" />
     <Compile Include="Factory\RRule\RecurrencePattern.cs" />
     <Compile Include="Factory\RRule\RecurrencePatternSerializer.cs" />

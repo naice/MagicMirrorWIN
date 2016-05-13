@@ -120,7 +120,7 @@ namespace MagicMirror.ViewModel
 
         private void timerTime_Tick(object sender, object e)
         {
-            var now = DateTime.Now;
+            var now = DateTimeFactory.Instance.Now;
             var date = now.Date;
             var dateTimeMinute = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             var dateTimeSecond = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
@@ -142,7 +142,7 @@ namespace MagicMirror.ViewModel
         public async Task<object> ProcessData(Configuration.Configuration config)
         {
             List<CalendarItem> newCalendarItems = await _calendarFactory.GetFullCalendarList(config);
-            var now = DateTime.Now;
+            var now = DateTimeFactory.Instance.Now;
             List<CalendarItem> filteredCalendarItems = new List<CalendarItem>();
             foreach (var item in newCalendarItems)
             {

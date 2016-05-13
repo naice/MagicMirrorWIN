@@ -261,7 +261,7 @@ namespace MagicMirror.Factory
                         RecurrencePattern r = new RecurrencePattern(item.RRULE);
 
                         var duration = item.End - item.Start;
-                        DateTime begin = DateTime.Now;
+                        DateTime begin = DateTimeFactory.Instance.Now;
                         DateTime end = begin.AddYears(10);
                         foreach (var date in RecurrencePatternSerializer.GetDates(begin, begin, end, 2, r, false))
                         {

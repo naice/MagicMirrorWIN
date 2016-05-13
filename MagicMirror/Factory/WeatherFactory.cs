@@ -91,7 +91,7 @@ namespace MagicMirror.Factory
             if (!currentWeather.Success) return null;
 
             weather.BeaufortWindScale = WIWindBeaufort.Beaufort[WIWindBeaufort.KMHToBeaufort(currentWeather.Item.WindSpeed)];
-            var now = DateTime.Now;
+            var now = DateTimeFactory.Instance.Now;
 
             weather.SunState = WIWeather.Sunrise;
             weather.SunStateTime = currentWeather.Item.Sunrise.ToString("HH:mm");
