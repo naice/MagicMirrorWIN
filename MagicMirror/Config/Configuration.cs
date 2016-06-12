@@ -66,6 +66,10 @@ namespace MagicMirror.Configuration
                 URL = "https://calendar.google.com/calendar/ical/im.naice%40gmail.com/private-4d01a1953bc6da5f195b42075004ac68/basic.ics",
                 Foreground = "#ffffffff",
             },
+            new CalendarAndColor() {
+                URL = "http://i.cal.to/ical/209/emspielplanwmspielplan/em-2016-spielplan/60d77de2.ebaa43fa-b0ce3286.ics",
+                Foreground = "#ff00D95D",
+            },
         };
 
         // WEATHER CONFIG

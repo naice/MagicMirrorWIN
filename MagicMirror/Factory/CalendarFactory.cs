@@ -57,6 +57,30 @@ namespace MagicMirror.Factory
 
             return t;
         }
+        static DateTime GetDateTime3(string val)
+        {
+            DateTime t = DateTime.MinValue;
+
+            string tval = val.Trim();
+
+            if (!string.IsNullOrWhiteSpace(tval) && tval.Length == 15)
+            {
+                try
+                {
+                    t = DateTime.ParseExact(val, "yyyyMMddTHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (FormatException)
+                {
+
+                }
+                catch (ArgumentException)
+                {
+
+                }
+            }
+
+            return t;
+        }
         static DateTime GetDateTime2(string val)
         {
             DateTime t = DateTime.MinValue;
@@ -181,6 +205,10 @@ namespace MagicMirror.Factory
                                         {
                                             cur_event.Start = GetDateTime2(val);
                                         }
+                                        if (cur_event.Start == DateTime.MinValue)
+                                        {
+                                            cur_event.Start = GetDateTime3(val);
+                                        }
                                     }
                                     //If the type is an end date, do the same as above
                                     else if (type == "DTEND")
@@ -189,6 +217,11 @@ namespace MagicMirror.Factory
                                         if (cur_event.End == DateTime.MinValue)
                                         {
                                             cur_event.End = GetDateTime2(val);
+                                        }
+
+                                        if (cur_event.End == DateTime.MinValue)
+                                        {
+                                            cur_event.End = GetDateTime3(val);
                                         }
                                     }
                                     //Convert timestamp

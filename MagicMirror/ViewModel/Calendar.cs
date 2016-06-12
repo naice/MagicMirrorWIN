@@ -118,7 +118,7 @@ namespace MagicMirror.ViewModel
             timerTime.Start();
         }
 
-        private void timerTime_Tick(object sender, object e)
+        private async void timerTime_Tick(object sender, object e)
         {
             var now = DateTimeFactory.Instance.Now;
             var date = now.Date;
@@ -132,6 +132,19 @@ namespace MagicMirror.ViewModel
             CurrentDateString = _CurrentDate.ToString("dddd, d. MMMM yyyy");
             CurrentDateTimeMinuteString = _CurrentDateTimeMinute.ToString("HH:mm");
             CurrentDateTimeSecondString = _CurrentDateTimeSecond.ToString("ss");
+
+            try
+            {
+                await UILock.WaitAsync();
+                foreach (var item in CalendarItems)
+                {
+                    UpdateTime(item, now);
+                }
+            }
+            finally
+            {
+                UILock.Release();
+            }
         }
 
         public DateTime LastUpdate { get; set; }
@@ -139,6 +152,43 @@ namespace MagicMirror.ViewModel
         public TimeSpan UpdateTimeout { get; set; } = TimeSpan.FromMinutes(5);
 
         private CalendarFactory _calendarFactory = new CalendarFactory();
+
+        private void UpdateTime(CalendarItem item, DateTime now)
+        {
+            // todo: Extrahieren, globale funktion...
+
+            var dt = item.Start;
+            var nowDay = new DateTime(now.Year, now.Month, now.Day);
+            var nowDayEnd = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
+            var nowMonth = new DateTime(now.Year, now.Month, 1);
+            var nowMonthEnd = new DateTime(now.Year, now.Month + 1, 1).AddSeconds(-1);
+            var nowYear = new DateTime(now.Year, 1, 1);
+            var nowYearEnd = new DateTime(now.Year + 1, 1, 1).AddSeconds(-1);
+
+            if (dt < now.AddMinutes(1))
+                item.Time = "Jetzt";
+            else if (dt < now.AddHours(1))
+                item.Time = string.Format("in {0} Minuten", (int)(dt - now).TotalMinutes);
+            else if (dt < now.AddHours(6) || dt < nowDayEnd)
+                item.Time = string.Format("in {0} Stunden", (int)(dt - now).TotalHours);
+            else if (dt < nowDayEnd.AddDays(1))
+                item.Time = string.Format("Morgen um {0:HH}:{0:mm}", dt);
+            else if (dt < nowDayEnd.AddDays(2))
+                item.Time = string.Format("Übermorgen um {0:HH}:{0:mm}", dt);
+            else if (dt < nowDayEnd.AddDays(6))
+                item.Time = string.Format("{0:dddd} um {0:HH}:{0:mm}", dt);
+            else if (dt < nowDayEnd.AddDays(15) || dt < nowMonthEnd)
+                item.Time = string.Format("in {0} Tagen", (int)(dt - nowDay).TotalDays);
+            else if (dt < nowMonthEnd.AddMonths(1))
+                item.Time = string.Format("nächsten Monat");
+            else if (dt < nowMonthEnd.AddMonths(6) || dt < nowYearEnd)
+                item.Time = string.Format("in {0} Monaten", nowYear.Year == dt.Year ? dt.Month - now.Month : 12 - now.Month + dt.Month);
+            else if (dt.Year - now.Year == 1)
+                item.Time = string.Format("nächstes Jahr im {0:MMMM}", dt);
+            else
+                item.Time = string.Format("in {0} Jahren", dt.Year - now.Year);
+        }
+
         public async Task<object> ProcessData(Configuration.Configuration config)
         {
             List<CalendarItem> newCalendarItems = await _calendarFactory.GetFullCalendarList(config);
@@ -152,35 +202,7 @@ namespace MagicMirror.ViewModel
                 {
                     try
                     {
-                        var nowDay = new DateTime(now.Year, now.Month, now.Day);
-                        var nowDayEnd = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
-                        var nowMonth = new DateTime(now.Year, now.Month, 1);
-                        var nowMonthEnd = new DateTime(now.Year, now.Month + 1, 1).AddSeconds(-1);
-                        var nowYear = new DateTime(now.Year, 1, 1);
-                        var nowYearEnd = new DateTime(now.Year + 1, 1, 1).AddSeconds(-1);
-                        if (dt < now.AddMinutes(1))
-                            item.Time = "Jetzt";
-                        else if (dt < now.AddHours(1))
-                            item.Time = string.Format("in {0} Minuten", (int)(dt - now).TotalMinutes);
-                        else if (dt < now.AddHours(6) || dt < nowDayEnd)
-                            item.Time = string.Format("in {0} Stunden", (int)(dt - now).TotalHours);
-                        else if (dt < nowDayEnd.AddDays(1))
-                            item.Time = string.Format("Morgen um {0:HH}:{0:mm}", dt);
-                        else if (dt < nowDayEnd.AddDays(2))
-                            item.Time = string.Format("Übermorgen um {0:HH}:{0:mm}", dt);
-                        else if (dt < nowDayEnd.AddDays(6))
-                            item.Time = string.Format("{0:dddd} um {0:HH}:{0:mm}", dt);
-                        else if (dt < nowDayEnd.AddDays(15) || dt < nowMonthEnd)
-                            item.Time = string.Format("in {0} Tagen", (int)(dt - nowDay).TotalDays);
-                        else if (dt < nowMonthEnd.AddMonths(1))
-                            item.Time = string.Format("nächsten Monat");
-                        else if (dt < nowMonthEnd.AddMonths(6) || dt < nowYearEnd)
-                            item.Time = string.Format("in {0} Monaten", nowYear.Year == dt.Year ? dt.Month - now.Month : 12 - now.Month + dt.Month);
-                        else if (dt.Year - now.Year == 1)
-                            item.Time = string.Format("nächstes Jahr im {0:MMMM}", dt);
-                        else
-                            item.Time = string.Format("in {0} Jahren", dt.Year - now.Year);
-
+                        UpdateTime(item, now);
 
                         filteredCalendarItems.Add(item);
                     }
