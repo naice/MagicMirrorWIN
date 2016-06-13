@@ -136,9 +136,18 @@ namespace MagicMirror.ViewModel
             try
             {
                 await UILock.WaitAsync();
+                var removeitems = new List<CalendarItem>();
                 foreach (var item in CalendarItems)
                 {
                     UpdateTime(item, now);
+
+                    if (item.Start < now.AddHours(-1.1))
+                        removeitems.Add(item);
+                }
+
+                foreach (var item in removeitems)
+                {
+                    CalendarItems.Remove(item);
                 }
             }
             finally
@@ -165,8 +174,16 @@ namespace MagicMirror.ViewModel
             var nowYear = new DateTime(now.Year, 1, 1);
             var nowYearEnd = new DateTime(now.Year + 1, 1, 1).AddSeconds(-1);
 
-            if (dt < now.AddMinutes(1))
+            if (dt < now.AddMinutes(-1))
+            {
+                item.Time = string.Format("vor {0} Minuten", (int)(now - dt).TotalMinutes);
+                item.TimeBrush = "#ffFF3333";
+            }
+            else if (dt < now.AddMinutes(1) && dt > now.AddMinutes(-1))
+            {
                 item.Time = "Jetzt";
+                item.TimeBrush = "#ffFF3333";
+            }
             else if (dt < now.AddHours(1))
                 item.Time = string.Format("in {0} Minuten", (int)(dt - now).TotalMinutes);
             else if (dt < now.AddHours(6) || dt < nowDayEnd)

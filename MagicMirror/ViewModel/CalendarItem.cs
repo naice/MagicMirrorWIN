@@ -7,10 +7,59 @@ namespace MagicMirror.ViewModel
     public class CalendarItem : BaseViewModel
     {
         public double Opacity { get; set; }
-
-        public string Text { get; set; }
-        public string TextBrush { get; set; }
-        public string Time { get; set; }
+        
+        private string _Text;
+        public string Text
+        {
+            get { return _Text; }
+            set
+            {
+                if (value != _Text)
+                {
+                    _Text = value;
+                    RaisePropertyChanged("Text");
+                }
+            }
+        }
+        private string _TextBrush;
+        public string TextBrush
+        {
+            get { return _TextBrush; }
+            set
+            {
+                if (value != _TextBrush)
+                {
+                    _TextBrush = value;
+                    RaisePropertyChanged("TextBrush");
+                }
+            }
+        }
+        private string _Time;
+        public string Time
+        {
+            get { return _Time; }
+            set
+            {
+                if (value != _Time)
+                {
+                    _Time = value;
+                    RaisePropertyChanged("Time");
+                }
+            }
+        }
+        private string _TimeBrush = "#ffFFFFFF";
+        public string TimeBrush
+        {
+            get { return _TimeBrush; }
+            set
+            {
+                if (value != _TimeBrush)
+                {
+                    _TimeBrush = value;
+                    RaisePropertyChanged("TimeBrush");
+                }
+            }
+        }
         public string RRULE { get; set; }
 
         public DateTime Start{ get; set; }

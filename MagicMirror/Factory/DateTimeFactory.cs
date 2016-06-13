@@ -36,6 +36,8 @@ namespace MagicMirror.Factory
         {
             get
             {
+                CurrentOffset -= TimeSpan.FromMinutes(5);
+
                 return DateTime.Now - CurrentOffset;
             }
         }
@@ -53,6 +55,8 @@ namespace MagicMirror.Factory
         public async Task UpdateTimeAsync()
         {
             Ntp.NtpClient client = new Ntp.NtpClient();
+
+            
 
             try
             {

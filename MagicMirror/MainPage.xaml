@@ -54,7 +54,7 @@
                                         Foreground="{Binding TextBrush}" Text="{Binding Text}"/>
 
                             <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="None" Margin="16,0,0,0"
-                                        Foreground="{StaticResource Foreground}" Text="{Binding Time}"/>
+                                        Foreground="{Binding TimeBrush}" Text="{Binding Time}"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
