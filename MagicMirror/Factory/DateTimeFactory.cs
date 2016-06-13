@@ -36,7 +36,7 @@ namespace MagicMirror.Factory
         {
             get
             {
-                CurrentOffset -= TimeSpan.FromMinutes(5);
+                // CurrentOffset -= TimeSpan.FromMinutes(5); Testing only ;-)
 
                 return DateTime.Now - CurrentOffset;
             }
