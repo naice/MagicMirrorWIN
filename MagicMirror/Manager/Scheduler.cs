@@ -64,7 +64,13 @@ namespace MagicMirror.Manager
 
             if (schedule.Begin <= _dateTimeProvider.Now)
             {
-                throw new SchedulerDateException("Can't add schedule in past!");
+                if (schedule.Recurrence <= TimeSpan.Zero)
+                {
+                    throw new SchedulerDateException("Can't add schedule in past!");
+                }
+
+                TryStartRecurringSchedule(schedule);
+                return;
             }
 
             _schedules.Add(schedule);
@@ -75,21 +81,23 @@ namespace MagicMirror.Manager
                 // remove schedule first!
                 _schedules.Remove(schedule);
 
-                if (A.IsCompleted)
-                {
-                    if (schedule.Action != null)
+                    if (A.IsCompleted)
                     {
-                        schedule.Action();
-                    }
+                        schedule.Action?.Invoke();
 
-                    if (schedule.Recurrence > TimeSpan.Zero)
-                    {
-                        schedule.Begin = schedule.Begin.Add(schedule.Recurrence);
-                        StartSchedule(schedule);
+                        TryStartRecurringSchedule(schedule);
                     }
-                }
             });
             //scheduledTask.Start(); Start may not be called on a promise-style task.
+        }
+
+        private void TryStartRecurringSchedule(Schedule schedule)
+        {
+            if (schedule.Recurrence > TimeSpan.Zero)
+            {
+                schedule.Begin = schedule.Begin.Add(schedule.Recurrence);
+                StartSchedule(schedule);
+            }
         }
 
         /// <summary>
