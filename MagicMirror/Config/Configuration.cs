@@ -51,9 +51,11 @@ namespace MagicMirror.Configuration
                 }
              },
         };
-              
 
-        
+        // SCREEN SAVER
+        public TimeSpan ScreenSaverBegin { get; set; } = TimeSpan.FromHours(1);
+        public TimeSpan ScreenSaverEnd { get; set; } = TimeSpan.FromHours(6);
+
         // CALENDAR CONFIG
 
         public int MaxCalendarItems { get; set; } = 20;
@@ -99,6 +101,6 @@ namespace MagicMirror.Configuration
                 PhoneticName = "ICELIVE",
                 URL = "http://www.wdr.de/wdrlive/media/einslive.m3u",
             },
-        };
+        }; 
     }
 }

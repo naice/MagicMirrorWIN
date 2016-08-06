@@ -1,4 +1,4 @@
-MainPackage=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\MagicMirror\bin\ARM\Release\MagicMirror_1.0.3.0_ARM.appx
-SymbolPackage=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\AppPackages\MagicMirror_1.0.3.0_Test\MagicMirror_1.0.3.0_ARM.appxsym
-ResourcePack=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\MagicMirror\bin\ARM\Release\MagicMirror_1.0.3.0_language-de.appx
-ResourcePack=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\MagicMirror\bin\ARM\Release\MagicMirror_1.0.3.0_language-en.appx
+MainPackage=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\MagicMirror\bin\ARM\Release\MagicMirror_1.0.5.0_ARM.appx
+SymbolPackage=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\AppPackages\MagicMirror_1.0.5.0_Test\MagicMirror_1.0.5.0_ARM.appxsym
+ResourcePack=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\MagicMirror\bin\ARM\Release\MagicMirror_1.0.5.0_language-de.appx
+ResourcePack=D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\MagicMirror\bin\ARM\Release\MagicMirror_1.0.5.0_language-en.appx

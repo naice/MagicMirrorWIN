@@ -44,6 +44,21 @@ namespace MagicMirror.ViewModel
         }
 
 
+        private bool _ShowScreenSaver = false;
+        public bool ShowScreenSaver
+        {
+            get { return _ShowScreenSaver; }
+            set
+            {
+                if (value != _ShowScreenSaver)
+                {
+                    _ShowScreenSaver = value;
+                    RaisePropertyChanged("ShowScreenSaver");
+                }
+            }
+        }
+
+
         // this commadn is for testing purpose if no microphone or whatsoever
         public RelayCommand<object> Clicked { get; set; }
         // this command will start our update mechanism and init some basics e.g. speech recognition
@@ -80,6 +95,23 @@ namespace MagicMirror.ViewModel
         async void StartUpdateTask()
         {
             await DateTimeFactory.Instance.UpdateTimeAsync();
+            var config = new Configuration.Configuration();
+
+            // Turnon ScreenSaver
+            Manager.ScheduleManager.Instance.Scheduler.StartSchedule(
+                Manager.ScheduleManager.Instance.Scheduler.CreateRecurringScheduleFromToday(
+                    () => { EnsureOnUI(() => ShowScreenSaver = true); },
+                    config.ScreenSaverBegin, 
+                    Manager.Schedule.RecurrenceDaily)
+                );
+
+            // Turnoff ScreenSaver
+            Manager.ScheduleManager.Instance.Scheduler.StartSchedule(
+                Manager.ScheduleManager.Instance.Scheduler.CreateRecurringScheduleFromToday(
+                    () => { EnsureOnUI(() => ShowScreenSaver = false); },
+                    config.ScreenSaverEnd,
+                    Manager.Schedule.RecurrenceDaily)
+                );
 
             await Task.Factory.StartNew(async() => {
                 while (true)
@@ -126,7 +158,7 @@ namespace MagicMirror.ViewModel
                         await updateViewModel.UILock.WaitAsync();
                         try
                         {
-                            await EnsureOnUI(() => updateViewModel.UpdateUI(config, dat));
+                            await EnsureOnUIAsync(() => updateViewModel.UpdateUI(config, dat));
                         }
                         catch (Exception ex)
                         {
@@ -139,11 +171,15 @@ namespace MagicMirror.ViewModel
             
 
             if (ShowSplashScreen)
-                await EnsureOnUI(() => ShowSplashScreen = false);
+                await EnsureOnUIAsync(() => ShowSplashScreen = false);
         }
         #endregion
-        
-        private static async Task EnsureOnUI(Windows.UI.Core.DispatchedHandler callback)
+
+        private static async void EnsureOnUI(Windows.UI.Core.DispatchedHandler callback)
+        {
+            await EnsureOnUIAsync(callback);
+        }
+        private static async Task EnsureOnUIAsync(Windows.UI.Core.DispatchedHandler callback)
         {
             if (App.Dispatcher.HasThreadAccess)
             {
@@ -231,39 +267,39 @@ namespace MagicMirror.ViewModel
 
                     if (text == "SHOW" || text == "NEWS" || text == "DETAIL")
                     {
-                        await EnsureOnUI(() => this.News.ViewDetail());
+                        await EnsureOnUIAsync(() => this.News.ViewDetail());
                     }
                     else if (text == "HIDE" || text == "CLOSE" || text == "TIME" || text == "BACK" || text == "ESCAPE")
                     {
-                        await EnsureOnUI(() => { this.News.HideDetail(); this.Weather.HideDetail(); });
+                        await EnsureOnUIAsync(() => { this.News.HideDetail(); this.Weather.HideDetail(); });
                     }
                     else if (text == "WEATHER")
                     {
-                        await EnsureOnUI(() => this.Weather.ViewDetail());
+                        await EnsureOnUIAsync(() => this.Weather.ViewDetail());
                     }
                     else if (text == "STOP" || text == "PAUSE")
                     {
-                        await EnsureOnUI(() => Playback.Instance.Pause());
+                        await EnsureOnUIAsync(() => Playback.Instance.Pause());
                     }
                     else if (text == "LOUDER")
                     {
-                        await EnsureOnUI(() => Playback.Instance.Louder());
+                        await EnsureOnUIAsync(() => Playback.Instance.Louder());
                     }
                     else if (text == "QUIETER")
                     {
-                        await EnsureOnUI(() => Playback.Instance.Quieter());
+                        await EnsureOnUIAsync(() => Playback.Instance.Quieter());
                     }
                     else if (text == "RADIO")
                     {
                         var radio = new Configuration.Configuration().Radios.FirstOrDefault();
                         if (radio != null)
-                            await EnsureOnUI(()=>Playback.Instance.LoadAndPlay(radio));
+                            await EnsureOnUIAsync(()=>Playback.Instance.LoadAndPlay(radio));
                     }
                     else
                     {
                         var radio = new Configuration.Configuration().Radios.Where(A => A.PhoneticName == text).FirstOrDefault();
                         if (radio != null)
-                            await EnsureOnUI(()=>Playback.Instance.LoadAndPlay(radio));
+                            await EnsureOnUIAsync(()=>Playback.Instance.LoadAndPlay(radio));
                     }
                 }
             }
@@ -273,7 +309,7 @@ namespace MagicMirror.ViewModel
         {
             Log.i("SR State: " + args.State.ToString());
 
-            await EnsureOnUI(() => {
+            await EnsureOnUIAsync(() => {
                 ShowListeningInfo = args.State == SpeechRecognizerState.SpeechDetected;
             });
         }

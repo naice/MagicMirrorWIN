@@ -245,5 +245,17 @@
                 </StackPanel>
             </Grid>
         </controls:ContentSwitch>
+        
+        <!-- OVERLAY SCREEN SAVER -->
+        <controls:ContentSwitch Show="{Binding ShowScreenSaver}">
+            <Grid Background="#000000">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Style="{StaticResource FontLight}" FontSize="{StaticResource FontSizeLarge}" Foreground="{StaticResource Foreground}" Text="{Binding Calendar.CurrentDateTimeMinuteString}"/>
+                    <TextBlock Style="{StaticResource FontLight}" FontSize="{StaticResource FontSizeTimeSeconds}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Calendar.CurrentDateTimeSecondString}"
+                           VerticalAlignment="Top" Margin="0,5,0,0"/>
+                </StackPanel>
+                <Rectangle Fill="#EE000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Grid>
+        </controls:ContentSwitch>
     </Grid>
 </Page>

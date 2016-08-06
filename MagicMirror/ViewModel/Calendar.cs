@@ -166,6 +166,8 @@ namespace MagicMirror.ViewModel
         {
             // todo: Extrahieren, globale funktion...
 
+            var mnth = new string[] { "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember" };
+
             var dt = item.Start;
             var nowDay = new DateTime(now.Year, now.Month, now.Day);
             var nowDayEnd = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
@@ -201,7 +203,8 @@ namespace MagicMirror.ViewModel
             else if (dt < nowMonthEnd.AddMonths(6) || dt < nowYearEnd)
                 item.Time = string.Format("in {0} Monaten", nowYear.Year == dt.Year ? dt.Month - now.Month : 12 - now.Month + dt.Month);
             else if (dt.Year - now.Year == 1)
-                item.Time = string.Format("nächstes Jahr im {0:MMMM}", dt);
+                //item.Time = string.Format("nächstes Jahr im {0:MMMM}", dt);
+                item.Time = string.Format("nächstes Jahr im {0}", mnth[dt.Month-1]);
             else
                 item.Time = string.Format("in {0} Jahren", dt.Year - now.Year);
         }
