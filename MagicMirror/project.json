@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "HtmlAgilityPack": "1.4.9",
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "MvvmLightLibs": "5.2.0"
   },
   "frameworks": {

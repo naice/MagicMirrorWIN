@@ -56,8 +56,6 @@ namespace MagicMirror.Factory
         {
             Ntp.NtpClient client = new Ntp.NtpClient();
 
-            
-
             try
             {
                 var currentCorrectUtcTime = await client.GetNetworkTimeAsync();
