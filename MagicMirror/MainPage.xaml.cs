@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicMirror.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,24 +14,28 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
-
 namespace MagicMirror
 {
-    /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            InitializeViewModel();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private void InitializeViewModel()
         {
-            ViewModel.Playback.Instance.MediaElement = mediaElementPlayback;
-            base.OnNavigatedTo(e);
+            var radioController = new Controller.MediaElementController(mediaElementRadio);
+            var videoController = new Controller.MediaElementController(mediaElementVideo);
+            var radio = new Radio(radioController);
+            radioController.FeedbackReciever = radio;
+            var video = new Video(videoController);
+            videoController.FeedbackReciever = video;
+            var main = new MainViewModel(video, radio);
+
+            DataContext = main;
         }
     }
 }

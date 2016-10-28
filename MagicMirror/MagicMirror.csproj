@@ -107,7 +107,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Contracts\IMediaElementControl.cs" />
+    <Compile Include="Contracts\IMediaElementFeedback.cs" />
     <Compile Include="ControlExtensions\WebViewExtensions.cs" />
+    <Compile Include="Controller\MediaElementController.cs" />
     <Compile Include="Controls\ContentFade.cs" />
     <Compile Include="Controls\ContentFadeItems.cs" />
     <Compile Include="Controls\ContentSwitch.cs" />
@@ -143,9 +146,10 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\News.cs" />
     <Compile Include="ViewModel\NewsItem.cs" />
-    <Compile Include="ViewModel\Playback.cs" />
+    <Compile Include="ViewModel\Radio.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\Timeout.cs" />
+    <Compile Include="ViewModel\Video.cs" />
     <Compile Include="ViewModel\Weather.cs" />
     <Compile Include="ViewModel\WeatherForecast.cs" />
     <Compile Include="ViewModel\WeatherForecastDetail.cs" />

@@ -1,4 +1,5 @@
-﻿using MagicMirror.Factory;
+﻿using MagicMirror.Contracts;
+using MagicMirror.Factory;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,16 +18,22 @@ namespace MagicMirror.ViewModel
     public class MainViewModel : BaseViewModel
     {
         // compliments
-        public Compliments Compliments { get; set; } = new Compliments();
+        public Compliments Compliments { get; private set; } = new Compliments();
 
         // calendar / time
-        public Calendar Calendar { get; set; } = new Calendar();
+        public Calendar Calendar { get; private set; } = new Calendar();
 
         // weather
-        public Weather Weather { get; set; } = new Weather();
+        public Weather Weather { get; private set; } = new Weather();
 
         // news
-        public News News { get; set; } = new News();
+        public News News { get; private set; } = new News();
+
+        // radio
+        public Radio Radio { get; private set; }
+
+        // video
+        public Video Video { get; private set; }
         
         // splash
         private bool _ShowSplashScreen = true;
@@ -43,7 +50,6 @@ namespace MagicMirror.ViewModel
             }
         }
 
-
         private bool _ShowScreenSaver = false;
         public bool ShowScreenSaver
         {
@@ -58,16 +64,23 @@ namespace MagicMirror.ViewModel
             }
         }
 
-
         // this commadn is for testing purpose if no microphone or whatsoever
         public RelayCommand<object> Clicked { get; set; }
         // this command will start our update mechanism and init some basics e.g. speech recognition
         public RelayCommand<object> Initzialize { get; set; }
-
-        private IUpdateViewModel[] _updateViewModels;
+        
+        private readonly IUpdateViewModel[] _updateViewModels;
 
         public MainViewModel()
         {
+            //todo: design instance only
+        }
+
+        public MainViewModel(Video video, Radio radio)
+        {
+            Video = video;
+            Radio = radio;
+
             _updateViewModels = new IUpdateViewModel[] {
                 Compliments, Calendar, Weather, News
             };
@@ -78,9 +91,9 @@ namespace MagicMirror.ViewModel
                 //else
                 //    this.Weather.ViewDetail();
 
-                var radio = new Configuration.Configuration().Radios.FirstOrDefault();
-                if (radio != null)
-                    Playback.Instance.LoadAndPlay(radio);
+                var radioConfig = new Configuration.Configuration().Radios.FirstOrDefault();
+                if (radioConfig != null)
+                    Radio.Play(radioConfig);
             });
 
             Initzialize = new RelayCommand<object>(() =>
@@ -90,7 +103,6 @@ namespace MagicMirror.ViewModel
                 StartUpdateTask();
             });
         }
-        
 
         async void StartUpdateTask()
         {
@@ -279,27 +291,27 @@ namespace MagicMirror.ViewModel
                     }
                     else if (text == "STOP" || text == "PAUSE")
                     {
-                        await EnsureOnUIAsync(() => Playback.Instance.Pause());
+                        await EnsureOnUIAsync(() => Radio.Pause());
                     }
                     else if (text == "LOUDER")
                     {
-                        await EnsureOnUIAsync(() => Playback.Instance.Louder());
+                        await EnsureOnUIAsync(() => Radio.Louder());
                     }
                     else if (text == "QUIETER")
                     {
-                        await EnsureOnUIAsync(() => Playback.Instance.Quieter());
+                        await EnsureOnUIAsync(() => Radio.Quieter());
                     }
                     else if (text == "RADIO")
                     {
                         var radio = new Configuration.Configuration().Radios.FirstOrDefault();
                         if (radio != null)
-                            await EnsureOnUIAsync(()=>Playback.Instance.LoadAndPlay(radio));
+                            await EnsureOnUIAsync(()=>Radio.Play(radio));
                     }
                     else
                     {
                         var radio = new Configuration.Configuration().Radios.Where(A => A.PhoneticName == text).FirstOrDefault();
                         if (radio != null)
-                            await EnsureOnUIAsync(()=>Playback.Instance.LoadAndPlay(radio));
+                            await EnsureOnUIAsync(()=>Radio.Play(radio));
                     }
                 }
             }
