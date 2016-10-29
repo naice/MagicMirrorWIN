@@ -161,6 +161,7 @@
     <None Include="MagicMirror_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\youtube-512.png" />
     <Content Include="Grammar\grammar-en.xml" />
     <None Include="LICENSE" />
     <Content Include="Properties\Default.rd.xml" />
@@ -187,15 +188,16 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\API.YouTube\API.YouTube.csproj">
+      <Project>{62110201-8027-4665-b07a-16dc74cb48d9}</Project>
+      <Name>API.YouTube</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WeatherNetUWP\WeatherNetUWP.csproj">
       <Project>{0ddd635f-4b59-4689-ae51-83404d44c2af}</Project>
       <Name>WeatherNetUWP</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
-      <Name>Behaviors SDK %28XAML%29</Name>
-    </SDKReference>
     <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>

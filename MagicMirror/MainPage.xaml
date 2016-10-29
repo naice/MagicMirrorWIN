@@ -11,6 +11,7 @@
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:vm="using:MagicMirror.ViewModel"
     xmlns:im="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:toolkitControls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
     mc:Ignorable="d">
 
@@ -240,7 +241,10 @@
         <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <controls:ContentSwitch Show="{Binding Video.ShowVideo}">
                 <Border Background="Black">
-                    <MediaElement x:Name="mediaElementVideo" />
+                    <Grid>
+                        <toolkitControls:ImageEx IsCacheEnabled="True" PlaceholderSource="/Assets/youtube-512.png" Source="{Binding Video.Thumbnail}"/>
+                        <MediaElement x:Name="mediaElementVideo" />
+                    </Grid>
                 </Border>
             </controls:ContentSwitch>
         </Border>

@@ -19,7 +19,7 @@ namespace MagicMirror
         }
 
         /// <inheritdoc/>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
             // disable cursor. 
             CoreWindow.GetForCurrentThread().PointerCursor = null;

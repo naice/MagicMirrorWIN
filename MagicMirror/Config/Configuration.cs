@@ -101,6 +101,10 @@ namespace MagicMirror.Configuration
                 PhoneticName = "ICELIVE",
                 URL = "http://www.wdr.de/wdrlive/media/einslive.m3u",
             },
-        }; 
+        };
+
+        // YOUTUBE CONIFG
+
+        public string YoutubeAPIKey { get; set; } = "AIzaSyCNEGRKXNsWilfyeANn9nolM5600QEQQSQ";
     }
 }
