@@ -17,6 +17,7 @@ namespace API.YouTube.Model
         public int MaxResults { get; set; } = 50;
         public string Q { get; set; }
         public string Key { get; set; }
+        public string PageToken { get; set; }
 
 
         public SearchList(string query)

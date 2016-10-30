@@ -47,8 +47,7 @@ namespace MagicMirror.ViewModel
 
         private void Tick(object sender, object e)
         {
-            if (Action != null)
-                Action();
+            Action?.Invoke();
         }
 
         /// <summary>

@@ -16,6 +16,20 @@ namespace MagicMirror.ViewModel
             _videoController = videoController;
         }
 
+
+        private bool _ShowVideo;
+        public bool ShowVideo
+        {
+            get { return _ShowVideo; }
+            set
+            {
+                if (value != _ShowVideo)
+                {
+                    _ShowVideo = value;
+                    RaisePropertyChanged("ShowVideo");
+                }
+            }
+        }
         private bool _IsPlaying;
         public bool IsPlaying
         {
@@ -39,6 +53,19 @@ namespace MagicMirror.ViewModel
                 {
                     _IsBuffering = value;
                     RaisePropertyChanged("IsBuffering");
+                }
+            }
+        }
+        private string _Thumbnail;
+        public string Thumbnail
+        {
+            get { return _Thumbnail; }
+            set
+            {
+                if (value != _Thumbnail)
+                {
+                    _Thumbnail = value;
+                    RaisePropertyChanged("Thumbnail");
                 }
             }
         }

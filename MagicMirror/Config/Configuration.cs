@@ -99,7 +99,7 @@ namespace MagicMirror.Configuration
             new RadioConfig() {
                 Name = "1Live",
                 PhoneticName = "ICELIVE",
-                URL = "http://www.wdr.de/wdrlive/media/einslive.m3u",
+                URL = "http://1live.akacast.akamaistream.net/7/706/119434/v1/gnl.akacast.akamaistream.net/1live",
             },
         };
 

@@ -8,10 +8,11 @@ using System.Xml.Serialization;
 using MagicMirror.Configuration;
 using System.Net.Http;
 using MagicMirror.Contracts;
+using MagicMirror.Provider;
 
 namespace MagicMirror.ViewModel
 {
-    public class Radio : BaseViewModel, IMediaElementFeedback
+    public class Radio : BaseViewModel, IMediaElementFeedback, ISpeechRecognitionResultGenerated
     {
         private readonly IMediaElementControl _mediaControl;
         private string _RadioName;
@@ -96,6 +97,42 @@ namespace MagicMirror.ViewModel
         {
             RadioName = r.Name;
             _mediaControl.Play(new Uri(r.URL));
+        }
+
+        public void SpeechRecognitionResultGenerated(SpeechRecognitionResult result)
+        {
+            if (result.TextUpper == "STOP" || result.TextUpper == "PAUSE")
+            {
+                UI.EnsureOn(() => Pause());
+                result.IsHandled = true;
+            }
+            else if (result.TextUpper == "LOUDER")
+            {
+                UI.EnsureOn(() => Louder());
+                result.IsHandled = true;
+            }
+            else if (result.TextUpper == "QUIETER")
+            {
+                UI.EnsureOn(() => Quieter());
+                result.IsHandled = true;
+            }
+            else if (result.TextUpper == "RADIO")
+            {
+                var radio = new Configuration.Configuration().Radios.FirstOrDefault();
+                if (radio != null)
+                    UI.EnsureOn(() => Play(radio));
+                result.IsHandled = true;
+            }
+            else
+            {
+                var radio = new Configuration.Configuration().Radios
+                    .Where(A => A.PhoneticName.Equals(result.TextUpper, StringComparison.OrdinalIgnoreCase))
+                    .FirstOrDefault();
+
+                if (radio != null)
+                    UI.EnsureOn(() => Play(radio));
+                result.IsHandled = true;
+            }
         }
     }
 }

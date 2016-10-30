@@ -129,6 +129,7 @@
     <Compile Include="Factory\RSSFeed\RSSCreatorT3N.cs" />
     <Compile Include="Factory\WeatherFactory.cs" />
     <Compile Include="Factory\WebHelper.cs" />
+    <Compile Include="Factory\YouTubeFactory.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -137,6 +138,10 @@
     <Compile Include="Manager\ScheduleManager.cs" />
     <Compile Include="Manager\Scheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\ISpeechRecognitionResultGenerated.cs" />
+    <Compile Include="Provider\ISpeechRecognitionStateChange.cs" />
+    <Compile Include="Provider\SpeechRecognitionProvider.cs" />
+    <Compile Include="Provider\SpeechRecognitionResult.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\Calendar.cs" />
@@ -149,6 +154,7 @@
     <Compile Include="ViewModel\Radio.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\Timeout.cs" />
+    <Compile Include="ViewModel\UI.cs" />
     <Compile Include="ViewModel\Video.cs" />
     <Compile Include="ViewModel\Weather.cs" />
     <Compile Include="ViewModel\WeatherForecast.cs" />
