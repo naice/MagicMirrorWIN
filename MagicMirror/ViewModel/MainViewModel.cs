@@ -86,6 +86,7 @@ namespace MagicMirror.ViewModel
         public RelayCommand<object> Initzialize { get; set; }
         
         private readonly IUpdateViewModel[] _updateViewModels;
+        private object SpeechRecognitionProvider;
 
         public MainViewModel()
         {
@@ -109,11 +110,21 @@ namespace MagicMirror.ViewModel
 
             Initzialize = new RelayCommand<object>(() =>
             {
-                Provider.SpeechRecognitionProvider.Instance.Touch();
-                Provider.SpeechRecognitionProvider.Instance.Register<Provider.ISpeechRecognitionStateChange>(this);
-                Provider.SpeechRecognitionProvider.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(Weather);
-                Provider.SpeechRecognitionProvider.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(News);
-                Provider.SpeechRecognitionProvider.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(Radio);
+                if (new Configuration.Configuration().IsAlexaVoice)
+                {
+                    // TODO: INIT ALEXA 
+                }
+                else
+                {
+                    // init default build in speech recognition.
+                    SpeechRecognitionProvider = new Provider.BuildInSpeechRecognitionProvider(
+                        Provider.SpeechRecognitionManager.Instance);
+                }
+
+                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionStateChange>(this);
+                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(Weather);
+                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(News);
+                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(Radio);
 
                 StartUpdateTask();
             });
@@ -148,9 +159,9 @@ namespace MagicMirror.ViewModel
                         // todo: remove
                         await UI.EnsureOnAsync(() => this.ShowSplashScreen = false);
                         
-                        //await Process();
+                        await Process();
                         await Task.Delay(60000);
-                        //await DateTimeFactory.Instance.UpdateTimeAsync();
+                        await DateTimeFactory.Instance.UpdateTimeAsync();
 
                     }
                     catch (Exception ex)

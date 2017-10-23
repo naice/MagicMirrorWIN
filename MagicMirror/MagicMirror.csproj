@@ -138,9 +138,11 @@
     <Compile Include="Manager\ScheduleManager.cs" />
     <Compile Include="Manager\Scheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\BuildInSpeechRecognitionProvider.cs" />
+    <Compile Include="Provider\ISpeechRecognitionManager.cs" />
     <Compile Include="Provider\ISpeechRecognitionResultGenerated.cs" />
     <Compile Include="Provider\ISpeechRecognitionStateChange.cs" />
-    <Compile Include="Provider\SpeechRecognitionProvider.cs" />
+    <Compile Include="Provider\SpeechRecognitionManager.cs" />
     <Compile Include="Provider\SpeechRecognitionResult.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
