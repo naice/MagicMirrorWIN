@@ -121,7 +121,7 @@ namespace MagicMirror
 
             ConfigServer.DependencyConfiguration.Begin()
                 .Set(new JsonConvert())
-                .Set(new ConfigurationContract())
+                .Set(new ConfigurationContract());
 
             await ConfigServer.ConfigServer.Instance.Run();
 
