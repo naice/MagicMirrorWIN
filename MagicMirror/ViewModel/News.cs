@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using MagicMirror.Provider;
 
 namespace MagicMirror.ViewModel
 {
-    public class News : BaseViewModel, IUpdateViewModel
+    public class News : BaseViewModel, IUpdateViewModel, ISpeechRecognitionResultGenerated
     {
         private NewsItem _CurrentNews;
         public NewsItem CurrentNews
@@ -152,5 +153,18 @@ namespace MagicMirror.ViewModel
             }
         }
         #endregion
+
+        public void SpeechRecognitionResultGenerated(SpeechRecognitionResult result)
+        {
+            if (result.IsCancel())
+            {
+                UI.EnsureOn(() => HideDetail());
+            }
+            else if (result.TextUpper == "SHOW" || result.TextUpper == "NEWS" || result.TextUpper == "DETAIL")
+            {
+                UI.EnsureOn(() => ViewDetail());
+                result.IsHandled = true;
+            }
+        }
     }
 }

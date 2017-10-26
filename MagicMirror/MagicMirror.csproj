@@ -1,26 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{B05061B5-161F-4121-8A89-B349D444CA93}</ProjectGuid>
+    <ProjectGuid>{F6C9E8A0-E8C4-45FD-9A93-6ACC213348C6}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MagicMirror</RootNamespace>
     <AssemblyName>MagicMirror</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>MagicMirror_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\AppPackages\</AppxPackageDir>
-    <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -91,23 +88,18 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
-  <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Font\weathericons-regular-webfont.ttf" />
-    <Content Include="Assets\Font\HelveticaNeue-Light.ttf" />
-    <Content Include="Assets\Font\HelveticaNeue-Medium.ttf" />
-    <Content Include="Assets\Font\HelveticaNeue-UltraLight.ttf" />
-    <None Include="project.json" />
-  </ItemGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Contracts\IMediaElementControl.cs" />
+    <Compile Include="Contracts\IMediaElementFeedback.cs" />
     <Compile Include="ControlExtensions\WebViewExtensions.cs" />
+    <Compile Include="Controller\MediaElementController.cs" />
     <Compile Include="Controls\ContentFade.cs" />
     <Compile Include="Controls\ContentFadeItems.cs" />
     <Compile Include="Controls\ContentSwitch.cs" />
@@ -121,11 +113,12 @@
     <Compile Include="Factory\RRule\WeekDay.cs" />
     <Compile Include="Factory\RSSFeed\GenericHtml.cs" />
     <Compile Include="Factory\RSSFeed\IRSSItemCreator.cs" />
-    <Compile Include="Factory\RSSFeed\RSSCreatorGolem.cs" />
     <Compile Include="Factory\RSSFeed\RSSCreatorDefault.cs" />
+    <Compile Include="Factory\RSSFeed\RSSCreatorGolem.cs" />
     <Compile Include="Factory\RSSFeed\RSSCreatorT3N.cs" />
     <Compile Include="Factory\WeatherFactory.cs" />
     <Compile Include="Factory\WebHelper.cs" />
+    <Compile Include="Factory\YouTubeFactory.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -134,6 +127,12 @@
     <Compile Include="Manager\ScheduleManager.cs" />
     <Compile Include="Manager\Scheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\BuildInSpeechRecognitionProvider.cs" />
+    <Compile Include="Provider\ISpeechRecognitionManager.cs" />
+    <Compile Include="Provider\ISpeechRecognitionResultGenerated.cs" />
+    <Compile Include="Provider\ISpeechRecognitionStateChange.cs" />
+    <Compile Include="Provider\SpeechRecognitionManager.cs" />
+    <Compile Include="Provider\SpeechRecognitionResult.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\Calendar.cs" />
@@ -143,9 +142,11 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\News.cs" />
     <Compile Include="ViewModel\NewsItem.cs" />
-    <Compile Include="ViewModel\Playback.cs" />
+    <Compile Include="ViewModel\Radio.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\Timeout.cs" />
+    <Compile Include="ViewModel\UI.cs" />
+    <Compile Include="ViewModel\Video.cs" />
     <Compile Include="ViewModel\Weather.cs" />
     <Compile Include="ViewModel\WeatherForecast.cs" />
     <Compile Include="ViewModel\WeatherForecastDetail.cs" />
@@ -154,11 +155,21 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Font\HelveticaNeue-Light.ttf" />
+    <Content Include="Assets\Font\HelveticaNeue-Medium.ttf" />
+    <Content Include="Assets\Font\HelveticaNeue-UltraLight.ttf" />
+    <Content Include="Assets\Font\weathericons-regular-webfont.ttf" />
+    <None Include="ApplicationInsights.config" />
+    <None Include="LICENSE" />
     <None Include="MagicMirror_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\avs-icon-amazon.png" />
+    <Content Include="Assets\avs-icon.png" />
+    <Content Include="Assets\youtube-512.png" />
+    <EmbeddedResource Include="Config\ConfigurationSchema.json" />
+    <EmbeddedResource Include="Config\ConfigurationUiSchema.json" />
     <Content Include="Grammar\grammar-en.xml" />
-    <None Include="LICENSE" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -183,20 +194,43 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack">
+      <Version>1.6.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>2.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\API.YouTube\API.YouTube.csproj">
+      <Project>{62110201-8027-4665-b07a-16dc74cb48d9}</Project>
+      <Name>API.YouTube</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigServer\ConfigServer.csproj">
+      <Project>{3c78c63f-db30-453b-91d6-e02389b70361}</Project>
+      <Name>ConfigServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WeatherNetUWP\WeatherNetUWP.csproj">
       <Project>{0ddd635f-4b59-4689-ae51-83404d44c2af}</Project>
       <Name>WeatherNetUWP</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Dropbox\Work\dev\vs\#lib\NcodedUniversal\NcodedUniversal.csproj">
+      <Project>{c1dfd3ee-e8c0-4cb5-8b44-a53d50ac2f8d}</Project>
+      <Name>NcodedUniversal</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
-      <Name>Behaviors SDK %28XAML%29</Name>
-    </SDKReference>
-    <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
-      <Name>Windows IoT Extensions for the UWP</Name>
-    </SDKReference>
-  </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

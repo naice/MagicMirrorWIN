@@ -1,8 +1,7 @@
 ﻿{
   "dependencies": {
-    "HtmlAgilityPack": "1.4.9",
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "MvvmLightLibs": "5.2.0"
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
+    "Newtonsoft.Json": "10.0.3"
   },
   "frameworks": {
     "uap10.0": {}

@@ -9,8 +9,10 @@
     xmlns:controlExtensions="using:MagicMirror.ControlExtensions"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:vm="using:MagicMirror.ViewModel"
     xmlns:im="using:Microsoft.Xaml.Interactions.Media"
-    DataContext="{StaticResource MainViewModel}"
+    xmlns:toolkitControls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
     mc:Ignorable="d">
 
     <!-- this will start our updating logic for the mainviewmodel -->
@@ -142,6 +144,7 @@
                 </Border>
             </controls:ContentSwitch>
         </Border>
+        
         <!-- OVERLAY FOR WEATHER -->
         <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="840" Height="1000" >
             <controls:ContentSwitch Show="{Binding Weather.ShowDetail}">
@@ -225,16 +228,28 @@
         </Border>
         
         <!-- OVERLAY SPEECH REC. -->
-        <Border VerticalAlignment="Bottom" HorizontalAlignment="Left" DataContext="{StaticResource Playback}">
-            <controls:ContentSwitch Show="{Binding IsPlaying}">
+        <Border VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <controls:ContentSwitch Show="{Binding Radio.IsPlaying}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Du hörst: " FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding RadioName}" FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Radio.RadioName}" FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
                 </StackPanel>
             </controls:ContentSwitch>
         </Border>
 
-        <MediaElement x:Name="mediaElementPlayback" Opacity="0"/>
+        <!-- OVERLAY VIDEO -->
+        <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <controls:ContentSwitch Show="{Binding Video.ShowVideo}">
+                <Border Background="Black">
+                    <Grid>
+                        <toolkitControls:ImageEx IsCacheEnabled="True" PlaceholderSource="/Assets/youtube-512.png" Source="{Binding Video.Thumbnail}"/>
+                        <MediaElement x:Name="mediaElementVideo" />
+                    </Grid>
+                </Border>
+            </controls:ContentSwitch>
+        </Border>
+
+        <MediaElement x:Name="mediaElementRadio" Opacity="0"/>
 
         <!-- OVERLAY SPLASH SCREEN -->
         <controls:ContentSwitch Show="{Binding ShowSplashScreen}">

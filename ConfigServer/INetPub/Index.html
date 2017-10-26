@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="bootstrap.min.css" rel="stylesheet"/>
+    <script crossorigin src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-jsonschema-form/dist/react-jsonschema-form.js"></script>
+    <!--<script src="react-jsonschema-form.js"></script>-->
+    
+    <title>Hello!</title>
+</head>
+<body>
+    <div>
+        <div id="App" style="max-width:800px; margin:2em;">
+
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        // alias form.
+        const Form = JSONSchemaForm.default;
+        const log = (type) => console.log.bind(console, type);
+
+        function UpdateConfiguration(formData)
+        {
+            var jsonText = JSON.stringify(formData);
+            log("submit formdata: " + jsonText);
+
+            $.ajax({ url: "/api/UpdateConfiguration", data: jsonText })
+                .done(function (jsonText) {
+                    responseObj = JSON.parse(jsonText);
+                    if (!responseObj.Success) {
+                        alert(responseObj.UserHint);
+                    }
+                    else {
+                        alert("Updated!");
+                    }
+                })
+                .fail(function () {
+                    $("#App").html('<div class="alert alert-danger">Server is not available. [CONNECTION]</div>');
+                });
+        }
+
+        // request schema from api
+        $.ajax("/api/GetTemplate")
+            .done(function (jsonText) {
+                responseObj = JSON.parse(jsonText);
+                ReactDOM.render(
+                    React.createElement(Form,
+                        {
+                            'schema': JSON.parse(responseObj.JsonSchema),
+                            'uiSchema': JSON.parse(responseObj.UiSchema),
+                            'formData': responseObj.CurrentState,
+                            'onChange': log("changed"),
+                            'onSubmit': UpdateConfiguration,
+                            'onError': log("errors")
+                        })
+                    , document.getElementById("App")
+                );
+            })
+            .fail(function () {
+                $("#App").html('<div class="alert alert-danger">Could not get a Template. [CONNECTION]</div>');
+            });
+    </script>
+
+</body>
+</html>

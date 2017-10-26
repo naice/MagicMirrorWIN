@@ -1,118 +1,163 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using ConfigServer.Converter;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Reflection;
+using System.IO;
 
 namespace MagicMirror
 {
-    /// <summary>
-    /// Stellt das anwendungsspezifische Verhalten bereit, um die Standardanwendungsklasse zu ergänzen.
-    /// </summary>
     sealed partial class App : Application
     {
         public static CoreDispatcher Dispatcher { get; private set; }
-        public static ViewModel.MainViewModel MainViewModel { get { return Application.Current.Resources["MainViewModel"] as ViewModel.MainViewModel;} }
-        /// <summary>
-        /// Initialisiert das Singletonanwendungsobjekt.  Dies ist die erste Zeile von erstelltem Code
-        /// und daher das logische Äquivalent von main() bzw. WinMain().
-        /// </summary>
+
+        #region Default implementations
+        private class JsonConvert : NcodedUniversal.Converter.IJsonConvert, ConfigServer.Converter.IJsonConvert
+        {
+            public T DeserializeObject<T>(string jsonString) where T : class
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString);
+            }
+
+            public string SerializeObject(object obj)
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            }
+
+            object IJsonConvert.DeserializeObject(string jsonString, Type type)
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject(jsonString, type);
+            }
+
+            string IJsonConvert.SerializeObject(object obj)
+            {
+                return SerializeObject(obj);
+            }
+        }
+
+        private class StorageIO : NcodedUniversal.Storage.IStorageIO
+        {
+            private readonly StorageFolder _folder;
+
+            public StorageIO(StorageFolder folder)
+            {
+                _folder = folder ?? ApplicationData.Current.LocalFolder;
+            }
+
+            public async Task<string> ReadAllTextAsync(string name)
+            {
+                var file = await _folder.GetFileAsync(name);
+
+                return await FileIO.ReadTextAsync(file);
+            }
+
+            public async Task WriteAllTextAsync(string name, string text)
+            {
+                var file = await _folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+
+                await FileIO.WriteTextAsync(file, text);
+            }
+        }
+
+        private class ConfigurationContract : ConfigServer.IConfigurationContract
+        {
+            public Type ConfigurationType => typeof(Configuration.Configuration);
+            private Configuration.Configuration CurrentConfig = new Configuration.Configuration();
+
+            public async Task<object> ConfigurationRequest()
+            {
+                await Task.Delay(1);
+                return CurrentConfig;
+            }
+            public async Task ConfigurationUpdated(object newConfigurationObject)
+            {
+                await Task.Delay(1);
+                CurrentConfig = (Configuration.Configuration)newConfigurationObject;
+            }
+            public string ConfigurationValidation(object newConfigurationObject)
+            {
+                return null;
+            }
+            static string FromRessource(string path)
+            {
+                var assembly = typeof(ConfigurationContract).GetTypeInfo().Assembly;
+                using (var sr = new StreamReader(assembly.GetManifestResourceStream(path)))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+            static Lazy<string> SCHEMA = new Lazy<string>(() => FromRessource("MagicMirror.Config.ConfigurationSchema.json"));
+            static Lazy<string> UI_SCHEMA = new Lazy<string>(() => FromRessource("MagicMirror.Config.ConfigurationUiSchema.json"));
+            public string GetConfigurationSchema()
+            {
+                return SCHEMA.Value;
+            }
+            public string GetConfigurationUiSchema()
+            {
+                return UI_SCHEMA.Value;
+            }
+        }
+        #endregion
+
         public App()
         {
-            /*
-            Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
-                Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
-                Microsoft.ApplicationInsights.WindowsCollectors.Session);
-            */
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Anwendung durch den Endbenutzer normal gestartet wird. Weitere Einstiegspunkte
-        /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
-        /// </summary>
-        /// <param name="e">Details über Startanforderung und -prozess.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        /// <inheritdoc/>
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            // defaults
+            NcodedUniversal.Configuration.Begin()
+                .Set(new JsonConvert())
+                .Set(new StorageIO(null));
+
+            ConfigServer.DependencyConfiguration.Begin()
+                .Set(new JsonConvert())
+                .Set(new ConfigurationContract());
+
+            await ConfigServer.ConfigServer.Instance.Run();
+
+            return;
+
             // disable cursor. 
             CoreWindow.GetForCurrentThread().PointerCursor = null;
             Window.Current.CoreWindow.PointerCursor = null;
 
             // get ui dispatcher
             Dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-            
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                //this.DebugSettings.EnableFrameRateCounter = true;
-            }
-#endif
 
             Frame rootFrame = Window.Current.Content as Frame;
-
-            // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
-            // Nur sicherstellen, dass das Fenster aktiv ist.
             if (rootFrame == null)
             {
-                // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
                 rootFrame = new Frame();
-
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Zustand von zuvor angehaltener Anwendung laden
-                }
-
-                // Den Frame im aktuellen Fenster platzieren
                 Window.Current.Content = rootFrame;
             }
 
             if (rootFrame.Content == null)
             {
-                // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
-                // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
-                // übergeben werden
                 rootFrame.Navigate(typeof(MainPage), e.Arguments);
             }
-            // Sicherstellen, dass das aktuelle Fenster aktiv ist
             Window.Current.Activate();
         }
-
-        /// <summary>
-        /// Wird aufgerufen, wenn die Navigation auf eine bestimmte Seite fehlschlägt
-        /// </summary>
-        /// <param name="sender">Der Rahmen, bei dem die Navigation fehlgeschlagen ist</param>
-        /// <param name="e">Details über den Navigationsfehler</param>
+        
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
-
-        /// <summary>
-        /// Wird aufgerufen, wenn die Ausführung der Anwendung angehalten wird.  Der Anwendungszustand wird gespeichert,
-        /// ohne zu wissen, ob die Anwendung beendet oder fortgesetzt wird und die Speicherinhalte dabei
-        /// unbeschädigt bleiben.
-        /// </summary>
-        /// <param name="sender">Die Quelle der Anhalteanforderung.</param>
-        /// <param name="e">Details zur Anhalteanforderung.</param>
+        
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Anwendungszustand speichern und alle Hintergrundaktivitäten beenden
+
             deferral.Complete();
         }
     }

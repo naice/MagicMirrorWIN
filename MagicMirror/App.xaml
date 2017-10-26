@@ -6,10 +6,7 @@
     xmlns:vm="using:MagicMirror.ViewModel"
     RequestedTheme="Dark">
     <Application.Resources>
-
-        <vm:MainViewModel x:Key="MainViewModel"/>
-        <vm:Playback x:Key="Playback"/>
-
+        
         <x:Double x:Key="FontSizeLarge">60</x:Double>
         <x:Double x:Key="FontSizeMedium">32</x:Double>
 
