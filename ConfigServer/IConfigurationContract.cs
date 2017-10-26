@@ -2,7 +2,9 @@
 
 namespace ConfigServer
 {
-    public interface IConfigurationContract { }
+    public interface IConfigurationContract
+    {
+    }
     public interface IConfigurationContract<T> : IConfigurationContract
     {
         Task ConfigurationUpdated(T newConfigurationData);
