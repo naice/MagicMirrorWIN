@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ConfigServer.Converter;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
@@ -7,6 +8,8 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using System.Reflection;
+using System.IO;
 
 namespace MagicMirror
 {
@@ -14,8 +17,8 @@ namespace MagicMirror
     {
         public static CoreDispatcher Dispatcher { get; private set; }
 
-        #region Default implementations for NcodedUniversal
-        private class JsonConvert : NcodedUniversal.Converter.IJsonConvert
+        #region Default implementations
+        private class JsonConvert : NcodedUniversal.Converter.IJsonConvert, ConfigServer.Converter.IJsonConvert
         {
             public T DeserializeObject<T>(string jsonString) where T : class
             {
@@ -25,6 +28,16 @@ namespace MagicMirror
             public string SerializeObject(object obj)
             {
                 return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            }
+
+            object IJsonConvert.DeserializeObject(string jsonString, Type type)
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject(jsonString, type);
+            }
+
+            string IJsonConvert.SerializeObject(object obj)
+            {
+                return SerializeObject(obj);
             }
         }
 
@@ -51,6 +64,45 @@ namespace MagicMirror
                 await FileIO.WriteTextAsync(file, text);
             }
         }
+
+        private class ConfigurationContract : ConfigServer.IConfigurationContract
+        {
+            public Type ConfigurationType => typeof(Configuration.Configuration);
+            private Configuration.Configuration CurrentConfig = new Configuration.Configuration();
+
+            public async Task<object> ConfigurationRequest()
+            {
+                await Task.Delay(1);
+                return CurrentConfig;
+            }
+            public async Task ConfigurationUpdated(object newConfigurationObject)
+            {
+                await Task.Delay(1);
+                CurrentConfig = (Configuration.Configuration)newConfigurationObject;
+            }
+            public string ConfigurationValidation(object newConfigurationObject)
+            {
+                return null;
+            }
+            static string FromRessource(string path)
+            {
+                var assembly = typeof(ConfigurationContract).GetTypeInfo().Assembly;
+                using (var sr = new StreamReader(assembly.GetManifestResourceStream(path)))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+            static Lazy<string> SCHEMA = new Lazy<string>(() => FromRessource("MagicMirror.Config.ConfigurationSchema.json"));
+            static Lazy<string> UI_SCHEMA = new Lazy<string>(() => FromRessource("MagicMirror.Config.ConfigurationUiSchema.json"));
+            public string GetConfigurationSchema()
+            {
+                return SCHEMA.Value;
+            }
+            public string GetConfigurationUiSchema()
+            {
+                return UI_SCHEMA.Value;
+            }
+        }
         #endregion
 
         public App()
@@ -66,6 +118,10 @@ namespace MagicMirror
             NcodedUniversal.Configuration.Begin()
                 .Set(new JsonConvert())
                 .Set(new StorageIO(null));
+
+            ConfigServer.DependencyConfiguration.Begin()
+                .Set(new JsonConvert())
+                .Set(new ConfigurationContract())
 
             await ConfigServer.ConfigServer.Instance.Run();
 

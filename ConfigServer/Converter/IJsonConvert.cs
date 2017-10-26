@@ -8,7 +8,7 @@ namespace ConfigServer.Converter
 {
     public interface IJsonConvert
     {
-        T DeserializeObject<T>(string jsonString) where T : class;
+        object DeserializeObject(string jsonString, Type type);
         string SerializeObject(object obj);
     }
 }

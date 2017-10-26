@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConfigServer.INetPub
+namespace ConfigServer
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    sealed class SchemaFormAttribute : Attribute
+    public sealed class SchemaFormAttribute : Attribute
     {
         // This is a positional argument
         public SchemaFormAttribute()
@@ -24,7 +24,7 @@ namespace ConfigServer.INetPub
     }
 
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    sealed class SchemaPropertyAttribute : Attribute
+    public sealed class SchemaPropertyAttribute : Attribute
     {
         // This is a positional argument
         public SchemaPropertyAttribute()

@@ -93,5 +93,13 @@ namespace ConfigServer
         {
             await _httpServer.StartServerAsync();
         }
+
+        /// <summary>
+        /// No Exception = good.
+        /// </summary>
+        public static void TestConfigurationObject(object toTest)
+        {
+            JsonSchemaBuilder.Instance.Build(toTest);
+        }
     }
 }

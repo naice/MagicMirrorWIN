@@ -167,6 +167,8 @@
     <Content Include="Assets\avs-icon-amazon.png" />
     <Content Include="Assets\avs-icon.png" />
     <Content Include="Assets\youtube-512.png" />
+    <EmbeddedResource Include="Config\ConfigurationSchema.json" />
+    <EmbeddedResource Include="Config\ConfigurationUiSchema.json" />
     <Content Include="Grammar\grammar-en.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

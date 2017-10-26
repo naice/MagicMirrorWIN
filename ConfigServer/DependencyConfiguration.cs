@@ -56,7 +56,7 @@ namespace ConfigServer
         /// <summary>
         /// Set the default <see cref="Model.IStorageIO"/> for the framework.
         /// </summary
-        public DependencyConfiguration Set<T>(IConfigurationContract<T> configurationContract)
+        public DependencyConfiguration Set(IConfigurationContract configurationContract)
         {
             DefaultConfigurationContract = configurationContract ?? throw new ArgumentException(nameof(configurationContract));
             return this;

@@ -26,35 +26,48 @@
     <script type="text/javascript">
         // alias form.
         const Form = JSONSchemaForm.default;
+        const log = (type) => console.log.bind(console, type);
+
+        function UpdateConfiguration(formData)
+        {
+            var jsonText = JSON.stringify(formData);
+            log("submit formdata: " + jsonText);
+
+            $.ajax({ url: "/api/UpdateConfiguration", data: jsonText })
+                .done(function (jsonText) {
+                    responseObj = JSON.parse(jsonText);
+                    if (!responseObj.Success) {
+                        alert(responseObj.UserHint);
+                    }
+                    else {
+                        alert("Updated!");
+                    }
+                })
+                .fail(function () {
+                    $("#App").html('<div class="alert alert-danger">Server is not available. [CONNECTION]</div>');
+                });
+        }
 
         // request schema from api
         $.ajax("/api/GetTemplate")
-            .done(function (schema) {
-                console.log(schema);
+            .done(function (jsonText) {
+                responseObj = JSON.parse(jsonText);
                 ReactDOM.render(
                     React.createElement(Form,
                         {
-                            'schema': JSON.parse(schema),
+                            'schema': JSON.parse(responseObj.JsonSchema),
+                            'uiSchema': JSON.parse(responseObj.UiSchema),
+                            'formData': responseObj.CurrentState,
                             'onChange': log("changed"),
-                            'onSubmit': log("submitted"),
+                            'onSubmit': UpdateConfiguration,
                             'onError': log("errors")
                         })
                     , document.getElementById("App")
                 );
             })
             .fail(function () {
-                $(getElementById("App")).innerHTML("ERROR: NO TEMPLATE");
+                $("#App").html('<div class="alert alert-danger">Could not get a Template. [CONNECTION]</div>');
             });
-
-
-        const log = (type) => console.log.bind(console, type);
-
-        //React.render((
-        //<Form schema={schema}
-        //      onChange={log("changed")}
-        //      onSubmit={log("submitted")}
-        //      onError={log("errors")} />
-        //), document.getElementById("App"));
     </script>
 
 </body>

@@ -114,6 +114,7 @@
     <Compile Include="Attributes.cs" />
     <Compile Include="InvalidConfigurationException.cs" />
     <Compile Include="JsonSchemaBuilder.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ConfigServer.rd.xml" />
   </ItemGroup>
