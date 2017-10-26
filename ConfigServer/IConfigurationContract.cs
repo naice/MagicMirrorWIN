@@ -4,10 +4,7 @@ namespace ConfigServer
 {
     public interface IConfigurationContract
     {
-    }
-    public interface IConfigurationContract<T> : IConfigurationContract
-    {
-        Task ConfigurationUpdated(T newConfigurationData);
-        Task<T> ConfigurationRequest();
+        Task ConfigurationUpdated(object newConfigurationData);
+        Task<object> ConfigurationRequest();
     }
 }
