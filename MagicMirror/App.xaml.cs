@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,7 +13,46 @@ namespace MagicMirror
     sealed partial class App : Application
     {
         public static CoreDispatcher Dispatcher { get; private set; }
-        
+
+        #region Default implementations for NcodedUniversal
+        private class JsonConvert : NcodedUniversal.Converter.IJsonConvert
+        {
+            public T DeserializeObject<T>(string jsonString) where T : class
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString);
+            }
+
+            public string SerializeObject(object obj)
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            }
+        }
+
+        private class StorageIO : NcodedUniversal.Storage.IStorageIO
+        {
+            private readonly StorageFolder _folder;
+
+            public StorageIO(StorageFolder folder)
+            {
+                _folder = folder ?? ApplicationData.Current.LocalFolder;
+            }
+
+            public async Task<string> ReadAllTextAsync(string name)
+            {
+                var file = await _folder.GetFileAsync(name);
+
+                return await FileIO.ReadTextAsync(file);
+            }
+
+            public async Task WriteAllTextAsync(string name, string text)
+            {
+                var file = await _folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+
+                await FileIO.WriteTextAsync(file, text);
+            }
+        }
+        #endregion
+
         public App()
         {
             this.InitializeComponent();
@@ -21,6 +62,15 @@ namespace MagicMirror
         /// <inheritdoc/>
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            // defaults
+            NcodedUniversal.Configuration.Begin()
+                .Set(new JsonConvert())
+                .Set(new StorageIO(null));
+
+            await ConfigServer.ConfigServer.Instance.Run();
+
+            return;
+
             // disable cursor. 
             CoreWindow.GetForCurrentThread().PointerCursor = null;
             Window.Current.CoreWindow.PointerCursor = null;

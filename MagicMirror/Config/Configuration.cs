@@ -106,7 +106,7 @@ namespace MagicMirror.Configuration
         // YOUTUBE CONIFG
 
         public string YoutubeAPIKey { get; set; } = "AIzaSyCNEGRKXNsWilfyeANn9nolM5600QEQQSQ";
-        public bool IsAlexaVoice { get; set; } = true;
+        public bool IsAlexaVoice { get; set; } = false;
         public string AlexaAPIKey { get; set; } = "";
     }
 }

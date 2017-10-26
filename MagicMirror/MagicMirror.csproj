@@ -21,6 +21,8 @@
     <AppxPackageDir>D:\Dropbox\Work\dev\vs\#wiotRaspberry\MagicMirror\AppPackages\</AppxPackageDir>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>arm</AppxBundlePlatforms>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -100,7 +102,6 @@
     <Content Include="Assets\Font\HelveticaNeue-Light.ttf" />
     <Content Include="Assets\Font\HelveticaNeue-Medium.ttf" />
     <Content Include="Assets\Font\HelveticaNeue-UltraLight.ttf" />
-    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -196,9 +197,17 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\#lib\NcodedUniversal\NcodedUniversal.csproj">
+      <Project>{c1dfd3ee-e8c0-4cb5-8b44-a53d50ac2f8d}</Project>
+      <Name>NcodedUniversal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\API.YouTube\API.YouTube.csproj">
       <Project>{62110201-8027-4665-b07a-16dc74cb48d9}</Project>
       <Name>API.YouTube</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigServer\ConfigServer.csproj">
+      <Project>{3c78c63f-db30-453b-91d6-e02389b70361}</Project>
+      <Name>ConfigServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\WeatherNetUWP\WeatherNetUWP.csproj">
       <Project>{0ddd635f-4b59-4689-ae51-83404d44c2af}</Project>
@@ -210,7 +219,6 @@
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
