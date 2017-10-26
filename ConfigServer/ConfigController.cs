@@ -25,7 +25,7 @@ namespace ConfigServer
     [RestController(InstanceCreationType.Singleton)]
     public class ConigController
     {
-        [UriFormat("/UpdateConfiguration")]
+        [UriFormat("/UpdateConfiguration/{json}")]
         public async Task<IGetResponse> UpdateConfiguration(string json)
         {
             var configContract = DependencyConfiguration.DefaultConfigurationContract;
