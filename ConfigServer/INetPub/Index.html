@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" id="theme" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script crossorigin src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div style="width:100%;">
+    <div style="width:100%">
         <div style="max-width:800px; margin: 0 auto">
             <div style="margin:2em;">
                 <div id="App">
@@ -32,15 +32,13 @@
         </div>
     </div>
 
-
     <script type="text/javascript">
         // alias form.
         const Form = JSONSchemaForm.default;
         const log = (type) => console.log.bind(console, type);
         var alertId = 0;
 
-        function AlertOut(text, type)
-        {
+        function AlertOut(text, type) {
             var alertBoxId = "alertBox" + alertId++;
             var alertBoxSelector = '#' + alertBoxId;
             $('#AlertBoxHolder').append('<div id="' + alertBoxId + '" class="alert ' + type + '" style="display:none;">' + text + '</div>');
@@ -57,8 +55,7 @@
             AlertOut(text, 'alert-success');
         }
 
-        function UpdateConfiguration(formData)
-        {
+        function UpdateConfiguration(formData) {
             var jsonText = JSON.stringify(formData);
             log("submit formdata: " + jsonText);
 
@@ -86,13 +83,11 @@
                     'onError': log("errors")
                 };
 
-                if (responseObj.UiSchema)
-                {
+                if (responseObj.UiSchema) {
                     formOpt.uiSchema = JSON.parse(responseObj.UiSchema);
                 }
 
-                if (responseObj.CurrentState)
-                {
+                if (responseObj.CurrentState) {
                     formOpt.formData = responseObj.CurrentState;
                 }
 

@@ -135,6 +135,8 @@ namespace MagicMirror
                 .Set(new JsonConvert())
                 .Set(new ConfigurationContract());
 
+            string test = Newtonsoft.Json.JsonConvert.SerializeObject(new Configuration.Configuration());
+
             await ConfigServer.ConfigServer.Instance.Run();
 
             return;

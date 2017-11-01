@@ -84,7 +84,6 @@ namespace MagicMirror.Configuration
         public string WeatherLanguage { get; set; } = "de";
 
         // NEWS CONFIG
-
         public Factory.RSSFeed.IRSSItemCreator[] NewsFeeds { get; set; } = new Factory.RSSFeed.IRSSItemCreator[]
         {
             new Factory.RSSFeed.RSSCreatorGolem(),
@@ -106,6 +105,11 @@ namespace MagicMirror.Configuration
         // YOUTUBE CONIFG
 
         public string YoutubeAPIKey { get; set; } = "AIzaSyCNEGRKXNsWilfyeANn9nolM5600QEQQSQ";
+
+
+
+
+
         public bool IsAlexaVoice { get; set; } = false;
         public string AlexaAPIKey { get; set; } = "";
     }

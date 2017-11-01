@@ -48,7 +48,7 @@ namespace ConfigServer
             );
         }
 
-        [UriFormat("/RestartUI/")]
+        [UriFormat("/RestartUI")]
         public IGetResponse RestartUI()
         {
 

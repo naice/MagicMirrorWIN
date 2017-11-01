@@ -1,17 +1,93 @@
 ﻿{
-	"title": "Todo",
-	"type": "object",
-	"required": ["title"],
-	"properties": {
-		"title": {
-			"type": "string",
-			"title": "Title",
-			"default": "A new task"
-		},
-		"done": {
-			"type": "boolean",
-			"title": "Done?",
-			"default": "false"
-		}
-	}
+    "title": "Magic Mirror WIN",
+    "type": "object",
+    "required": [ "title" ],
+    "properties": {
+        "DayTimeCompliments": {
+            "type": "object",
+            "title": "",
+            "properties": {
+                "Morning": {
+                    "type": "array",
+                    "title": "Morning Compliments",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Afternoon": {
+                    "type": "array",
+                    "title": "Afternoon Compliments",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Evening": {
+                    "type": "array",
+                    "title": "Evening Compliments",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "ScreenSaverBegin": {
+            "type": "string",
+            "title": "Screensaver Start"
+        },
+        "ScreenSaverEnd": {
+            "type": "string",
+            "title": "Screensaver End"
+        },
+        "MaxCalendarItems": {
+            "type": "integer",
+            "title": "Maximum Calendar Items"
+        },
+        "WeatherAPIKey": {
+            "type": "string",
+            "title": "Open Weather Map API Key"
+        },
+        "WeatherAPIUrl": {
+            "type": "string",
+            "format":  "uri",
+            "title": "Open Weather Map URL"
+        },
+        "WeatherCity": {
+            "type": "string",
+            "title": "City"
+        },
+        "WeatherCountry": {
+            "type": "string",
+            "title": "Country"
+        },
+        "WeatherUnits": {
+            "type": "string",
+            "title": "Units"
+        },
+        "WeatherLanguage": {
+            "type": "string",
+            "title": "Language (ISO)"
+        },
+        "Radios": {
+            "type": "array",
+            "title": "Radios",
+            "items": {
+                "type": "object",
+                "title": "Radio",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "PhoneticName": {
+                        "type": "string",
+                        "title": "Phonetic Name"
+                    },
+                    "URL": {
+                        "type": "string",
+                        "title": "Url"
+                    }
+                }
+            }
+        }
+    }
 }
