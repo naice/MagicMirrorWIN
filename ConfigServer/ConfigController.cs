@@ -48,20 +48,27 @@ namespace ConfigServer
             );
         }
 
+        [UriFormat("/RestartUI/")]
+        public IGetResponse RestartUI()
+        {
+
+            return new GetResponse(GetResponse.ResponseStatus.OK);
+        }
+
         [UriFormat("/GetTemplate")]
         public async Task<IGetResponse> GetTemplate()
         {
             Log.I("API: GetTemplate");
             var configContract = DependencyConfiguration.DefaultConfigurationContract;
 
-            return new GetResponse(GetResponse.ResponseStatus.OK,
-                new GetTemplateResponse()
-                {
-                    JsonSchema = configContract.GetConfigurationSchema(),
-                    UiSchema = configContract.GetConfigurationUiSchema(),
-                    CurrentState = await configContract.ConfigurationRequest(),
-                }
-            );
+            var getTemplateResponse = new GetTemplateResponse()
+            {
+                JsonSchema = configContract.GetConfigurationSchema(),
+                UiSchema = configContract.GetConfigurationUiSchema(),
+                CurrentState = await configContract.ConfigurationRequest(),
+            };
+            
+            return new GetResponse(GetResponse.ResponseStatus.OK, getTemplateResponse);
         }
     }
 }

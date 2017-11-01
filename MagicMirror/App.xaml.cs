@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using System.Reflection;
 using System.IO;
+using NcodedUniversal.Storage;
 
 namespace MagicMirror
 {
@@ -52,9 +53,18 @@ namespace MagicMirror
 
             public async Task<string> ReadAllTextAsync(string name)
             {
-                var file = await _folder.GetFileAsync(name);
 
-                return await FileIO.ReadTextAsync(file);
+                try
+                {
+                    var file = await _folder.GetFileAsync(name);
+                    return await FileIO.ReadTextAsync(file);
+                }
+                catch (IOException ex)
+                {
+                    Log.e(ex);
+                }
+
+                return null;
             }
 
             public async Task WriteAllTextAsync(string name, string text)
@@ -67,23 +77,24 @@ namespace MagicMirror
 
         private class ConfigurationContract : ConfigServer.IConfigurationContract
         {
+            public Storage<Configuration.Configuration> ConfigurationStorage = new Storage<Configuration.Configuration>("config.json");
             public Type ConfigurationType => typeof(Configuration.Configuration);
-            private Configuration.Configuration CurrentConfig = new Configuration.Configuration();
 
             public async Task<object> ConfigurationRequest()
             {
-                await Task.Delay(1);
-                return CurrentConfig;
+                return await ConfigurationStorage.Get();
             }
             public async Task ConfigurationUpdated(object newConfigurationObject)
             {
-                await Task.Delay(1);
-                CurrentConfig = (Configuration.Configuration)newConfigurationObject;
+                await ConfigurationStorage.Replace(newConfigurationObject as Configuration.Configuration);
             }
             public string ConfigurationValidation(object newConfigurationObject)
             {
+                // TODO: Implement sanity checks
                 return null;
             }
+
+            #region Schema
             static string FromRessource(string path)
             {
                 var assembly = typeof(ConfigurationContract).GetTypeInfo().Assembly;
@@ -102,6 +113,7 @@ namespace MagicMirror
             {
                 return UI_SCHEMA.Value;
             }
+            #endregion
         }
         #endregion
 

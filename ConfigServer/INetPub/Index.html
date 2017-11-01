@@ -16,9 +16,19 @@
     <title>Hello!</title>
 </head>
 <body>
-    <div>
-        <div id="App" style="max-width:800px; margin:2em;">
+    <div style="position:fixed; top:0; left:0; width:100%">
+        <div style="max-width:800px; margin: 0 auto">
+            <div id="AlertBoxHolder" style="margin:2em;">
+            </div>
+        </div>
+    </div>
+    <div style="width:100%;">
+        <div style="max-width:800px; margin: 0 auto">
+            <div style="margin:2em;">
+                <div id="App">
 
+                </div>
+            </div>
         </div>
     </div>
 
@@ -27,42 +37,68 @@
         // alias form.
         const Form = JSONSchemaForm.default;
         const log = (type) => console.log.bind(console, type);
+        var alertId = 0;
+
+        function AlertOut(text, type)
+        {
+            var alertBoxId = "alertBox" + alertId++;
+            var alertBoxSelector = '#' + alertBoxId;
+            $('#AlertBoxHolder').append('<div id="' + alertBoxId + '" class="alert ' + type + '" style="display:none;">' + text + '</div>');
+            $(alertBoxSelector).fadeIn('slow', function () {
+                $(this).delay(1000).fadeOut('slow', function () {
+                    $(this).remove();
+                });
+            });
+        }
+        function ErrorOut(text) {
+            AlertOut(text, 'alert-danger');
+        }
+        function SuccessOut(text) {
+            AlertOut(text, 'alert-success');
+        }
 
         function UpdateConfiguration(formData)
         {
             var jsonText = JSON.stringify(formData);
             log("submit formdata: " + jsonText);
 
-            $.ajax({ url: "/api/UpdateConfiguration", data: jsonText })
-                .done(function (jsonText) {
-                    responseObj = JSON.parse(jsonText);
+            $.ajax({ url: "/api/UpdateConfiguratio", data: jsonText })
+                .done(function (responseObj) {
                     if (!responseObj.Success) {
-                        alert(responseObj.UserHint);
+                        ErrorOut(responseObj.UserHint);
                     }
                     else {
-                        alert("Updated!");
+                        SuccessOut("<strong>Updated!</strong>");
                     }
                 })
                 .fail(function () {
-                    $("#App").html('<div class="alert alert-danger">Server is not available. [CONNECTION]</div>');
+                    ErrorOut("Could not reach server. [CONNECTION]");
                 });
         }
 
         // request schema from api
         $.ajax("/api/GetTemplate")
-            .done(function (jsonText) {
-                responseObj = JSON.parse(jsonText);
+            .done(function (responseObj) {
+                var formOpt = {
+                    'schema': JSON.parse(responseObj.JsonSchema),
+                    'onChange': log("changed"),
+                    'onSubmit': UpdateConfiguration,
+                    'onError': log("errors")
+                };
+
+                if (responseObj.UiSchema)
+                {
+                    formOpt.uiSchema = JSON.parse(responseObj.UiSchema);
+                }
+
+                if (responseObj.CurrentState)
+                {
+                    formOpt.formData = responseObj.CurrentState;
+                }
+
                 ReactDOM.render(
-                    React.createElement(Form,
-                        {
-                            'schema': JSON.parse(responseObj.JsonSchema),
-                            'uiSchema': JSON.parse(responseObj.UiSchema),
-                            'formData': responseObj.CurrentState,
-                            'onChange': log("changed"),
-                            'onSubmit': UpdateConfiguration,
-                            'onError': log("errors")
-                        })
-                    , document.getElementById("App")
+                    React.createElement(Form, formOpt),
+                    document.getElementById("App")
                 );
             })
             .fail(function () {
