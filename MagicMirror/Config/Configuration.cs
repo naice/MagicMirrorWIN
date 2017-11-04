@@ -106,10 +106,11 @@ namespace MagicMirror.Configuration
 
         public string YoutubeAPIKey { get; set; } = "AIzaSyCNEGRKXNsWilfyeANn9nolM5600QEQQSQ";
 
+        // ALEXA 
 
+        public string AlexaCloudAPIKey { get; set; } = "06E6D37B-AEF7-409F-B815-114C82047094";
 
-
-
+        
         public bool IsAlexaVoice { get; set; } = false;
         public string AlexaAPIKey { get; set; } = "";
     }

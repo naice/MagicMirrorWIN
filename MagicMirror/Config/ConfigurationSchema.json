@@ -42,13 +42,31 @@
             "type": "integer",
             "title": "Maximum Calendar Items"
         },
+        "CalendarAndColor": {
+            "type": "array",
+            "title": "iCal Calendar",
+            "items": {
+                "type": "object",
+                "title": "Calendar",
+                "properties": {
+                    "URL": {
+                        "type": "string",
+                        "title": "iCal URL"
+                    },
+                    "Foreground": {
+                        "type": "string",
+                        "title": "Foreground Color"
+                    }
+                }
+            }
+        },
         "WeatherAPIKey": {
             "type": "string",
             "title": "Open Weather Map API Key"
         },
         "WeatherAPIUrl": {
             "type": "string",
-            "format":  "uri",
+            "format": "uri",
             "title": "Open Weather Map URL"
         },
         "WeatherCity": {
@@ -88,6 +106,10 @@
                     }
                 }
             }
+        },
+        "AlexaCloudAPIKey": {
+            "type": "string",
+            "title":  "API Key for Alexa Cloud API"
         }
     }
 }

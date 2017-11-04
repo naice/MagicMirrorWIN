@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NcodedUniversal", "D:\Dropb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWSMagicMirror", "AWSMagicMirror\AWSMagicMirror.csproj", "{E9FDE2FF-EA43-4C6D-8082-A433C92FE2AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicMirror.Contracts", "MagicMirror.Contracts\MagicMirror.Contracts.csproj", "{9EBF7885-4182-441F-8181-53C36E52F885}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,22 @@ Global
 		{E9FDE2FF-EA43-4C6D-8082-A433C92FE2AA}.Release|x64.Build.0 = Release|Any CPU
 		{E9FDE2FF-EA43-4C6D-8082-A433C92FE2AA}.Release|x86.ActiveCfg = Release|Any CPU
 		{E9FDE2FF-EA43-4C6D-8082-A433C92FE2AA}.Release|x86.Build.0 = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|ARM.Build.0 = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|x64.Build.0 = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Debug|x86.Build.0 = Debug|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|ARM.ActiveCfg = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|ARM.Build.0 = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|x64.ActiveCfg = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|x64.Build.0 = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|x86.ActiveCfg = Release|Any CPU
+		{9EBF7885-4182-441F-8181-53C36E52F885}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
