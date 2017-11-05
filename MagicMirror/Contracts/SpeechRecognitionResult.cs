@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Provider
+namespace MagicMirror.Contracts
 {
     public class SpeechRecognitionResult
     {

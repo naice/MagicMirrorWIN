@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,6 @@ namespace MagicMirror.Contracts
     public class ApiRequest
     {
         public string Action { get; set; }
-        public string Parameter { get; set; }
+        public JObject Parameter { get; set; }
     }
 }

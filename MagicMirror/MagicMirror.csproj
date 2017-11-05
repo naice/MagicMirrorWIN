@@ -132,11 +132,17 @@
     <Compile Include="Manager\Scheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\BuildInSpeechRecognitionProvider.cs" />
-    <Compile Include="Provider\ISpeechRecognitionManager.cs" />
-    <Compile Include="Provider\ISpeechRecognitionResultGenerated.cs" />
-    <Compile Include="Provider\ISpeechRecognitionStateChange.cs" />
+    <Compile Include="Contracts\ISpeechRecognitionManager.cs" />
+    <Compile Include="Contracts\ISpeechRecognitionResultGenerated.cs" />
+    <Compile Include="Contracts\ISpeechRecognitionStateChange.cs" />
     <Compile Include="Provider\SpeechRecognitionManager.cs" />
-    <Compile Include="Provider\SpeechRecognitionResult.cs" />
+    <Compile Include="Contracts\SpeechRecognitionResult.cs" />
+    <Compile Include="Services\Cloud\CloudCallAttribute.cs" />
+    <Compile Include="Services\Cloud\CloudService.cs" />
+    <Compile Include="Services\Cloud\CloudServiceInstanceAttribute.cs" />
+    <Compile Include="Services\Cloud\CouldServer.cs" />
+    <Compile Include="Services\Cloud\ICloudDependencyResolver.cs" />
+    <Compile Include="Services\TestApiController.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\Calendar.cs" />
@@ -199,7 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.6.2</Version>
+      <Version>1.6.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.1</Version>
@@ -215,6 +221,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="NETStandard.HttpListener">
+      <Version>1.0.3.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

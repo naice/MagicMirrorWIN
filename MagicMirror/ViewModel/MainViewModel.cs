@@ -15,7 +15,7 @@ using Windows.UI.Xaml;
 
 namespace MagicMirror.ViewModel
 {
-    public class MainViewModel : BaseViewModel, Provider.ISpeechRecognitionStateChange
+    public class MainViewModel : BaseViewModel, Contracts.ISpeechRecognitionStateChange
     {
         // compliments
         public Compliments Compliments { get; private set; } = new Compliments();
@@ -121,10 +121,10 @@ namespace MagicMirror.ViewModel
                         Provider.SpeechRecognitionManager.Instance);
                 }
 
-                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionStateChange>(this);
-                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(Weather);
-                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(News);
-                Provider.SpeechRecognitionManager.Instance.Register<Provider.ISpeechRecognitionResultGenerated>(Radio);
+                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionStateChange>(this);
+                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionResultGenerated>(Weather);
+                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionResultGenerated>(News);
+                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionResultGenerated>(Radio);
 
                 StartUpdateTask();
             });

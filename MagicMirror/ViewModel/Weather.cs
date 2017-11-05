@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MagicMirror.Configuration;
 using MagicMirror.Factory;
 using MagicMirror.Provider;
+using MagicMirror.Contracts;
 
 namespace MagicMirror.ViewModel
 {

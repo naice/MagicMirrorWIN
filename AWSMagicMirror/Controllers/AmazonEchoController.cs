@@ -12,6 +12,7 @@ using AWSMagicMirror.Services;
 using AWSMagicMirror.Services.Exceptions;
 using System.Net.Http.Headers;
 using MagicMirror.Contracts;
+using Newtonsoft.Json.Linq;
 
 namespace AWSMagicMirror.Controllers
 {
@@ -39,8 +40,8 @@ namespace AWSMagicMirror.Controllers
 
                 var apiRequest = new ApiRequest
                 {
-                    Action = "Service/IPersonalAgentService/ProcessSkillServiceRequest",
-                    Parameter = JsonConvert.SerializeObject(request),
+                    Action = "Service/ProcessSkillServiceRequest",
+                    Parameter = JObject.FromObject(request),
                 };
 
                 var apiResponse = await _clientService.SendRequestAsync(clientId.Value, apiRequest, TimeSpan.FromSeconds(5));
@@ -49,23 +50,22 @@ namespace AWSMagicMirror.Controllers
                     return CreateJsonResponse(apiResponse.Result.ToObject<SkillServiceResponse>());
                 }
 
-                return CreateJsonResponse("Der Client hat einen Fehler gemeldet!");
+                return CreateJsonResponse("Dein Spiegel hat einen Fehler gemeldet!");
             }
             catch (ClientNotReachableException)
             {
-                return CreateJsonResponse("Ich konnte deinen Spiegel nicht erreichen. Versuche es später noch einmal.");
+                return CreateJsonResponse("Es tut mir leid, ich konnte deinen Spiegel nicht erreichen. Versuche es später noch einmal.");
             }
         }
 
-        private HttpResponseMessage CreateJsonResponse(string answer)
+        private static HttpResponseMessage CreateJsonResponse(string answer)
         {
             var response = new SkillServiceResponse();
             response.Response.OutputSpeech.Text = answer;
 
             return CreateJsonResponse(response);
         }
-
-        private HttpResponseMessage CreateJsonResponse(SkillServiceResponse skillServiceResponse)
+        private static HttpResponseMessage CreateJsonResponse(SkillServiceResponse skillServiceResponse)
         {
             var serializerSettings = new JsonSerializerSettings
             {

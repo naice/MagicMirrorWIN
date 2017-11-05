@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Windows.Media.SpeechRecognition;
 
-namespace MagicMirror.Provider
+namespace MagicMirror.Contracts
 {
     public interface ISpeechRecognitionManager
     {

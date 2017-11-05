@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Navigation;
 using System.Reflection;
 using System.IO;
 using NcodedUniversal.Storage;
+using System.Linq;
 
 namespace MagicMirror
 {
@@ -123,9 +124,34 @@ namespace MagicMirror
             this.Suspending += OnSuspending;
         }
 
+        Services.Cloud.CloudServer cloudServer;
+
+        class DefaultDependecyResolver : Services.Cloud.ICloudDependencyResolver
+        {
+            public object[] GetDependecys(Type[] dependencyTypes)
+            {
+                return dependencyTypes.Select(type => GetDependency(type)).ToArray();
+            }
+
+            public object GetDependency(Type dependencyType)
+            {
+                if (dependencyType == typeof(Services.ITestDependency))
+                {
+                    return new Services.TestDependecyImplementation0();
+                }
+
+                throw new NotImplementedException();
+            }
+        }
+
         /// <inheritdoc/>
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            cloudServer = new Services.Cloud.CloudServer(9090, new DefaultDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
+            cloudServer.Start();
+            return;
+
+
             // defaults
             NcodedUniversal.Configuration.Begin()
                 .Set(new JsonConvert())

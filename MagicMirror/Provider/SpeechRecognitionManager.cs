@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicMirror.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -81,7 +82,7 @@ namespace MagicMirror.Provider
         {
             foreach (var resultGeneratedInterface in await GetSpeechRecognitionInterfaces<ISpeechRecognitionResultGenerated>())
             {
-                var result = new SpeechRecognitionResult()
+                var result = new Contracts.SpeechRecognitionResult()
                 {
                     Text = text
                 };
