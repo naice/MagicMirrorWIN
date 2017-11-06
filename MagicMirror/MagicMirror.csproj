@@ -139,6 +139,7 @@
     <Compile Include="Provider\SpeechRecognitionManager.cs" />
     <Compile Include="Contracts\SpeechRecognitionResult.cs" />
     <Compile Include="Services\Amazon\AlexaApiController.cs" />
+    <Compile Include="Services\Cloud\CloudServiceApiRouteHandler.cs" />
     <Compile Include="Services\Cloud\CloudCallAttribute.cs" />
     <Compile Include="Services\Cloud\CloudHttpContext.cs" />
     <Compile Include="Services\Cloud\CloudService.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Services\Cloud\ExposedCloudAction.cs" />
     <Compile Include="Services\Cloud\ExposedCloudService.cs" />
     <Compile Include="Services\Cloud\ICloudDependencyResolver.cs" />
+    <Compile Include="Services\Cloud\ICloudRouteHandler.cs" />
     <Compile Include="Services\TestApiController.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />

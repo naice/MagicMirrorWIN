@@ -5,62 +5,60 @@ using System.Reflection;
 
 namespace MagicMirror.Services.Cloud
 {
-    public partial class CloudServer
+    internal class ExposedCloudService
     {
-        private class ExposedCloudService
+        public Type ServiceType { get; set; }
+        public CloudServiceInstanceType InstanceType { get; set; } = CloudServiceInstanceType.Instance;
+        public CloudService SingletonInstance { get; set; }
+        public List<ExposedCloudAction> Routes { get; set; } = new List<ExposedCloudAction>();
+
+        private readonly ICloudServiceDependencyResolver _cloudDependencyResolver;
+
+        public ExposedCloudService(ICloudServiceDependencyResolver cloudDependencyResolver)
         {
-            public Type ServiceType { get; set; }
-            public CloudServiceInstanceType InstanceType { get; set; } = CloudServiceInstanceType.Instance;
-            public CloudService SingletonInstance { get; set; }
-            public List<ExposedCloudAction> Routes { get; set; } = new List<ExposedCloudAction>();
+            _cloudDependencyResolver = cloudDependencyResolver;
+        }
 
-            private readonly ICloudServiceDependencyResolver _cloudDependencyResolver;
-
-            public ExposedCloudService(ICloudServiceDependencyResolver cloudDependencyResolver)
+        public object GetInstance(CloudHttpContext context)
+        {
+            if (InstanceType == CloudServiceInstanceType.Instance)
             {
-                _cloudDependencyResolver = cloudDependencyResolver;
+                return ApplyContext(InternalCreateInstance(), context);
             }
 
-            public object GetInstance(CloudHttpContext context)
+            if (InstanceType == CloudServiceInstanceType.SingletonStrict ||
+                InstanceType == CloudServiceInstanceType.SingletonLazy)
             {
-                if (InstanceType == CloudServiceInstanceType.Instance)
+                if (SingletonInstance == null)
                 {
-                    return ApplyContext(InternalCreateInstance(), context);
+                    SingletonInstance = InternalCreateInstance();
                 }
 
-                if (InstanceType == CloudServiceInstanceType.SingletonStrict ||
-                    InstanceType == CloudServiceInstanceType.SingletonLazy)
-                {
-                    if (SingletonInstance == null)
-                    {
-                        SingletonInstance = InternalCreateInstance();
-                    }
-
-                    return ApplyContext(SingletonInstance, context);
-                }
-
-                throw new NotImplementedException($"{nameof(ExposedCloudService)}: InstanceType not implemented. {InstanceType}");
+                return ApplyContext(SingletonInstance, context);
             }
 
-            private CloudService InternalCreateInstance()
+            throw new NotImplementedException($"{nameof(ExposedCloudService)}: InstanceType not implemented. {InstanceType}");
+        }
+
+        private CloudService InternalCreateInstance()
+        {
+            var activator = new CloudServiceActivator();
+
+            return activator.Activate(ServiceType, _cloudDependencyResolver);
+        }
+
+        private static CloudService ApplyContext(CloudService cloudService, CloudHttpContext context)
+        {
+            if (cloudService == null)
             {
-                var activator = new CloudServiceActivator();
-
-                return activator.Activate(ServiceType, _cloudDependencyResolver);
+                throw new ArgumentNullException(nameof(cloudService));
             }
 
-            private static CloudService ApplyContext(CloudService cloudService, CloudHttpContext context)
-            {
-                if (cloudService == null)
-                {
-                    throw new ArgumentNullException(nameof(cloudService));
-                }
+            cloudService.Request = context?.Request;
+            cloudService.Response = context?.Response;
 
-                cloudService.Request = context?.Request;
-                cloudService.Response = context?.Response;
-
-                return cloudService;
-            }
+            return cloudService;
         }
     }
 }
+
