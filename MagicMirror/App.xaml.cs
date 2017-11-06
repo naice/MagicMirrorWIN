@@ -147,7 +147,7 @@ namespace MagicMirror
         /// <inheritdoc/>
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            cloudServer = new Services.Cloud.CloudServer(9090, new DefaultDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
+            cloudServer = new Services.Cloud.CloudServer(8886, new DefaultDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
             cloudServer.Start();
             return;
 

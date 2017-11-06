@@ -36,6 +36,9 @@ namespace AWSMagicMirror.Services
 
         public string GetClientURLFromClientId(Guid clientId)
         {
+//                 "http://emmusss.ddns.net"
+            return "http://emmusss.ddns.net:8886";
+
             if (!_knownClients.TryGetValue(clientId, out string clientURL))
             {
                 return null;
@@ -46,6 +49,8 @@ namespace AWSMagicMirror.Services
 
         public Guid? GetClientUidFromAmazonUserId(string amazonUserId)
         {
+            return Guid.NewGuid();
+
             if (!_amazonUserIdMappings.TryGetValue(amazonUserId, out Guid clientId))
             {
                 return null;

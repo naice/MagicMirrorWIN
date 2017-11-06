@@ -17,6 +17,7 @@
         {
         }
 
+        /*
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Models.Mirror>()
@@ -31,5 +32,6 @@
 
         public virtual DbSet<Models.Mirror> Mirrors { get; set; }
         public virtual DbSet<Models.AlexaEchoDevice> Devices { get; set; }
+        */
     }
 }

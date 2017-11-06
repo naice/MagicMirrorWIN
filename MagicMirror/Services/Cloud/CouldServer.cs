@@ -322,9 +322,21 @@ namespace MagicMirror.Services.Cloud
             }
         }
 
+        private string StripPort(string absPath)
+        {
+            string portStr = _port.ToString();
+
+            if (absPath.StartsWith(portStr))
+            {
+                absPath = absPath.Substring(portStr.Length);
+            }
+
+            return absPath;
+        }
+
         private async void  _httpListener_Request(object sender, HttpListenerRequestEventArgs e)
         {
-            string route = MakeRoute(e.Request.Url.AbsolutePath);
+            string route = MakeRoute(StripPort(e.Request.Url.AbsolutePath));
             var cloudAction = GetActionForRoute(route);
 
             if (cloudAction == null)

@@ -14,6 +14,7 @@ namespace AWSMagicMirror.Services
     public class ClientService
     {
         private readonly AccessControlService _accessControlService;
+        private const string AMAZON_SKILL_SERVICE_ENDPOINT = "/Service/Amazon/ProcessSkillServiceRequest";
 
         public ClientService(AccessControlService accessControlService)
         {
@@ -34,14 +35,15 @@ namespace AWSMagicMirror.Services
 
         private async Task<ApiResponse> InternalSendRequestAsync(Guid clientId, ApiRequest apiRequest, TimeSpan timeout)
         {
+            string errorText = "";
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
                     client.Timeout = timeout.Add(new TimeSpan(0, 0, 30));
-                    using (var response = await client.PostAsJsonAsync(
-                        requestUri: _accessControlService.GetClientURLFromClientId(clientId),
-                        value: apiRequest))
+                    string requestUri = _accessControlService.GetClientURLFromClientId(clientId) + AMAZON_SKILL_SERVICE_ENDPOINT;
+
+                    using (var response = await client.PostAsJsonAsync(requestUri: requestUri, value: apiRequest))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -54,10 +56,11 @@ namespace AWSMagicMirror.Services
             catch (TimeoutException) { }
             catch (Exception ex)
             {
+                errorText = ex.Message;
                 Trace.WriteLine($"InternalSendRequestAsync: Unhandled exeption. {ex.Message}");
             }
 
-            return new ApiResponse() { Error = ApiResponseCode.Error };
+            return new ApiResponse() { Error = ApiResponseCode.Error, ErrorText=errorText };
         }
     }
 }

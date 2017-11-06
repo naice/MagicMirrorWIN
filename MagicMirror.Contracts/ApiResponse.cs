@@ -15,6 +15,7 @@ namespace MagicMirror.Contracts
     public class ApiResponse
     {
         public ApiResponseCode Error { get; set; }
+        public string ErrorText { get; set; }
         public JObject Result { get; set; }
     }
 }

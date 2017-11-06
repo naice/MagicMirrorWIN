@@ -137,6 +137,7 @@
     <Compile Include="Contracts\ISpeechRecognitionStateChange.cs" />
     <Compile Include="Provider\SpeechRecognitionManager.cs" />
     <Compile Include="Contracts\SpeechRecognitionResult.cs" />
+    <Compile Include="Services\Amazon\AlexaApiController.cs" />
     <Compile Include="Services\Cloud\CloudCallAttribute.cs" />
     <Compile Include="Services\Cloud\CloudService.cs" />
     <Compile Include="Services\Cloud\CloudServiceInstanceAttribute.cs" />
@@ -234,6 +235,10 @@
     <ProjectReference Include="..\ConfigServer\ConfigServer.csproj">
       <Project>{3c78c63f-db30-453b-91d6-e02389b70361}</Project>
       <Name>ConfigServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MagicMirror.Contracts\MagicMirror.Contracts.csproj">
+      <Project>{9ebf7885-4182-441f-8181-53c36e52f885}</Project>
+      <Name>MagicMirror.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\WeatherNetUWP\WeatherNetUWP.csproj">
       <Project>{0ddd635f-4b59-4689-ae51-83404d44c2af}</Project>

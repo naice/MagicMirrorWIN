@@ -40,7 +40,7 @@ namespace AWSMagicMirror.Controllers
 
                 var apiRequest = new ApiRequest
                 {
-                    Action = "Service/ProcessSkillServiceRequest",
+                    Action = "Service/Amazon/ProcessSkillServiceRequest",
                     Parameter = JObject.FromObject(request),
                 };
 
@@ -50,7 +50,7 @@ namespace AWSMagicMirror.Controllers
                     return CreateJsonResponse(apiResponse.Result.ToObject<SkillServiceResponse>());
                 }
 
-                return CreateJsonResponse("Dein Spiegel hat einen Fehler gemeldet!");
+                return CreateJsonResponse("Dein Spiegel hat einen Fehler gemeldet, Jens!");
             }
             catch (ClientNotReachableException)
             {
