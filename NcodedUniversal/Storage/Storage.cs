@@ -106,6 +106,38 @@ namespace NcodedUniversal.Storage
             }
         }
 
+        public async Task Replace(StorageContent content)
+        {
+            await storageLock.WaitAsync();
+
+            storageContent = content;
+
+            storageLock.Release();
+        }
+
+        public async Task<StorageContent> Get()
+        {
+            await storageLock.WaitAsync();
+
+            if (storageContent == null)
+            {
+                await UnsafeOpen();
+            }
+
+            try
+            {
+                return storageContent;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                storageLock.Release();
+            }
+        }
+
         public void Dispose()
         {
             if (storageLock != null) storageLock.Dispose();
