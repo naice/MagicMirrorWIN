@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 
 namespace MagicMirror.Services.Amazon
 {
-
     [CloudServiceInstance(CloudServiceInstanceType.SingletonStrict)]
     public class AlexaApiController : CloudService
     {
-
         [CloudCall("Service/Amazon/ProcessSkillServiceRequest")]
         public async Task<Contracts.ApiResponse> ProcessSkillServiceRequest(Contracts.ApiRequest request)
         {
