@@ -240,13 +240,13 @@
       <Project>{9ebf7885-4182-441f-8181-53c36e52f885}</Project>
       <Name>MagicMirror.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NcodedUniversal\NcodedUniversal.csproj">
+      <Project>{c1dfd3ee-e8c0-4cb5-8b44-a53d50ac2f8d}</Project>
+      <Name>NcodedUniversal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WeatherNetUWP\WeatherNetUWP.csproj">
       <Project>{0ddd635f-4b59-4689-ae51-83404d44c2af}</Project>
       <Name>WeatherNetUWP</Name>
-    </ProjectReference>
-    <ProjectReference Include="D:\Dropbox\Work\dev\vs\#lib\NcodedUniversal\NcodedUniversal.csproj">
-      <Project>{c1dfd3ee-e8c0-4cb5-8b44-a53d50ac2f8d}</Project>
-      <Name>NcodedUniversal</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
