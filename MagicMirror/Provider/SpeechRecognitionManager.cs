@@ -61,7 +61,6 @@ namespace MagicMirror.Provider
         {
             _speechRecognitionInterfacesLock = new SemaphoreSlim(1, 1);
             _speechRecognitionInterfaces = new HashSet<object>();
-
         }
 
         private async Task<T[]> GetSpeechRecognitionInterfaces<T>()

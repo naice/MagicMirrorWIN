@@ -90,6 +90,7 @@ namespace MagicMirror.Services.Cloud
 
                 if (isHandled)
                 {
+                    context.Response.Close();
                     return;
                 }
             }

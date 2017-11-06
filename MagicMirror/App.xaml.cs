@@ -43,7 +43,6 @@ namespace MagicMirror
                 return SerializeObject(obj);
             }
         }
-
         private class StorageIO : NcodedUniversal.Storage.IStorageIO
         {
             private readonly StorageFolder _folder;
@@ -76,17 +75,7 @@ namespace MagicMirror
                 await FileIO.WriteTextAsync(file, text);
             }
         }
-        #endregion
-
-        public App()
-        {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
-        }
-
-        Services.Cloud.CloudServer cloudServer;
-
-        class DefaultDependecyResolver : Services.Cloud.ICloudServiceDependencyResolver
+        private class CloudDependecyResolver : Services.Cloud.ICloudServiceDependencyResolver
         {
             public object[] GetDependecys(Type[] dependencyTypes)
             {
@@ -99,17 +88,30 @@ namespace MagicMirror
                 {
                     return new Services.TestDependecyImplementation0();
                 }
+                if (dependencyType == typeof(Contracts.ISpeechRecognitionManager))
+                {
+                    return Provider.SpeechRecognitionManager.Instance;
+                }
 
                 throw new NotImplementedException();
             }
         }
+        #endregion
+
+        public App()
+        {
+            this.InitializeComponent();
+            this.Suspending += OnSuspending;
+        }
+
+        Services.Cloud.CloudServer cloudServer;
 
         /// <inheritdoc/>
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            cloudServer = new Services.Cloud.CloudServer(8886, new DefaultDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
+            cloudServer = new Services.Cloud.CloudServer(8886, new CloudDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
             cloudServer.Start();
-            return;
+            //return;
 
             // defaults
             NcodedUniversal.Configuration.Begin()
@@ -121,7 +123,7 @@ namespace MagicMirror
                 .Set(new ConfigurationContract());
             
             await ConfigServer.ConfigServer.Instance.Run();
-            return;
+            //return;
 
             // disable cursor. 
             CoreWindow.GetForCurrentThread().PointerCursor = null;

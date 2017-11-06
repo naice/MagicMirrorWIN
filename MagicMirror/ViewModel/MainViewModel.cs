@@ -112,7 +112,8 @@ namespace MagicMirror.ViewModel
             {
                 if (new Configuration.Configuration().IsAlexaVoice)
                 {
-                    // TODO: INIT ALEXA 
+                    // Alexa is self initiating, when the intent arrives it gets dispatched via 
+                    // SpeechRecognitionManager.
                 }
                 else
                 {
@@ -121,10 +122,10 @@ namespace MagicMirror.ViewModel
                         Provider.SpeechRecognitionManager.Instance);
                 }
 
-                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionStateChange>(this);
-                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionResultGenerated>(Weather);
-                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionResultGenerated>(News);
-                Provider.SpeechRecognitionManager.Instance.Register<Contracts.ISpeechRecognitionResultGenerated>(Radio);
+                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionStateChange>(this);
+                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Weather);
+                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(News);
+                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Radio);
 
                 StartUpdateTask();
             });
