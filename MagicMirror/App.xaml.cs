@@ -12,6 +12,7 @@ using System.Reflection;
 using System.IO;
 using NcodedUniversal.Storage;
 using System.Linq;
+using MagicMirror.Contracts;
 
 namespace MagicMirror
 {
@@ -110,7 +111,6 @@ namespace MagicMirror
             cloudServer.Start();
             return;
 
-
             // defaults
             NcodedUniversal.Configuration.Begin()
                 .Set(new JsonConvert())
@@ -119,11 +119,8 @@ namespace MagicMirror
             ConfigServer.DependencyConfiguration.Begin()
                 .Set(new JsonConvert())
                 .Set(new ConfigurationContract());
-
-            string test = Newtonsoft.Json.JsonConvert.SerializeObject(new Configuration.Configuration());
-
+            
             await ConfigServer.ConfigServer.Instance.Run();
-
             return;
 
             // disable cursor. 

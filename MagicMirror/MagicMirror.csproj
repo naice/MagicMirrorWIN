@@ -100,6 +100,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Contracts\ConfigurationContract.cs" />
     <Compile Include="Contracts\IMediaElementControl.cs" />
     <Compile Include="Contracts\IMediaElementFeedback.cs" />
     <Compile Include="ControlExtensions\WebViewExtensions.cs" />
@@ -139,9 +140,13 @@
     <Compile Include="Contracts\SpeechRecognitionResult.cs" />
     <Compile Include="Services\Amazon\AlexaApiController.cs" />
     <Compile Include="Services\Cloud\CloudCallAttribute.cs" />
+    <Compile Include="Services\Cloud\CloudHttpContext.cs" />
     <Compile Include="Services\Cloud\CloudService.cs" />
+    <Compile Include="Services\Cloud\CloudServiceActivator.cs" />
     <Compile Include="Services\Cloud\CloudServiceInstanceAttribute.cs" />
     <Compile Include="Services\Cloud\CouldServer.cs" />
+    <Compile Include="Services\Cloud\ExposedCloudAction.cs" />
+    <Compile Include="Services\Cloud\ExposedCloudService.cs" />
     <Compile Include="Services\Cloud\ICloudDependencyResolver.cs" />
     <Compile Include="Services\TestApiController.cs" />
     <Compile Include="Tools.cs" />
