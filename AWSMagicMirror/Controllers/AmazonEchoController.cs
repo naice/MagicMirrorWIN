@@ -40,7 +40,6 @@ namespace AWSMagicMirror.Controllers
 
                 var apiRequest = new ApiRequest
                 {
-                    Action = "Service/Amazon/ProcessSkillServiceRequest",
                     Parameter = JObject.FromObject(request),
                 };
 

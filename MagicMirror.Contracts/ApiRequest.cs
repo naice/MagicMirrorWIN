@@ -9,7 +9,6 @@ namespace MagicMirror.Contracts
 {
     public class ApiRequest
     {
-        public string Action { get; set; }
         public JObject Parameter { get; set; }
     }
 }
