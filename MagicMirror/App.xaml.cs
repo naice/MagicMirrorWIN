@@ -86,7 +86,7 @@ namespace MagicMirror
 
         Services.Cloud.CloudServer cloudServer;
 
-        class DefaultDependecyResolver : Services.Cloud.ICloudDependencyResolver
+        class DefaultDependecyResolver : Services.Cloud.ICloudServiceDependencyResolver
         {
             public object[] GetDependecys(Type[] dependencyTypes)
             {

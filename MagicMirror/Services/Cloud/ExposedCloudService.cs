@@ -14,9 +14,9 @@ namespace MagicMirror.Services.Cloud
             public CloudService SingletonInstance { get; set; }
             public List<ExposedCloudAction> Routes { get; set; } = new List<ExposedCloudAction>();
 
-            private readonly ICloudDependencyResolver _cloudDependencyResolver;
+            private readonly ICloudServiceDependencyResolver _cloudDependencyResolver;
 
-            public ExposedCloudService(ICloudDependencyResolver cloudDependencyResolver)
+            public ExposedCloudService(ICloudServiceDependencyResolver cloudDependencyResolver)
             {
                 _cloudDependencyResolver = cloudDependencyResolver;
             }

@@ -5,21 +5,26 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
+using Windows.Networking.Connectivity;
 
 namespace MagicMirror.Services.Cloud
 {
     public partial class CloudServer : IDisposable
     {
-        private readonly int _port;
+        private readonly IPEndPoint _endPoint;
         private readonly Assembly[] _assemblys;
         private readonly List<ExposedCloudService> _exposedCloudServices;
-        private readonly ICloudDependencyResolver _cloudDependencyResolver;
+        private readonly ICloudServiceDependencyResolver _cloudDependencyResolver;
 
         private HttpListener _httpListener;
 
-        public CloudServer(int port, ICloudDependencyResolver cloudDependencyResolver, params Assembly[] assemblys)
+        public CloudServer(int port, ICloudServiceDependencyResolver cloudDependencyResolver, params Assembly[] assemblys)
+            : this(GetDefaultEndPoint(port), cloudDependencyResolver, assemblys) { }
+
+        public CloudServer(IPEndPoint endPoint, ICloudServiceDependencyResolver cloudDependencyResolver, params Assembly[] assemblys)
         {
-            _port = port;
+            _endPoint = endPoint;
             _exposedCloudServices = new List<ExposedCloudService>();
             _assemblys = assemblys;
             _cloudDependencyResolver = cloudDependencyResolver;
@@ -55,7 +60,10 @@ namespace MagicMirror.Services.Cloud
         }
         private ExposedCloudAction GetActionForRoute(string route)
         {
-            return _exposedCloudServices.SelectMany(service => service.Routes).Where(rroute => string.Compare(rroute.Route, route, true) == 0).FirstOrDefault();
+            return _exposedCloudServices
+                .SelectMany(service => service.Routes)
+                .Where(rroute => string.Compare(rroute.Route, route, true) == 0)
+                .FirstOrDefault();
         }
         private void TryExposeCloudService(Type cloudServiceType, CloudServiceInstanceType instanceType)
         {
@@ -127,7 +135,7 @@ namespace MagicMirror.Services.Cloud
                 _exposedCloudServices.Add(exposedCloudService);
             }
         }
-        private string MakeRoute(string route)
+        private static string MakeRoute(string route)
         {
             while (route.StartsWith("/"))
             {
@@ -140,34 +148,9 @@ namespace MagicMirror.Services.Cloud
 
             return route;
         }
-
-        public void Start()
-        {
-            if (_httpListener == null)
-            {
-                _httpListener = new HttpListener(IPAddress.Parse("192.168.0.110"), _port);
-                _httpListener.Request += _httpListener_Request;
-                _httpListener.Start();
-
-                return;
-            }
-
-            throw new InvalidOperationException("CloudServer already running.");
-        }
-
-        public void Stop()
-        {
-            if (_httpListener != null)
-            {
-                _httpListener.Close();
-                _httpListener.Dispose();
-                _httpListener = null;
-            }
-        }
-
         private string StripPort(string absPath)
         {
-            string portStr = _port.ToString();
+            string portStr = _endPoint.Port.ToString();
 
             if (absPath.StartsWith(portStr))
             {
@@ -177,9 +160,31 @@ namespace MagicMirror.Services.Cloud
             return absPath;
         }
 
-        private async void  _httpListener_Request(object sender, HttpListenerRequestEventArgs e)
+        public void Start()
         {
-            CloudHttpContext context = new CloudHttpContext(e.Request, e.Response);
+            if (_httpListener == null)
+            {
+                _httpListener = new HttpListener(_endPoint);
+                _httpListener.Request += (sender, e) => ProcessHttpRequestOwnTask(new CloudHttpContext(e.Request, e.Response));
+                _httpListener.Start();
+
+                return;
+            }
+
+            throw new InvalidOperationException("CloudServer already running.");
+        }
+        public void Stop()
+        {
+            if (_httpListener != null)
+            {
+                _httpListener.Close();
+                _httpListener.Dispose();
+                _httpListener = null;
+            }
+        }
+        
+        private async Task ProcessHttpRequest(CloudHttpContext context)
+        {
             string route = MakeRoute(StripPort(context.Request.Url.AbsolutePath));
             var cloudAction = GetActionForRoute(route);
 
@@ -236,6 +241,10 @@ namespace MagicMirror.Services.Cloud
 
             context.Response.Close();
         }
+        private void ProcessHttpRequestOwnTask(CloudHttpContext context)
+        {
+            Task.Factory.StartNew(async () => await ProcessHttpRequest(context));
+        }
 
         public void Dispose()
         {
@@ -244,6 +253,33 @@ namespace MagicMirror.Services.Cloud
                 _httpListener.Close();
                 _httpListener.Dispose();
                 _httpListener = null;
+            }
+        }
+        
+        private static IPEndPoint GetDefaultEndPoint(int port)
+        {
+            List<IPAddress> ipAddresses = new List<IPAddress>();
+            var hostnames = NetworkInformation.GetHostNames();
+            foreach (var hn in hostnames)
+            {
+                if (hn.IPInformation != null && 
+                     (hn.IPInformation.NetworkAdapter.IanaInterfaceType == 71 || 
+                      hn.IPInformation.NetworkAdapter.IanaInterfaceType == 6))
+                {
+                    string strIPAddress = hn.DisplayName;
+                    
+                    if (IPAddress.TryParse(strIPAddress, out IPAddress address))
+                        ipAddresses.Add(address);
+                }
+            }
+
+            if (ipAddresses.Count < 1)
+            {
+                return new IPEndPoint(IPAddress.Loopback, port);
+            }
+            else
+            {
+                return new IPEndPoint(ipAddresses[ipAddresses.Count - 1], port);
             }
         }
     }

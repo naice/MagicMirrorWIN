@@ -17,7 +17,6 @@ namespace MagicMirror.Services.Amazon
         public async Task<Contracts.ApiResponse> ProcessSkillServiceRequest(Contracts.ApiRequest request)
         {
             var serviceRequest = request.Parameter.ToObject<Contracts.AmazonEcho.SkillServiceRequest>();
-            
 
 
             var result = new Contracts.AmazonEcho.SkillServiceResponse();

@@ -9,7 +9,7 @@ namespace MagicMirror.Services.Cloud
 {
     internal class CloudServiceActivator
     {
-        public CloudService Activate(Type serviceType, ICloudDependencyResolver dependecyResolver)
+        public CloudService Activate(Type serviceType, ICloudServiceDependencyResolver dependecyResolver)
         {
             var constuctors = serviceType.GetConstructors(BindingFlags.Instance | BindingFlags.Public);
 
@@ -41,7 +41,7 @@ namespace MagicMirror.Services.Cloud
             throw new InvalidOperationException(
                 $"{nameof(CloudServiceActivator)}: Could not find a matching constructor for "+
                 $"{serviceType.FullName}. Either provide a parameterless constructor or provide "+
-                $"the correct dependencys via {nameof(ICloudDependencyResolver)}.");
+                $"the correct dependencys via {nameof(ICloudServiceDependencyResolver)}.");
         }
     }
 }
