@@ -38,6 +38,8 @@ namespace AWSMagicMirror.Controllers
                     throw new UnauthorizedAccessException();
                 }
 
+                // clear request user id.
+                request.Session.User.UserId = null;
                 var apiRequest = new ApiRequest
                 {
                     Parameter = JObject.FromObject(request),
