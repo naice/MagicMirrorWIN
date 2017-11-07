@@ -112,6 +112,8 @@
     <Compile Include="Converter\Json.cs" />
     <Compile Include="InvalidConfigurationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schedule.cs" />
+    <Compile Include="Scheduler.cs" />
     <Compile Include="Storage\IStorageIO.cs" />
     <Compile Include="Storage\Storage.cs" />
     <EmbeddedResource Include="Properties\NcodedUniversal.rd.xml" />

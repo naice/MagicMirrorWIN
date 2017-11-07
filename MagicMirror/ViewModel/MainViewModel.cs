@@ -140,8 +140,8 @@ namespace MagicMirror.ViewModel
             Manager.ScheduleManager.Instance.Scheduler.StartSchedule(
                 Manager.ScheduleManager.Instance.Scheduler.CreateRecurringScheduleFromToday(
                     () => { UI.EnsureOn(() => ShowScreenSaver = true); },
-                    config.ScreenSaverBegin, 
-                    Manager.Schedule.RecurrenceDaily)
+                    config.ScreenSaverBegin,
+                    NcodedUniversal.Schedule.RecurrenceDaily)
                 );
 
             // Turnoff ScreenSaver
@@ -149,7 +149,7 @@ namespace MagicMirror.ViewModel
                 Manager.ScheduleManager.Instance.Scheduler.CreateRecurringScheduleFromToday(
                     () => { UI.EnsureOn(() => ShowScreenSaver = false); },
                     config.ScreenSaverEnd,
-                    Manager.Schedule.RecurrenceDaily)
+                    NcodedUniversal.Schedule.RecurrenceDaily)
                 );
 
             await Task.Factory.StartNew(async() => {
