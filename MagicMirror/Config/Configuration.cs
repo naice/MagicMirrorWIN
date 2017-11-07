@@ -25,6 +25,8 @@ namespace MagicMirror.Configuration
 
     public class Configuration
     {
+        // COMPLIMENTS
+
         public Dictionary<DayTime, List<string>> DayTimeCompliments { get; set; } = new Dictionary<DayTime, List<string>>() {
             {
                 DayTime.Morning,
@@ -53,6 +55,7 @@ namespace MagicMirror.Configuration
         };
 
         // SCREEN SAVER
+
         public TimeSpan ScreenSaverBegin { get; set; } = TimeSpan.FromHours(1);
         public TimeSpan ScreenSaverEnd { get; set; } = TimeSpan.FromHours(6);
 
@@ -84,6 +87,7 @@ namespace MagicMirror.Configuration
         public string WeatherLanguage { get; set; } = "de";
 
         // NEWS CONFIG
+
         public Factory.RSSFeed.IRSSItemCreator[] NewsFeeds { get; set; } = new Factory.RSSFeed.IRSSItemCreator[]
         {
             new Factory.RSSFeed.RSSCreatorGolem(),
@@ -108,10 +112,7 @@ namespace MagicMirror.Configuration
 
         // ALEXA 
 
-        public string AlexaCloudAPIKey { get; set; } = "06E6D37B-AEF7-409F-B815-114C82047094";
-
-        
-        public bool IsAlexaVoice { get; set; } = false;
-        public string AlexaAPIKey { get; set; } = "";
+        public string AlexaCloudAPIKey { get; set; } = "06E6D37B-AEF7-409F-B815-114C82047094";        
+        public bool IsAlexaVoice { get; set; } = true;
     }
 }
