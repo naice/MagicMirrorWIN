@@ -37,11 +37,6 @@ namespace MagicMirror.Services.Amazon
 
             var serviceRequest = request.Parameter.ToObject<Contracts.AmazonEcho.SkillServiceRequest>();
 
-            System.Diagnostics.Debug.WriteLine("REQ ------------------------------------");
-            System.Diagnostics.Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(serviceRequest, Newtonsoft.Json.Formatting.Indented));
-            System.Diagnostics.Debug.WriteLine("REQ ------------------------------------");
-            System.Diagnostics.Debug.WriteLine("");
-            System.Diagnostics.Debug.WriteLine("");
             if (serviceRequest.Request.Type == "LaunchRequest")
             {
                 // session is launched...
