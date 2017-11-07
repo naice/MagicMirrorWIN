@@ -119,13 +119,13 @@ namespace MagicMirror.ViewModel
                 {
                     // init default build in speech recognition.
                     SpeechRecognitionProvider = new Provider.BuildInSpeechRecognitionProvider(
-                        Provider.SpeechRecognitionManager.Instance);
+                        Manager.SpeechRecognitionManager.Instance);
                 }
 
-                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionStateChange>(this);
-                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Weather);
-                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(News);
-                Provider.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Radio);
+                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionStateChange>(this);
+                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Weather);
+                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(News);
+                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Radio);
 
                 StartUpdateTask();
             });

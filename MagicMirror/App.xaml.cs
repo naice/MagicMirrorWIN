@@ -90,7 +90,7 @@ namespace MagicMirror
                 }
                 if (dependencyType == typeof(Contracts.ISpeechRecognitionManager))
                 {
-                    return Provider.SpeechRecognitionManager.Instance;
+                    return Manager.SpeechRecognitionManager.Instance;
                 }
 
                 throw new NotImplementedException();

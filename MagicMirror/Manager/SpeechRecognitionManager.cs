@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.SpeechRecognition;
 
-namespace MagicMirror.Provider
+namespace MagicMirror.Manager
 {
     // Distribution logic for speech interactions.
     public class SpeechRecognitionManager : ISpeechRecognitionManager

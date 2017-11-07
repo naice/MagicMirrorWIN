@@ -136,7 +136,7 @@
     <Compile Include="Contracts\ISpeechRecognitionManager.cs" />
     <Compile Include="Contracts\ISpeechRecognitionResultGenerated.cs" />
     <Compile Include="Contracts\ISpeechRecognitionStateChange.cs" />
-    <Compile Include="Provider\SpeechRecognitionManager.cs" />
+    <Compile Include="Manager\SpeechRecognitionManager.cs" />
     <Compile Include="Contracts\SpeechRecognitionResult.cs" />
     <Compile Include="Services\Amazon\AlexaApiController.cs" />
     <Compile Include="Services\Cloud\CloudServiceApiRouteHandler.cs" />
