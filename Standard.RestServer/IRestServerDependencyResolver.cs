@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
     /// <summary>
-    /// Simple dependency resolver for your <see cref="CloudService"/> implementations.
+    /// Simple dependency resolver for your <see cref="RestServerService"/> implementations.
     /// </summary>
-    public interface ICloudServiceDependencyResolver
+    public interface IRestServerServiceDependencyResolver
     {
         /// <summary>
         /// Return a single dependecy matching the given type.
         /// </summary>
         object GetDependency(Type dependencyType);
         /// <summary>
-        /// Return dependecys in equal order as requested. Should use <see cref="ICloudServiceDependencyResolver.GetDependency(Type)"/>.
+        /// Return dependecys in equal order as requested. Should use <see cref="IRestServerServiceDependencyResolver.GetDependency(Type)"/>.
         /// </summary>
         object[] GetDependecys(Type[] dependencyTypes);
     }

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
-    public interface ICloudRouteHandler
+    public interface IRestServerRouteHandler
     {
         /// <summary>
         /// Handles a route. If a request is not closed must return false! Return true, if request is handled, 
         /// otherwise other handlers would process your context.
         /// </summary>
-        Task<bool> HandleRouteAsync(CloudHttpContext context);
+        Task<bool> HandleRouteAsync(RestServerHttpContext context);
     }
 }

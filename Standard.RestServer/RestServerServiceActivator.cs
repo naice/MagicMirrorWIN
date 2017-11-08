@@ -5,11 +5,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
-    internal class CloudServiceActivator
+    internal class RestServerServiceActivator
     {
-        public CloudService Activate(Type serviceType, ICloudServiceDependencyResolver dependecyResolver)
+        public RestServerService Activate(Type serviceType, IRestServerServiceDependencyResolver dependecyResolver)
         {
             var constuctors = serviceType.GetConstructors(BindingFlags.Instance | BindingFlags.Public);
 
@@ -19,7 +19,7 @@ namespace MagicMirror.Services.Cloud
                 if (parameters == null || parameters.Length == 0)
                 {
                     // default constructor
-                    return constructor.Invoke(new object[0]) as CloudService;
+                    return constructor.Invoke(new object[0]) as RestServerService;
                 }
 
                 if (dependecyResolver != null)
@@ -31,17 +31,17 @@ namespace MagicMirror.Services.Cloud
                         // no dependecys found.
                         continue;
                     }
-                    if (constructor.Invoke(dependencys) is CloudService cloudService)
+                    if (constructor.Invoke(dependencys) is RestServerService RestServerService)
                     {
-                        return cloudService;
+                        return RestServerService;
                     }
                 }
             }
 
             throw new InvalidOperationException(
-                $"{nameof(CloudServiceActivator)}: Could not find a matching constructor for "+
+                $"{nameof(RestServerServiceActivator)}: Could not find a matching constructor for "+
                 $"{serviceType.FullName}. Either provide a parameterless constructor or provide "+
-                $"the correct dependencys via {nameof(ICloudServiceDependencyResolver)}.");
+                $"the correct dependencys via {nameof(IRestServerServiceDependencyResolver)}.");
         }
     }
 }

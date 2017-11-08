@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
-    public enum CloudServiceInstanceType
+    public enum RestServerServiceInstanceType
     {
         /// <summary>
         /// Default Option.
@@ -19,18 +19,18 @@ namespace MagicMirror.Services.Cloud
         SingletonStrict,
     }
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public sealed class CloudServiceInstanceAttribute : Attribute
+    public sealed class RestServerServiceInstanceAttribute : Attribute
     {
-        readonly CloudServiceInstanceType cloudServiceInstanceType;
+        readonly RestServerServiceInstanceType _restServerServiceInstanceType;
         
-        public CloudServiceInstanceAttribute(CloudServiceInstanceType cloudServiceInstanceType)
+        public RestServerServiceInstanceAttribute(RestServerServiceInstanceType RestServerServiceInstanceType)
         {
-            this.cloudServiceInstanceType = cloudServiceInstanceType;
+            this._restServerServiceInstanceType = RestServerServiceInstanceType;
         }
 
-        public CloudServiceInstanceType CloudServiceInstanceType
+        public RestServerServiceInstanceType RestServerServiceInstanceType
         {
-            get { return cloudServiceInstanceType; }
+            get { return RestServerServiceInstanceType; }
         }
     }
 }

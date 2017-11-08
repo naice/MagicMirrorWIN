@@ -11,8 +11,8 @@
     <AssemblyName>MagicMirror</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -137,18 +137,6 @@
     <Compile Include="Manager\SpeechRecognitionManager.cs" />
     <Compile Include="Contracts\SpeechRecognitionResult.cs" />
     <Compile Include="Services\Amazon\AlexaApiController.cs" />
-    <Compile Include="Services\Cloud\CloudServiceApiRouteHandler.cs" />
-    <Compile Include="Services\Cloud\CloudCallAttribute.cs" />
-    <Compile Include="Services\Cloud\CloudHttpContext.cs" />
-    <Compile Include="Services\Cloud\CloudService.cs" />
-    <Compile Include="Services\Cloud\CloudServiceActivator.cs" />
-    <Compile Include="Services\Cloud\CloudServiceInstanceAttribute.cs" />
-    <Compile Include="Services\Cloud\CouldServer.cs" />
-    <Compile Include="Services\Cloud\ExposedCloudAction.cs" />
-    <Compile Include="Services\Cloud\ExposedCloudService.cs" />
-    <Compile Include="Services\Cloud\ICloudDependencyResolver.cs" />
-    <Compile Include="Services\Cloud\ICloudRouteHandler.cs" />
-    <Compile Include="Services\TestApiController.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\Calendar.cs" />
@@ -228,9 +216,6 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>2.0.0</Version>
     </PackageReference>
-    <PackageReference Include="NETStandard.HttpListener">
-      <Version>1.0.3.2</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\API.YouTube\API.YouTube.csproj">
@@ -248,6 +233,10 @@
     <ProjectReference Include="..\NcodedUniversal\NcodedUniversal.csproj">
       <Project>{c1dfd3ee-e8c0-4cb5-8b44-a53d50ac2f8d}</Project>
       <Name>NcodedUniversal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Standard.RestServer\NETStandard.RestServer.csproj">
+      <Project>{753861cd-69b3-4624-a992-e8cf4f7e400e}</Project>
+      <Name>NETStandard.RestServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\WeatherNetUWP\WeatherNetUWP.csproj">
       <Project>{0ddd635f-4b59-4689-ae51-83404d44c2af}</Project>

@@ -5,14 +5,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
-    public class CloudHttpContext
+    public class RestServerHttpContext
     {
         public HttpListenerRequest Request { get; private set; }
         public HttpListenerResponse Response { get; private set; }
 
-        public CloudHttpContext(HttpListenerRequest request, HttpListenerResponse response)
+        public RestServerHttpContext(HttpListenerRequest request, HttpListenerResponse response)
         {
             Request = request;
             Response = response;

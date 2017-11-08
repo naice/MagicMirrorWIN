@@ -7,14 +7,13 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using Windows.Networking.Connectivity;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
-    public partial class CloudServer : IDisposable
+    public partial class RestServer : IDisposable
     {
         private readonly IPEndPoint _endPoint;
-        private readonly ConcurrentBag<ICloudRouteHandler> _cloudRouteHandlers;
+        private readonly ConcurrentBag<IRestServerRouteHandler> _RestServerRouteHandlers;
 
         public bool IsRunning {
             get {
@@ -29,32 +28,31 @@ namespace MagicMirror.Services.Cloud
             }
         }
 
-        private HttpListener _httpListener;
+        private System.Net.Http.HttpListener _httpListener;
 
-        public CloudServer(int port, ICloudServiceDependencyResolver cloudDependencyResolver, params Assembly[] assemblys)
-            : this(GetDefaultEndPoint(port), cloudDependencyResolver, assemblys) { }
-        public CloudServer(IPEndPoint endPoint, ICloudServiceDependencyResolver cloudDependencyResolver, params Assembly[] assemblys)
+        public RestServer(int port, IRestServerServiceDependencyResolver RestServerDependencyResolver, params Assembly[] assemblys)
+            : this(GetDefaultEndPoint(port), RestServerDependencyResolver, assemblys) { }
+        public RestServer(IPEndPoint endPoint, IRestServerServiceDependencyResolver RestServerDependencyResolver, params Assembly[] assemblys)
         {
             _endPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
-
-
+            
             if (assemblys == null || assemblys.Length == 0)
             {
-                _cloudRouteHandlers = new ConcurrentBag<ICloudRouteHandler>();
+                _RestServerRouteHandlers = new ConcurrentBag<IRestServerRouteHandler>();
             }
             else
             {
-                _cloudRouteHandlers = new ConcurrentBag<ICloudRouteHandler>(
-                    new ICloudRouteHandler[] {
-                       new CloudServiceApiRouteHandler(endPoint, cloudDependencyResolver, assemblys),
+                _RestServerRouteHandlers = new ConcurrentBag<IRestServerRouteHandler>(
+                    new IRestServerRouteHandler[] {
+                       new RestServerServiceRouteHandler(endPoint, RestServerDependencyResolver, assemblys),
                     }
                 );
             }
         }
 
-        public CloudServer RegisterRouteHandler(ICloudRouteHandler handler)
+        public RestServer RegisterRouteHandler(IRestServerRouteHandler handler)
         {
-            _cloudRouteHandlers.Add(handler);
+            _RestServerRouteHandlers.Add(handler);
 
             return this;
         }
@@ -63,14 +61,14 @@ namespace MagicMirror.Services.Cloud
         {
             if (_httpListener == null)
             {
-                _httpListener = new HttpListener(_endPoint);
-                _httpListener.Request += (sender, e) => ProcessHttpRequestOwnTask(new CloudHttpContext(e.Request, e.Response));
+                _httpListener = new System.Net.Http.HttpListener(_endPoint);
+                _httpListener.Request += (sender, e) => ProcessHttpRequestOwnTask(new RestServerHttpContext(e.Request, e.Response));
                 _httpListener.Start();
 
                 return;
             }
 
-            throw new InvalidOperationException("CloudServer already running.");
+            throw new InvalidOperationException("RestServerServer already running.");
         }
         public void Stop()
         {
@@ -82,13 +80,13 @@ namespace MagicMirror.Services.Cloud
             }
         }
         
-        private async Task ProcessHttpRequest(CloudHttpContext context)
+        private async Task ProcessHttpRequest(RestServerHttpContext context)
         {
-            foreach (var routeHandler in _cloudRouteHandlers)
+            foreach (var routeHandler in _RestServerRouteHandlers)
             {
                 var isHandled = await routeHandler.HandleRouteAsync(context);
 
-                if (isHandled)
+                if (isHandled && !context.Response.IsClosed)
                 {
                     context.Response.Close();
                     return;
@@ -98,7 +96,7 @@ namespace MagicMirror.Services.Cloud
             context.Response.NotFound();
             context.Response.Close();
         }
-        private void ProcessHttpRequestOwnTask(CloudHttpContext context)
+        private void ProcessHttpRequestOwnTask(RestServerHttpContext context)
         {
             Task.Factory.StartNew(async () => await ProcessHttpRequest(context));
         }
@@ -115,6 +113,9 @@ namespace MagicMirror.Services.Cloud
         
         private static IPEndPoint GetDefaultEndPoint(int port)
         {
+            throw new NotImplementedException();
+
+            /*
             List<IPAddress> ipAddresses = new List<IPAddress>();
             var hostnames = NetworkInformation.GetHostNames();
             foreach (var hn in hostnames)
@@ -138,6 +139,7 @@ namespace MagicMirror.Services.Cloud
             {
                 return new IPEndPoint(ipAddresses[ipAddresses.Count - 1], port);
             }
+            */
         }
     }
 }

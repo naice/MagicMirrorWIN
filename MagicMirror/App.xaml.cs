@@ -13,6 +13,7 @@ using System.IO;
 using NcodedUniversal.Storage;
 using System.Linq;
 using MagicMirror.Contracts;
+using NETStandard.RestServer;
 
 namespace MagicMirror
 {
@@ -21,7 +22,7 @@ namespace MagicMirror
         public static CoreDispatcher Dispatcher { get; private set; }
 
         #region Default implementations
-        private class JsonConvert : NcodedUniversal.Converter.IJsonConvert, ConfigServer.Converter.IJsonConvert
+        private class JsonConvert : NcodedUniversal.Converter.IJsonConvert, IJsonConvert
         {
             public T DeserializeObject<T>(string jsonString) where T : class
             {
@@ -43,7 +44,7 @@ namespace MagicMirror
                 return SerializeObject(obj);
             }
         }
-        private class StorageIO : NcodedUniversal.Storage.IStorageIO
+        private class StorageIO : IStorageIO
         {
             private readonly StorageFolder _folder;
 
@@ -75,7 +76,7 @@ namespace MagicMirror
                 await FileIO.WriteTextAsync(file, text);
             }
         }
-        private class CloudDependecyResolver : Services.Cloud.ICloudServiceDependencyResolver
+        private class RestServerDependecyResolver : IRestServerServiceDependencyResolver
         {
             public object[] GetDependecys(Type[] dependencyTypes)
             {
@@ -84,11 +85,7 @@ namespace MagicMirror
 
             public object GetDependency(Type dependencyType)
             {
-                if (dependencyType == typeof(Services.ITestDependency))
-                {
-                    return new Services.TestDependecyImplementation0();
-                }
-                if (dependencyType == typeof(Contracts.ISpeechRecognitionManager))
+                if (dependencyType == typeof(ISpeechRecognitionManager))
                 {
                     return Manager.SpeechRecognitionManager.Instance;
                 }
@@ -104,13 +101,13 @@ namespace MagicMirror
             this.Suspending += OnSuspending;
         }
 
-        Services.Cloud.CloudServer cloudServer;
+        RestServer _restServer;
 
         /// <inheritdoc/>
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            cloudServer = new Services.Cloud.CloudServer(8886, new CloudDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
-            cloudServer.Start();
+            _restServer = new RestServer(8886, new RestServerDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
+            _restServer.Start();
             //return;
 
             // defaults

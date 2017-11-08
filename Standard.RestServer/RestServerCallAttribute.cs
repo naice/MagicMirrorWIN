@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
-    sealed class CloudCallAttribute : Attribute
+    public sealed class RestServerCallAttribute : Attribute
     {
         readonly string route;
         readonly string methods;
 
 
-        public CloudCallAttribute(string route, string methods = "POST,GET,PUT")
+        public RestServerCallAttribute(string route, string methods = "POST,GET,PUT")
         {
             this.route = route;
             this.methods = methods;

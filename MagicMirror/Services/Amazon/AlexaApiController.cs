@@ -1,5 +1,5 @@
 ﻿using MagicMirror.Contracts;
-using MagicMirror.Services.Cloud;
+using NETStandard.RestServer;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace MagicMirror.Services.Amazon
 {
-    [CloudServiceInstance(CloudServiceInstanceType.SingletonLazy)]
-    public class AlexaApiController : CloudService
+    [RestServerServiceInstance(RestServerServiceInstanceType.SingletonLazy)]
+    public class AlexaApiController : RestServerService
     {
         private readonly ISpeechRecognitionManager _speechRecognitionManager;
 
@@ -19,7 +19,7 @@ namespace MagicMirror.Services.Amazon
             _speechRecognitionManager = speechRecognitionManager;
         }
 
-        [CloudCall("Service/Amazon/ProcessSkillServiceRequest")]
+        [RestServerCall("Service/Amazon/ProcessSkillServiceRequest")]
         public async Task<ApiResponse> ProcessSkillServiceRequest(ApiRequest request)
         {
             if (_speechRecognitionManager == null)

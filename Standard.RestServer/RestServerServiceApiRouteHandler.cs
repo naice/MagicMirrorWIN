@@ -7,20 +7,20 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Services.Cloud
+namespace NETStandard.RestServer
 {
-    internal class CloudServiceApiRouteHandler : ICloudRouteHandler
+    internal class RestServerServiceRouteHandler : IRestServerRouteHandler
     {
         private readonly IPEndPoint _endPoint;
-        private readonly List<ExposedCloudService> _exposedCloudServices;
-        private readonly ICloudServiceDependencyResolver _cloudDependencyResolver;
+        private readonly List<ExposedRestServerService> _exposedRestServerServices;
+        private readonly IRestServerServiceDependencyResolver _RestServerDependencyResolver;
         private readonly Assembly[] _assemblys;
 
-        public CloudServiceApiRouteHandler(IPEndPoint endPoint, ICloudServiceDependencyResolver cloudDependencyResolver, params Assembly[] assemblys)
+        public RestServerServiceRouteHandler(IPEndPoint endPoint, IRestServerServiceDependencyResolver RestServerDependencyResolver, params Assembly[] assemblys)
         {
-            _exposedCloudServices = new List<ExposedCloudService>();
+            _exposedRestServerServices = new List<ExposedRestServerService>();
             _assemblys = assemblys;
-            _cloudDependencyResolver = cloudDependencyResolver;
+            _RestServerDependencyResolver = RestServerDependencyResolver;
             _endPoint = endPoint;
 
             RegisterExposedServices();
@@ -28,23 +28,23 @@ namespace MagicMirror.Services.Cloud
 
         private void RegisterExposedServices()
         {
-            var cloudServiceBaseType = typeof(CloudService);
+            var RestServerServiceBaseType = typeof(RestServerService);
             foreach (var assembly in _assemblys)
             {
                 var test = assembly.GetTypes();
 
 
-                foreach (var cloudServiceType in assembly.GetTypes()
-                    .Where(type => type != cloudServiceBaseType && type.GetTypeInfo().BaseType == cloudServiceBaseType))
+                foreach (var RestServerServiceType in assembly.GetTypes()
+                    .Where(type => type != RestServerServiceBaseType && type.GetTypeInfo().BaseType == RestServerServiceBaseType))
                 {
-                    var instanceType = CloudServiceInstanceType.Instance;
-                    var attrib = cloudServiceType.GetTypeInfo().GetCustomAttribute<CloudServiceInstanceAttribute>();
+                    var instanceType = RestServerServiceInstanceType.Instance;
+                    var attrib = RestServerServiceType.GetTypeInfo().GetCustomAttribute<RestServerServiceInstanceAttribute>();
                     if (attrib != null)
                     {
-                        instanceType = attrib.CloudServiceInstanceType;
+                        instanceType = attrib.RestServerServiceInstanceType;
                     }
 
-                    TryExposeCloudService(cloudServiceType, instanceType);
+                    TryExposeRestServerService(RestServerServiceType, instanceType);
                 }
             }
         }
@@ -52,45 +52,45 @@ namespace MagicMirror.Services.Cloud
         {
             return GetActionForRoute(route) != null;
         }
-        private ExposedCloudAction GetActionForRoute(string route)
+        private ExposedRestServerAction GetActionForRoute(string route)
         {
-            return _exposedCloudServices
+            return _exposedRestServerServices
                 .SelectMany(service => service.Routes)
                 .Where(rroute => string.Compare(rroute.Route, route, true) == 0)
                 .FirstOrDefault();
         }
-        private void TryExposeCloudService(Type cloudServiceType, CloudServiceInstanceType instanceType)
+        private void TryExposeRestServerService(Type RestServerServiceType, RestServerServiceInstanceType instanceType)
         {
-            ExposedCloudService exposedCloudService = new ExposedCloudService(_cloudDependencyResolver)
+            ExposedRestServerService exposedRestServerService = new ExposedRestServerService(_RestServerDependencyResolver)
             {
-                ServiceType = cloudServiceType,
+                ServiceType = RestServerServiceType,
                 InstanceType = instanceType,
             };
 
-            foreach (var method in cloudServiceType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var method in RestServerServiceType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {
-                var methodAttribute = method.GetCustomAttribute<CloudCallAttribute>();
+                var methodAttribute = method.GetCustomAttribute<RestServerCallAttribute>();
                 if (methodAttribute == null)
                 {
                     continue;
                 }
                 if (string.IsNullOrEmpty(methodAttribute.Route))
                 {
-                    throw new ArgumentException($"Invalid route given: {methodAttribute.Route}", nameof(CloudCallAttribute.Route));
+                    throw new ArgumentException($"Invalid route given: {methodAttribute.Route}", nameof(RestServerCallAttribute.Route));
                 }
 
                 var routeStr = MakeRoute(methodAttribute.Route);
 
                 if (IsRouteAlreadyRegistered(routeStr))
                 {
-                    throw new ArgumentException($"Route already registered. {routeStr}", nameof(CloudCallAttribute.Route));
+                    throw new ArgumentException($"Route already registered. {routeStr}", nameof(RestServerCallAttribute.Route));
                 }
 
                 Type inputType = null;
                 var parameters = method.GetParameters();
                 if (parameters != null && parameters.Length > 1)
                 {
-                    Log.w($"{nameof(CloudServiceApiRouteHandler)}: Method Parameter missmatch. Too many parameters. {routeStr}");
+                    Log.w($"{nameof(RestServerServiceRouteHandler)}: Method Parameter missmatch. Too many parameters. {routeStr}");
                     continue;
                 }
                 if (parameters != null && parameters.Length == 1)
@@ -99,34 +99,34 @@ namespace MagicMirror.Services.Cloud
                     var parameterTypeInfo = parameterInfo.ParameterType.GetTypeInfo();
                     if (!parameterTypeInfo.IsClass)
                     {
-                        Log.w($"{nameof(CloudServiceApiRouteHandler)}: Method Parameter missmatch. Parameter is no class! {routeStr}");
+                        Log.w($"{nameof(RestServerServiceRouteHandler)}: Method Parameter missmatch. Parameter is no class! {routeStr}");
                         continue;
                     }
 
                     inputType = parameterInfo.ParameterType;
                 }
 
-                var exposedCloudAction = new ExposedCloudAction(exposedCloudService, method)
+                var exposedRestServerAction = new ExposedRestServerAction(exposedRestServerService, method)
                 {
                     OutputType = method.ReturnType,
                     InputType = inputType,
                     Route = routeStr,
                     Methods = methodAttribute.Methods?.Split(',').Select(str => str.Trim().ToUpper()).ToArray() ?? new string[0]
                 };
-                exposedCloudService.Routes.Add(exposedCloudAction);
+                exposedRestServerService.Routes.Add(exposedRestServerAction);
 
-                Log.i($"{nameof(CloudServiceApiRouteHandler)}: \"{cloudServiceType.FullName}\" exposed API method \"{exposedCloudAction.Route}\".");
+                Log.i($"{nameof(RestServerServiceRouteHandler)}: \"{RestServerServiceType.FullName}\" exposed API method \"{exposedRestServerAction.Route}\".");
             }
 
             // We got any routes exposed? 
-            if (exposedCloudService.Routes.Count > 0)
+            if (exposedRestServerService.Routes.Count > 0)
             {
-                if (exposedCloudService.InstanceType == CloudServiceInstanceType.SingletonStrict)
+                if (exposedRestServerService.InstanceType == RestServerServiceInstanceType.SingletonStrict)
                 {
-                    exposedCloudService.GetInstance(null);
+                    exposedRestServerService.GetInstance(null);
                 }
 
-                _exposedCloudServices.Add(exposedCloudService);
+                _exposedRestServerServices.Add(exposedRestServerService);
             }
         }
         private static string MakeRoute(string route)
@@ -154,11 +154,11 @@ namespace MagicMirror.Services.Cloud
             return absPath;
         }
 
-        public async Task<bool> HandleRouteAsync(CloudHttpContext context)
+        public async Task<bool> HandleRouteAsync(RestServerHttpContext context)
         {
             string route = MakeRoute(StripPort(context.Request.Url.AbsolutePath));
-            var cloudAction = GetActionForRoute(route);
-            if (cloudAction == null)
+            var RestServerAction = GetActionForRoute(route);
+            if (RestServerAction == null)
             {
                 return false;
             }
@@ -167,9 +167,9 @@ namespace MagicMirror.Services.Cloud
 
             try
             {
-                if (cloudAction.InputType != null)
+                if (RestServerAction.InputType != null)
                 {
-                    inputParameter = JsonConvert.DeserializeObject(await context.Request.ReadContentAsStringAsync(), cloudAction.InputType);
+                    inputParameter = JsonConvert.DeserializeObject(await context.Request.ReadContentAsStringAsync(), RestServerAction.InputType);
                 }
             }
             catch (JsonException ex)
@@ -183,7 +183,7 @@ namespace MagicMirror.Services.Cloud
             object result = null;
             try
             {
-                result = await cloudAction.Execute(context, inputParameter);
+                result = await RestServerAction.Execute(context, inputParameter);
             }
             catch (Exception)
             {
