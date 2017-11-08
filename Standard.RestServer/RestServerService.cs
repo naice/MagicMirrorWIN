@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 
 namespace NETStandard.RestServer
 {
+    /// <summary>
+    /// Base class for Services.
+    /// </summary>
     public abstract class RestServerService
     {
+        /// <summary>
+        /// The current request. Only safe to access while inside a <see cref="RestServerCallAttribute"/> function.
+        /// </summary>
         public HttpListenerRequest Request { get; set; }
+        /// <summary>
+        /// The current response. Only safe to access while inside a <see cref="RestServerCallAttribute"/> function.
+        /// </summary>
         public HttpListenerResponse Response { get; set; }
-
-        public RestServerService()
-        {
-
-        }
     }
 }

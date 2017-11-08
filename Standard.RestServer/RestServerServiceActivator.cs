@@ -35,6 +35,8 @@ namespace NETStandard.RestServer
                     {
                         return RestServerService;
                     }
+
+                    throw new InvalidOperationException("Should never happen.");
                 }
             }
 
