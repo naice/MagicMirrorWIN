@@ -110,11 +110,23 @@ namespace NETStandard.RestServer
                 _httpListener = null;
             }
         }
-        
+
         private static IPEndPoint GetDefaultEndPoint(int port)
         {
-            throw new NotImplementedException();
+            var networkInterfaces = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
+            List<IPAddress> ipAddresses = new List<IPAddress>();
 
+            foreach (var networkInterface in networkInterfaces)
+            {
+                if (networkInterface != null &&
+                    networkInterface.NetworkInterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Ethernet &&
+                    networkInterface.NetworkInterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211)
+                {
+
+                }
+            }
+
+            throw new Exception();
             /*
             List<IPAddress> ipAddresses = new List<IPAddress>();
             var hostnames = NetworkInformation.GetHostNames();
