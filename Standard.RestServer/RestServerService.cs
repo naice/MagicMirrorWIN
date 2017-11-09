@@ -13,11 +13,11 @@ namespace NETStandard.RestServer
     public abstract class RestServerService
     {
         /// <summary>
-        /// The current request. Only safe to access while inside a <see cref="RestServerCallAttribute"/> function.
+        /// The current request. Only safe to access while inside a <see cref="RestServerServiceCallAttribute"/> function.
         /// </summary>
         public HttpListenerRequest Request { get; set; }
         /// <summary>
-        /// The current response. Only safe to access while inside a <see cref="RestServerCallAttribute"/> function.
+        /// The current response. Only safe to access while inside a <see cref="RestServerServiceCallAttribute"/> function.
         /// </summary>
         public HttpListenerResponse Response { get; set; }
     }

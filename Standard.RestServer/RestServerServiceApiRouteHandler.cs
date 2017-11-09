@@ -69,21 +69,21 @@ namespace NETStandard.RestServer
 
             foreach (var method in RestServerServiceType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {
-                var methodAttribute = method.GetCustomAttribute<RestServerCallAttribute>();
+                var methodAttribute = method.GetCustomAttribute<RestServerServiceCallAttribute>();
                 if (methodAttribute == null)
                 {
                     continue;
                 }
                 if (string.IsNullOrEmpty(methodAttribute.Route))
                 {
-                    throw new ArgumentException($"Invalid route given: {methodAttribute.Route}", nameof(RestServerCallAttribute.Route));
+                    throw new ArgumentException($"Invalid route given: {methodAttribute.Route}", nameof(RestServerServiceCallAttribute.Route));
                 }
 
                 var routeStr = MakeRoute(methodAttribute.Route);
 
                 if (IsRouteAlreadyRegistered(routeStr))
                 {
-                    throw new ArgumentException($"Route already registered. {routeStr}", nameof(RestServerCallAttribute.Route));
+                    throw new ArgumentException($"Route already registered. {routeStr}", nameof(RestServerServiceCallAttribute.Route));
                 }
 
                 Type inputType = null;

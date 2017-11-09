@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace NETStandard.RestServer
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
-    public sealed class RestServerCallAttribute : Attribute
+    public sealed class RestServerServiceCallAttribute : Attribute
     {
         readonly string route;
         readonly string methods;
 
 
-        public RestServerCallAttribute(string route, string methods = "POST,GET,PUT")
+        public RestServerServiceCallAttribute(string route, string methods = "POST,GET,PUT")
         {
             this.route = route;
             this.methods = methods;

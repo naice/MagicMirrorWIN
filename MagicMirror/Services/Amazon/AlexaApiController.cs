@@ -19,7 +19,7 @@ namespace MagicMirror.Services.Amazon
             _speechRecognitionManager = speechRecognitionManager;
         }
 
-        [RestServerCall("Service/Amazon/ProcessSkillServiceRequest")]
+        [RestServerServiceCall("Service/Amazon/ProcessSkillServiceRequest")]
         public async Task<ApiResponse> ProcessSkillServiceRequest(ApiRequest request)
         {
             if (_speechRecognitionManager == null)
