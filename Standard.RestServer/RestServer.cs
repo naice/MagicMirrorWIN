@@ -30,8 +30,8 @@ namespace NETStandard.RestServer
 
         private System.Net.Http.HttpListener _httpListener;
 
-        public RestServer(int port, IRestServerServiceDependencyResolver RestServerDependencyResolver, params Assembly[] assemblys)
-            : this(GetDefaultEndPoint(port), RestServerDependencyResolver, assemblys) { }
+        //public RestServer(int port, IRestServerServiceDependencyResolver RestServerDependencyResolver, params Assembly[] assemblys)
+        //    : this(GetDefaultEndPoint(port), RestServerDependencyResolver, assemblys) { }
         public RestServer(IPEndPoint endPoint, IRestServerServiceDependencyResolver RestServerDependencyResolver, params Assembly[] assemblys)
         {
             _endPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
@@ -111,47 +111,47 @@ namespace NETStandard.RestServer
             }
         }
 
-        private static IPEndPoint GetDefaultEndPoint(int port)
+/*
+    private static IPEndPoint GetDefaultEndPoint(int port)
+    {
+        var networkInterfaces = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
+        List<IPAddress> ipAddresses = new List<IPAddress>();
+
+        foreach (var networkInterface in networkInterfaces)
         {
-            var networkInterfaces = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
-            List<IPAddress> ipAddresses = new List<IPAddress>();
-
-            foreach (var networkInterface in networkInterfaces)
+            if (networkInterface != null &&
+                networkInterface.NetworkInterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Ethernet &&
+                networkInterface.NetworkInterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211)
             {
-                if (networkInterface != null &&
-                    networkInterface.NetworkInterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Ethernet &&
-                    networkInterface.NetworkInterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211)
-                {
 
-                }
             }
-
-            throw new Exception();
-            /*
-            List<IPAddress> ipAddresses = new List<IPAddress>();
-            var hostnames = NetworkInformation.GetHostNames();
-            foreach (var hn in hostnames)
-            {
-                if (hn.IPInformation != null && 
-                     (hn.IPInformation.NetworkAdapter.IanaInterfaceType == 71 || 
-                      hn.IPInformation.NetworkAdapter.IanaInterfaceType == 6))
-                {
-                    string strIPAddress = hn.DisplayName;
-                    
-                    if (IPAddress.TryParse(strIPAddress, out IPAddress address))
-                        ipAddresses.Add(address);
-                }
-            }
-
-            if (ipAddresses.Count < 1)
-            {
-                return new IPEndPoint(IPAddress.Loopback, port);
-            }
-            else
-            {
-                return new IPEndPoint(ipAddresses[ipAddresses.Count - 1], port);
-            }
-            */
         }
+
+        throw new Exception();
+        List<IPAddress> ipAddresses = new List<IPAddress>();
+        var hostnames = NetworkInformation.GetHostNames();
+        foreach (var hn in hostnames)
+        {
+            if (hn.IPInformation != null && 
+                 (hn.IPInformation.NetworkAdapter.IanaInterfaceType == 71 || 
+                  hn.IPInformation.NetworkAdapter.IanaInterfaceType == 6))
+            {
+                string strIPAddress = hn.DisplayName;
+
+                if (IPAddress.TryParse(strIPAddress, out IPAddress address))
+                    ipAddresses.Add(address);
+            }
+        }
+
+        if (ipAddresses.Count < 1)
+        {
+            return new IPEndPoint(IPAddress.Loopback, port);
+        }
+        else
+        {
+            return new IPEndPoint(ipAddresses[ipAddresses.Count - 1], port);
+        }
+    }
+*/
     }
 }

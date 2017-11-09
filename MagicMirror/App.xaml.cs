@@ -14,6 +14,9 @@ using NcodedUniversal.Storage;
 using System.Linq;
 using MagicMirror.Contracts;
 using NETStandard.RestServer;
+using System.Net;
+using System.Collections.Generic;
+using Windows.Networking.Connectivity;
 
 namespace MagicMirror
 {
@@ -106,7 +109,7 @@ namespace MagicMirror
         /// <inheritdoc/>
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            _restServer = new RestServer(8886, new RestServerDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
+            _restServer = new RestServer(GetDefaultEndPoint(8886), new RestServerDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
             _restServer.Start();
             //return;
 
@@ -154,6 +157,33 @@ namespace MagicMirror
             var deferral = e.SuspendingOperation.GetDeferral();
 
             deferral.Complete();
+        }
+
+        private static IPEndPoint GetDefaultEndPoint(int port)
+        {
+            List<IPAddress> ipAddresses = new List<IPAddress>();
+            var hostnames = NetworkInformation.GetHostNames();
+            foreach (var hn in hostnames)
+            {
+                if (hn.IPInformation != null &&
+                     (hn.IPInformation.NetworkAdapter.IanaInterfaceType == 71 ||
+                      hn.IPInformation.NetworkAdapter.IanaInterfaceType == 6))
+                {
+                    string strIPAddress = hn.DisplayName;
+
+                    if (IPAddress.TryParse(strIPAddress, out IPAddress address))
+                        ipAddresses.Add(address);
+                }
+            }
+
+            if (ipAddresses.Count < 1)
+            {
+                return new IPEndPoint(IPAddress.Loopback, port);
+            }
+            else
+            {
+                return new IPEndPoint(ipAddresses[ipAddresses.Count - 1], port);
+            }
         }
     }
 }
