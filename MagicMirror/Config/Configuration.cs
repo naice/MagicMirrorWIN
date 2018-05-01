@@ -25,6 +25,10 @@ namespace MagicMirror.Configuration
 
     public class Configuration
     {
+        // IMAGE LIBRARY
+
+        public bool SlideShowActivated { get; set; } = true;
+
         // COMPLIMENTS
 
         public Dictionary<DayTime, List<string>> DayTimeCompliments { get; set; } = new Dictionary<DayTime, List<string>>() {
@@ -91,7 +95,7 @@ namespace MagicMirror.Configuration
         public Factory.RSSFeed.IRSSItemCreator[] NewsFeeds { get; set; } = new Factory.RSSFeed.IRSSItemCreator[]
         {
             new Factory.RSSFeed.RSSCreatorGolem(),
-            new Factory.RSSFeed.RSSCreatorT3N(),
+            //new Factory.RSSFeed.RSSCreatorT3N(),
         };
 
         // RADIO CONFIG

@@ -15,6 +15,7 @@ namespace NETStandard.RestServer
         private readonly List<ExposedRestServerService> _exposedRestServerServices;
         private readonly IRestServerServiceDependencyResolver _RestServerDependencyResolver;
         private readonly Assembly[] _assemblys;
+        private readonly Lazy<Type> _iFileRequestType = new Lazy<Type>(() => typeof(IFileRequest));
 
         public RestServerServiceRouteHandler(IPEndPoint endPoint, IRestServerServiceDependencyResolver RestServerDependencyResolver, params Assembly[] assemblys)
         {
@@ -97,7 +98,8 @@ namespace NETStandard.RestServer
                 {
                     var parameterInfo = parameters[0];
                     var parameterTypeInfo = parameterInfo.ParameterType.GetTypeInfo();
-                    if (!parameterTypeInfo.IsClass)
+                    if (parameterInfo.ParameterType != _iFileRequestType.Value && 
+                       !parameterTypeInfo.IsClass)
                     {
                         Log.w($"{nameof(RestServerServiceRouteHandler)}: Method Parameter missmatch. Parameter is no class! {routeStr}");
                         continue;
@@ -157,19 +159,38 @@ namespace NETStandard.RestServer
         public async Task<bool> HandleRouteAsync(RestServerHttpContext context)
         {
             string route = MakeRoute(StripPort(context.Request.Url.AbsolutePath));
-            var RestServerAction = GetActionForRoute(route);
-            if (RestServerAction == null)
+            var action = GetActionForRoute(route);
+            if (action == null)
             {
+                context.Response.NotFound();
                 return false;
             }
 
-            object inputParameter = null;
+            if (context.Request.Headers.ContentType.Any(contentType=> contentType == HttpListenerHeaders.CONTENT_TYPE_FILESTREAM))
+            {
+                return await HandleRouteFileAsync(context, action);
+            }
 
+            return await HandleRouteJsonAsync(context, action);
+        }
+        private async Task<bool> HandleRouteFileAsync(RestServerHttpContext context, ExposedRestServerAction action)
+        {
+            if (action.InputType != _iFileRequestType.Value)
+            {
+                context.Response.NotFound();
+                return false;
+            }
+
+            return await HandleRouteOutputJsonAsync(context, action, new FileRequest(context.Request.InputStream));
+        }
+        public async Task<bool> HandleRouteJsonAsync(RestServerHttpContext context, ExposedRestServerAction action)
+        {
+            object inputParameter = null;
             try
             {
-                if (RestServerAction.InputType != null)
+                if (action.InputType != null)
                 {
-                    inputParameter = JsonConvert.DeserializeObject(await context.Request.ReadContentAsStringAsync(), RestServerAction.InputType);
+                    inputParameter = JsonConvert.DeserializeObject(await context.Request.ReadContentAsStringAsync(), action.InputType);
                 }
             }
             catch (JsonException ex)
@@ -180,10 +201,15 @@ namespace NETStandard.RestServer
                 return true;
             }
 
+
+            return await HandleRouteOutputJsonAsync(context, action, inputParameter);
+        }
+        private async Task<bool> HandleRouteOutputJsonAsync(RestServerHttpContext context, ExposedRestServerAction action, object inputParameter)
+        {
             object result = null;
             try
             {
-                result = await RestServerAction.Execute(context, inputParameter);
+                result = await action.Execute(context, inputParameter);
             }
             catch (Exception)
             {

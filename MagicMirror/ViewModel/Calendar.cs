@@ -172,7 +172,8 @@ namespace MagicMirror.ViewModel
             var nowDay = new DateTime(now.Year, now.Month, now.Day);
             var nowDayEnd = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
             var nowMonth = new DateTime(now.Year, now.Month, 1);
-            var nowMonthEnd = new DateTime(now.Year, now.Month + 1, 1).AddSeconds(-1);
+            var nowMonthEnd = new DateTime(now.Year, now.Month, 
+                DateTime.DaysInMonth(now.Year, now.Month), 23, 59, 59);
             var nowYear = new DateTime(now.Year, 1, 1);
             var nowYearEnd = new DateTime(now.Year + 1, 1, 1).AddSeconds(-1);
 

@@ -27,6 +27,10 @@
     <Capability Name="internetClientServer" />
     <Capability Name="privateNetworkClientServer" />
     <uap:Capability Name="removableStorage" />
+    <uap:Capability Name="picturesLibrary" />
+    <uap:Capability Name="userAccountInformation" />
+    <uap:Capability Name="musicLibrary" />
+    <uap:Capability Name="videosLibrary" />
     <DeviceCapability Name="microphone" />
   </Capabilities>
 </Package>

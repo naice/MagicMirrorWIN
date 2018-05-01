@@ -6,6 +6,9 @@ namespace System.Net.Http
 {
     public class HttpListenerHeaders : Dictionary<string, string>
     {
+        public const string CONTENT_TYPE_FILESTREAM = "file/stream";
+
+
         private HttpListenerHeaderValueCollection<string> _contentType;
         private HttpListenerHeaderValueCollection<string> _connection;
         private string _contentMd5;

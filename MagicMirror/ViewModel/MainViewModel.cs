@@ -29,12 +29,15 @@ namespace MagicMirror.ViewModel
         // news
         public News News { get; private set; } = new News();
 
+        // slide show
+        public SlideShow SlideShow { get; private set; } = new SlideShow();
+
         // radio
         public Radio Radio { get; private set; }
 
         // video
         public Video Video { get; private set; }
-        
+
         // splash
         private bool _ShowSplashScreen = true;
         public bool ShowSplashScreen
@@ -151,6 +154,11 @@ namespace MagicMirror.ViewModel
                     config.ScreenSaverEnd,
                     NcodedUniversal.Schedule.RecurrenceDaily)
                 );
+
+            if (config.SlideShowActivated)
+            {
+                UI.EnsureOn(()=>SlideShow.Enable());
+            }
 
             await Task.Factory.StartNew(async() => {
                 while (true)

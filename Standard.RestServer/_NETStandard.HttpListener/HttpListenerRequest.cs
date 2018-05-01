@@ -61,8 +61,12 @@ namespace System.Net.Http
         {
             if (HttpMethods.CanHaveContent(HttpMethod))
             {
-                int contentLength = (int)Headers.ContentLength;
+                if (Headers.ContentType.Any(contentType=> contentType == HttpListenerHeaders.CONTENT_TYPE_FILESTREAM))
+                {
+                    InputStream = reader.BaseStream;
+                }
 
+                int contentLength = (int)Headers.ContentLength;
                 if (contentLength > 0)
                 {
                     char[] buffer = new char[contentLength];
@@ -71,6 +75,7 @@ namespace System.Net.Http
 
                     InputStream = new MemoryStream(DefaultEncoding.GetBytes(buffer));
                 }
+
             }
         }
 

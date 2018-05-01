@@ -22,29 +22,19 @@ namespace MagicMirror.Controls
         }
         public static readonly DependencyProperty ContentTemplateProperty =
             DependencyProperty.Register("ContentTemplate", typeof(DataTemplate), typeof(ContentFadeItems), new PropertyMetadata(null));
-
         public Object SourceItems
         {
             get { return (Object)GetValue(SourceItemsProperty); }
             set { SetValue(SourceItemsProperty, value); }
         }
         public static DependencyProperty SourceItemsProperty = DependencyProperty.Register("SourceItems", typeof(Object), typeof(ContentFadeItems), new PropertyMetadata(null, new PropertyChangedCallback((A, B) => ((ContentFadeItems)A).OnSourceItemsChanged())));
-
-
-
         public Object CurrentItem
         {
             get { return (Object)GetValue(CurrentItemProperty); }
             set { SetValue(CurrentItemProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for CurrentItem.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CurrentItemProperty =
             DependencyProperty.Register("CurrentItem", typeof(Object), typeof(ContentFadeItems), new PropertyMetadata(null));
-
-
-
-
         public double Duration
         {
             get { return (double)GetValue(DurationProperty); }
@@ -119,7 +109,7 @@ namespace MagicMirror.Controls
             }
             else
                 _items = null;
-            _currentIndex = 0;
+            //_currentIndex = 0;
             
             SetContent();
             ResetTimer();

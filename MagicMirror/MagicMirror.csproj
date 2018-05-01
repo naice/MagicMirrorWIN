@@ -142,6 +142,7 @@
     <Compile Include="ViewModel\Calendar.cs" />
     <Compile Include="ViewModel\CalendarItem.cs" />
     <Compile Include="ViewModel\Compliments.cs" />
+    <Compile Include="ViewModel\SlideShow.cs" />
     <Compile Include="ViewModel\IUpdateViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\News.cs" />

@@ -130,9 +130,16 @@
     <Content Include="INetPub\Index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="INetPub\react-dom.development.js" />
+    <Content Include="INetPub\jquery.min.js" />
     <Content Include="INetPub\react-jsonschema-form.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="INetPub\react.development.js" />
+    <Content Include="INetPub\bootstrap.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INetPub\fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

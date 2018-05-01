@@ -30,7 +30,7 @@ namespace NETStandard.RestServer
 
         public RestServerServiceInstanceType RestServerServiceInstanceType
         {
-            get { return RestServerServiceInstanceType; }
+            get { return _restServerServiceInstanceType; }
         }
     }
 }
