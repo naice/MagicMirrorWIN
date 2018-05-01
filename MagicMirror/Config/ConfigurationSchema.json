@@ -1,7 +1,6 @@
 ﻿{
     "title": "Magic Mirror WIN",
     "type": "object",
-    "required": [ "title" ],
     "properties": {
         "SlideShowActivated": {
             "type": "boolean",
