@@ -235,10 +235,6 @@
       <Project>{c1dfd3ee-e8c0-4cb5-8b44-a53d50ac2f8d}</Project>
       <Name>NcodedUniversal</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Standard.RestServer\NETStandard.RestServer.csproj">
-      <Project>{753861cd-69b3-4624-a992-e8cf4f7e400e}</Project>
-      <Name>NETStandard.RestServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WeatherNetUWP\WeatherNetUWP.csproj">
       <Project>{0ddd635f-4b59-4689-ae51-83404d44c2af}</Project>
       <Name>WeatherNetUWP</Name>
