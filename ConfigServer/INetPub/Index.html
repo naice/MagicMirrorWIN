@@ -60,10 +60,10 @@
         }
 
         function UpdateConfiguration(formData) {
-            var jsonText = JSON.stringify(formData);
+            var jsonText = JSON.stringify(formData.formData);
             log("submit formdata: " + jsonText);
 
-            $.ajax({ url: "/api/UpdateConfiguratio", data: jsonText })
+            $.ajax({ url: "/api/UpdateConfiguration", data: jsonText })
                 .done(function (responseObj) {
                     if (!responseObj.Success) {
                         ErrorOut(responseObj.UserHint);
