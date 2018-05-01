@@ -77,8 +77,8 @@ namespace MagicMirror.Configuration
                 Foreground = "#ffffffff",
             },
             new CalendarAndColor() {
-                URL = "http://i.cal.to/ical/209/emspielplanwmspielplan/em-2016-spielplan/60d77de2.ebaa43fa-b0ce3286.ics",
-                Foreground = "#ff00D95D",
+                URL = "https://calendar.google.com/calendar/ical/de.german%23holiday%40group.v.calendar.google.com/public/basic.ics",
+                Foreground = "#ffffcc00",
             },
         };
 
