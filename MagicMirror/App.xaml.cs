@@ -107,7 +107,7 @@ namespace MagicMirror
         RestServer _restServer;
 
         /// <inheritdoc/>
-        protected async override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             _restServer = new RestServer(GetDefaultEndPoint(8886), new RestServerDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
             _restServer.Start();
@@ -122,8 +122,7 @@ namespace MagicMirror
                 .Set(new JsonConvert())
                 .Set(new ConfigurationContract());
             
-            await ConfigServer.ConfigServer.Instance.Run();
-            //return;
+            ConfigServer.ConfigServer.Instance.Run();
 
             // disable cursor. 
             CoreWindow.GetForCurrentThread().PointerCursor = null;

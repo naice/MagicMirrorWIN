@@ -106,7 +106,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ConfigController.cs" />
+    <Compile Include="ConfigService.cs" />
     <Compile Include="ConfigServer.cs" />
     <Compile Include="DependencyConfiguration.cs" />
     <Compile Include="Converter\IJsonConvert.cs" />
@@ -123,7 +123,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.1</Version>
+      <Version>6.1.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

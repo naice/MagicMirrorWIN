@@ -1,12 +1,11 @@
-﻿using Restup.Webserver.File;
-using Restup.Webserver.Http;
-using Restup.Webserver.Rest;
-using Restup.WebServer.Logging;
+﻿using NETStandard.RestServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Networking.Connectivity;
 
 namespace ConfigServer
 {
@@ -25,81 +24,35 @@ namespace ConfigServer
             }
         }
 
-        public class DebugLogger : AbstractLogger
-        {
-            protected override bool IsLogEnabled(LogLevel trace)
-            {
-                // Ignore level, log everything
-                return true;
-            }
-
-            protected override void LogMessage(string message, LogLevel loggingLevel, Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"{loggingLevel}: {message}");
-                System.Diagnostics.Debug.WriteLine($"{ex}");
-            }
-
-            protected override void LogMessage(string message, LogLevel loggingLevel, params object[] args)
-            {
-                System.Diagnostics.Debug.WriteLine($"{loggingLevel}: {(string.Format(message, args))}");
-            }
-        }
-        public class DebugLogFactory : ILogFactory
-        {
-            private ILogger _debugLogger;
-
-            public DebugLogFactory()
-            {
-                _debugLogger = new DebugLogger();
-            }
-
-            public void Dispose()
-            {
-                _debugLogger = null;
-            }
-
-            public ILogger GetLogger(string name)
-            {
-                return _debugLogger;
-            }
-
-            public ILogger GetLogger<T>()
-            {
-                return _debugLogger;
-            }
-        }
-
-        private readonly HttpServer _httpServer;
+        private readonly RestServer _httpServer;
         ConfigServer()
         {
-            Restup.Webserver.LogManager.SetLogFactory(new DebugLogFactory());
+            _httpServer = new RestServer(
+                new IPEndPoint(IPAddress.Parse(GetLocalIp()), DependencyConfiguration.DefaultPort),
+                null, 
+                System.Reflection.Assembly.GetExecutingAssembly());
+            _httpServer.RegisterRouteHandler(new RestServerServiceFileRouteHandler(DependencyConfiguration.DefaultBasePath));
+        }
+        private static string GetLocalIp()
+        {
+            var icp = NetworkInformation.GetInternetConnectionProfile();
 
-            var restRouteHandler = new RestRouteHandler();
-            restRouteHandler.RegisterController<ConigController>();
+            if (icp?.NetworkAdapter == null) return null;
+            var hostname =
+                NetworkInformation.GetHostNames()
+                    .FirstOrDefault(
+                        hn => hn.IPInformation?.NetworkAdapter != null && 
+                            hn.Type == Windows.Networking.HostNameType.Ipv4 &&
+                            hn.IPInformation.NetworkAdapter.NetworkAdapterId == icp.NetworkAdapter.NetworkAdapterId);
 
-            var fileRouteHandler = new StaticFileRouteHandler(DependencyConfiguration.DefaultBasePath);
-
-            var configuration = new HttpServerConfiguration()
-              .ListenOnPort(DependencyConfiguration.DefaultPort)
-              .RegisterRoute("api", restRouteHandler)
-              .RegisterRoute(fileRouteHandler)
-              .EnableCors();
-
-            _httpServer = new HttpServer(configuration);
+            // the ip address
+            return hostname?.CanonicalName;
         }
         #endregion
 
-        public async Task Run()
+        public void Run()
         {
-            await _httpServer.StartServerAsync();
-        }
-
-        /// <summary>
-        /// No Exception = good.
-        /// </summary>
-        public static void TestConfigurationObject(object toTest)
-        {
-            JsonSchemaBuilder.Instance.Build(toTest);
+            _httpServer.Start();
         }
     }
 }

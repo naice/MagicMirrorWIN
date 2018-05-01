@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -91,7 +92,7 @@ namespace MagicMirror.Configuration
         public string WeatherLanguage { get; set; } = "de";
 
         // NEWS CONFIG
-
+        [JsonIgnore]
         public Factory.RSSFeed.IRSSItemCreator[] NewsFeeds { get; set; } = new Factory.RSSFeed.IRSSItemCreator[]
         {
             new Factory.RSSFeed.RSSCreatorGolem(),

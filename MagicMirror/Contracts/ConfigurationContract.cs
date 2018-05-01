@@ -20,7 +20,9 @@ namespace MagicMirror.Contracts
         }
         public async Task ConfigurationUpdated(object newConfigurationObject)
         {
-            await ConfigurationStorage.Replace(newConfigurationObject as Configuration.Configuration);
+            var newConfig = newConfigurationObject as Configuration.Configuration;
+            await ConfigurationStorage.Perform(cfg => newConfig.NewsFeeds = cfg.NewsFeeds);
+            await ConfigurationStorage.Replace(newConfig);
         }
         public string ConfigurationValidation(object newConfigurationObject)
         {
