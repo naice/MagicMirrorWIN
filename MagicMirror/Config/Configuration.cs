@@ -66,7 +66,7 @@ namespace MagicMirror.Configuration
 
         // CALENDAR CONFIG
 
-        public int MaxCalendarItems { get; set; } = 20;
+        public int MaxCalendarItems { get; set; } = 10;
         public List<CalendarAndColor> CalendarAndColor { get; set; } = new List<CalendarAndColor>() {
             new CalendarAndColor() {
                 URL = "https://www.google.com/calendar/ical/mhkpje7sser0a1q2b99urco728@group.calendar.google.com/public/basic.ics",
@@ -106,18 +106,8 @@ namespace MagicMirror.Configuration
             // EINS LIVE
             new RadioConfig() {
                 Name = "1Live",
-                PhoneticName = "ICELIVE",
                 URL = "http://1live.akacast.akamaistream.net/7/706/119434/v1/gnl.akacast.akamaistream.net/1live",
             },
         };
-
-        // YOUTUBE CONIFG
-
-        public string YoutubeAPIKey { get; set; } = "AIzaSyCNEGRKXNsWilfyeANn9nolM5600QEQQSQ";
-
-        // ALEXA 
-
-        public string AlexaCloudAPIKey { get; set; } = "06E6D37B-AEF7-409F-B815-114C82047094";        
-        public bool IsAlexaVoice { get; set; } = true;
     }
 }

@@ -12,6 +12,7 @@
 
         <x:Double x:Key="FontSizeTimeSeconds">24</x:Double>
         <x:Double x:Key="FontSizeCalendarItem">20</x:Double>
+        <x:Double x:Key="FontSizeCalendarItemLarge">24</x:Double>
         <x:Double x:Key="FontSizeWeatherIconSmall">28</x:Double>
         <x:Double x:Key="FontSizeWeatherIconLarge">40</x:Double>
         <x:Double x:Key="FontSizeWeatherItemText">24</x:Double>
@@ -20,7 +21,7 @@
         <x:Double x:Key="FontSizeNewsDetailTitle">40</x:Double>
         <x:Double x:Key="FontSize">24</x:Double>
 
-        <x:Double x:Key="WidthCalendar">600</x:Double>
+        <x:Double x:Key="WidthCalendar">620</x:Double>
         <x:Double x:Key="WidthWeather">220</x:Double>
 
         <SolidColorBrush x:Key="Foreground" Color="#ffffff"/>

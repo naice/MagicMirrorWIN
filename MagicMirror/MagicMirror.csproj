@@ -11,7 +11,7 @@
     <AssemblyName>MagicMirror</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -21,7 +21,10 @@
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>arm</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>A6965E4E0E8E1E708EF90FDCB75964AE1964210F</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>737C94C07E72E649ACC20164724AA4A8ADF03739</PackageCertificateThumbprint>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -104,7 +107,6 @@
     <Compile Include="Contracts\IMediaElementControl.cs" />
     <Compile Include="Contracts\IMediaElementFeedback.cs" />
     <Compile Include="ControlExtensions\WebViewExtensions.cs" />
-    <Compile Include="Controller\MediaElementController.cs" />
     <Compile Include="Controls\ContentFade.cs" />
     <Compile Include="Controls\ContentFadeItems.cs" />
     <Compile Include="Controls\ContentSwitch.cs" />
@@ -123,20 +125,14 @@
     <Compile Include="Factory\RSSFeed\RSSCreatorT3N.cs" />
     <Compile Include="Factory\WeatherFactory.cs" />
     <Compile Include="Factory\WebHelper.cs" />
-    <Compile Include="Factory\YouTubeFactory.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="LogFileWriter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Manager\ScheduleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Provider\BuildInSpeechRecognitionProvider.cs" />
-    <Compile Include="Contracts\ISpeechRecognitionManager.cs" />
-    <Compile Include="Contracts\ISpeechRecognitionResultGenerated.cs" />
-    <Compile Include="Contracts\ISpeechRecognitionStateChange.cs" />
-    <Compile Include="Manager\SpeechRecognitionManager.cs" />
-    <Compile Include="Contracts\SpeechRecognitionResult.cs" />
-    <Compile Include="Services\Amazon\AlexaApiController.cs" />
+    <Compile Include="TemplateSelector\CalendarItemTemplateSelector.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\Calendar.cs" />
@@ -164,7 +160,6 @@
     <Content Include="Assets\Font\HelveticaNeue-Medium.ttf" />
     <Content Include="Assets\Font\HelveticaNeue-UltraLight.ttf" />
     <Content Include="Assets\Font\weathericons-regular-webfont.ttf" />
-    <None Include="ApplicationInsights.config" />
     <None Include="LICENSE" />
     <None Include="MagicMirror_TemporaryKey.pfx" />
   </ItemGroup>
@@ -174,7 +169,6 @@
     <Content Include="Assets\youtube-512.png" />
     <EmbeddedResource Include="Config\ConfigurationSchema.json" />
     <EmbeddedResource Include="Config\ConfigurationUiSchema.json" />
-    <Content Include="Grammar\grammar-en.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -199,23 +193,20 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack">
-      <Version>1.6.3</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.2</Version>
+      <Version>6.1.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>2.2.0</Version>
+      <Version>5.1.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>2.2.0</Version>
+      <Version>5.1.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
-      <Version>2.2.0</Version>
+      <Version>5.1.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>2.2.0</Version>
+      <Version>5.1.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -226,10 +217,6 @@
     <ProjectReference Include="..\ConfigServer\ConfigServer.csproj">
       <Project>{3c78c63f-db30-453b-91d6-e02389b70361}</Project>
       <Name>ConfigServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MagicMirror.Contracts\MagicMirror.Contracts.csproj">
-      <Project>{9ebf7885-4182-441f-8181-53c36e52f885}</Project>
-      <Name>MagicMirror.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\NcodedUniversal\NcodedUniversal.csproj">
       <Project>{c1dfd3ee-e8c0-4cb5-8b44-a53d50ac2f8d}</Project>

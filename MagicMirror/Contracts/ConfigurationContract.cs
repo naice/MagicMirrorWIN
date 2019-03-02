@@ -11,7 +11,7 @@ namespace MagicMirror.Contracts
 {
     internal class ConfigurationContract : ConfigServer.IConfigurationContract
     {
-        public Storage<Configuration.Configuration> ConfigurationStorage = new Storage<Configuration.Configuration>("config.json");
+        public Storage<Configuration.Configuration> ConfigurationStorage { get; } = new Storage<Configuration.Configuration>("config.json");
         public Type ConfigurationType => typeof(Configuration.Configuration);
 
         public async Task<object> ConfigurationRequest()
@@ -23,6 +23,7 @@ namespace MagicMirror.Contracts
             var newConfig = newConfigurationObject as Configuration.Configuration;
             await ConfigurationStorage.Perform(cfg => newConfig.NewsFeeds = cfg.NewsFeeds);
             await ConfigurationStorage.Replace(newConfig);
+            await ConfigurationStorage.Save();
         }
         public string ConfigurationValidation(object newConfigurationObject)
         {

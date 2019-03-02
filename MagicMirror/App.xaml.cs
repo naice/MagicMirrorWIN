@@ -13,7 +13,6 @@ using System.IO;
 using NcodedUniversal.Storage;
 using System.Linq;
 using MagicMirror.Contracts;
-using NETStandard.RestServer;
 using System.Net;
 using System.Collections.Generic;
 using Windows.Networking.Connectivity;
@@ -23,6 +22,8 @@ namespace MagicMirror
     sealed partial class App : Application
     {
         public static CoreDispatcher Dispatcher { get; private set; }
+        public static Storage<Configuration.Configuration> ConfigStorage => ConfigurationContract.ConfigurationStorage;
+        private static ConfigurationContract ConfigurationContract = new ConfigurationContract();
 
         #region Default implementations
         private class JsonConvert : NcodedUniversal.Converter.IJsonConvert, IJsonConvert
@@ -79,23 +80,6 @@ namespace MagicMirror
                 await FileIO.WriteTextAsync(file, text);
             }
         }
-        private class RestServerDependecyResolver : IRestServerServiceDependencyResolver
-        {
-            public object[] GetDependecys(Type[] dependencyTypes)
-            {
-                return dependencyTypes.Select(type => GetDependency(type)).ToArray();
-            }
-
-            public object GetDependency(Type dependencyType)
-            {
-                if (dependencyType == typeof(ISpeechRecognitionManager))
-                {
-                    return Manager.SpeechRecognitionManager.Instance;
-                }
-
-                throw new NotImplementedException();
-            }
-        }
         #endregion
 
         public App()
@@ -104,23 +88,20 @@ namespace MagicMirror
             this.Suspending += OnSuspending;
         }
 
-        RestServer _restServer;
-
         /// <inheritdoc/>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            _restServer = new RestServer(GetDefaultEndPoint(8886), new RestServerDependecyResolver(), this.GetType().GetTypeInfo().Assembly);
-            _restServer.Start();
-            //return;
-
             // defaults
             NcodedUniversal.Configuration.Begin()
                 .Set(new JsonConvert())
                 .Set(new StorageIO(null));
 
+            await ConfigStorage.Get();
+
             ConfigServer.DependencyConfiguration.Begin()
+                .SetPort(8887)
                 .Set(new JsonConvert())
-                .Set(new ConfigurationContract());
+                .Set(ConfigurationContract);
             
             ConfigServer.ConfigServer.Instance.Run();
 
@@ -131,8 +112,7 @@ namespace MagicMirror
             // get ui dispatcher
             Dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 rootFrame = new Frame();
                 rootFrame.NavigationFailed += OnNavigationFailed;

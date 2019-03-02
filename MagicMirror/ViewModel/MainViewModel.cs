@@ -15,7 +15,7 @@ using Windows.UI.Xaml;
 
 namespace MagicMirror.ViewModel
 {
-    public class MainViewModel : BaseViewModel, Contracts.ISpeechRecognitionStateChange
+    public class MainViewModel : BaseViewModel
     {
         // compliments
         public Compliments Compliments { get; private set; } = new Compliments();
@@ -31,12 +31,6 @@ namespace MagicMirror.ViewModel
 
         // slide show
         public SlideShow SlideShow { get; private set; } = new SlideShow();
-
-        // radio
-        public Radio Radio { get; private set; }
-
-        // video
-        public Video Video { get; private set; }
 
         // splash
         private bool _ShowSplashScreen = true;
@@ -89,47 +83,15 @@ namespace MagicMirror.ViewModel
         public RelayCommand<object> Initzialize { get; set; }
         
         private readonly IUpdateViewModel[] _updateViewModels;
-        private object SpeechRecognitionProvider;
 
         public MainViewModel()
         {
-            //todo: design instance only
-        }
-
-        public MainViewModel(Video video, Radio radio)
-        {
-            Video = video;
-            Radio = radio;
-
             _updateViewModels = new IUpdateViewModel[] {
                 Compliments, Calendar, Weather, News
             };
-            // this commadn is for testing purpose if no microphone or whatsoever
-            Clicked = new RelayCommand<object>(() => {
-                var radioConfig = new Configuration.Configuration().Radios.FirstOrDefault();
-                if (radioConfig != null)
-                    Radio.Play(radioConfig);
-            });
 
             Initzialize = new RelayCommand<object>(() =>
             {
-                if (new Configuration.Configuration().IsAlexaVoice)
-                {
-                    // Alexa is self initiating, when the intent arrives it gets dispatched via 
-                    // SpeechRecognitionManager.
-                }
-                else
-                {
-                    // init default build in speech recognition.
-                    SpeechRecognitionProvider = new Provider.BuildInSpeechRecognitionProvider(
-                        Manager.SpeechRecognitionManager.Instance);
-                }
-
-                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionStateChange>(this);
-                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Weather);
-                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(News);
-                Manager.SpeechRecognitionManager.Instance.Register<ISpeechRecognitionResultGenerated>(Radio);
-
                 StartUpdateTask();
             });
         }
@@ -137,7 +99,7 @@ namespace MagicMirror.ViewModel
         async void StartUpdateTask()
         {
             await DateTimeFactory.Instance.UpdateTimeAsync();
-            var config = new Configuration.Configuration();
+            var config = App.ConfigStorage.Content;
 
             // Turnon ScreenSaver
             Manager.ScheduleManager.Instance.Scheduler.StartSchedule(
@@ -184,8 +146,7 @@ namespace MagicMirror.ViewModel
         #region DATA Processing
         private async Task Process()
         {
-            var config = new Configuration.Configuration();
-
+            var config = App.ConfigStorage.Content;
             foreach (var updateViewModel in _updateViewModels)
             {
                 var now = DateTimeFactory.Instance.Now;
@@ -219,16 +180,10 @@ namespace MagicMirror.ViewModel
                     }
                 }
             }
-            
 
             if (ShowSplashScreen)
                 await UI.EnsureOnAsync(() => ShowSplashScreen = false);
         }
         #endregion
-        
-        public void SpeechRecognitionStateChanged(SpeechRecognizerState state)
-        {
-            UI.EnsureOn(() => { ShowListeningInfo = state == SpeechRecognizerState.SpeechDetected; });
-        }
     }
 }

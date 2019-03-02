@@ -12,6 +12,7 @@
     xmlns:vm="using:MagicMirror.ViewModel"
     xmlns:im="using:Microsoft.Xaml.Interactions.Media"
     xmlns:toolkitControls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ts="using:MagicMirror.TemplateSelector"
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
     mc:Ignorable="d">
 
@@ -27,14 +28,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <!-- for testing purpose -->
-        <i:Interaction.Behaviors>
-            <ic:EventTriggerBehavior EventName="PointerPressed">
-                <ic:InvokeCommandAction Command="{Binding Clicked}"/>
-            </ic:EventTriggerBehavior>
-        </i:Interaction.Behaviors> 
-        
+        </Grid.RowDefinitions>        
         <!-- TOPLEFT -->
         <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <!-- DATE -->
@@ -49,22 +43,42 @@
             </StackPanel>
             <!-- CALENDAR -->
             <ItemsControl ItemsSource="{Binding Calendar.CalendarItems}" Width="{StaticResource WidthCalendar}" HorizontalContentAlignment="Stretch">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Opacity="{Binding Opacity}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                <ItemsControl.ItemTemplateSelector>
+                    <ts:CalendarItemTemplateSelector>
+                        <ts:CalendarItemTemplateSelector.DefaultTemplate>
+                            <DataTemplate>
+                                <Grid Opacity="{Binding Opacity}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="CharacterEllipsis"
+                                    <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="CharacterEllipsis"
                                         Foreground="{Binding TextBrush}" Text="{Binding Text}"/>
 
-                            <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="None" Margin="16,0,0,0"
+                                    <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="None" Margin="16,0,0,0"
                                         Foreground="{Binding TimeBrush}" Text="{Binding Time}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                                </Grid>
+                            </DataTemplate>
+                        </ts:CalendarItemTemplateSelector.DefaultTemplate>
+                        <ts:CalendarItemTemplateSelector.AppointmentWithin6HoursOrToday>
+                            <DataTemplate>
+                                <Grid Opacity="{Binding Opacity}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItemLarge}" TextTrimming="CharacterEllipsis"
+                                        Foreground="{Binding TextBrush}" Text="{Binding Text}"/>
+
+                                    <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItemLarge}" TextTrimming="None" Margin="16,0,0,0"
+                                        Foreground="{Binding TimeBrush}" Text="{Binding Time}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ts:CalendarItemTemplateSelector.AppointmentWithin6HoursOrToday>
+                    </ts:CalendarItemTemplateSelector>
+                </ItemsControl.ItemTemplateSelector>
             </ItemsControl>
         </StackPanel>
         <!-- TOPRIGHT -->

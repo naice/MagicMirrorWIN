@@ -1,3 +1,3 @@
-MainPackage=D:\Cloud\Work\dev\#repos\MagicMirrorWIN\MagicMirror\bin\ARM\Debug\MagicMirror_1.0.9.0_ARM_Debug.appx
-SymbolPackage=D:\Cloud\Work\dev\#repos\MagicMirrorWIN\MagicMirror\AppPackages\MagicMirror_1.0.9.0_Debug_Test\MagicMirror_1.0.9.0_ARM_Debug.appxsym
-ResourcePack=D:\Cloud\Work\dev\#repos\MagicMirrorWIN\MagicMirror\bin\ARM\Debug\MagicMirror_1.0.9.0_language-de.appx
+MainPackage=C:\Users\imnai\source\repos\MagicMirrorWIN\MagicMirror\bin\ARM\Debug\MagicMirror_1.0.11.0_ARM_Debug.appx
+SymbolPackage=C:\Users\imnai\source\repos\MagicMirrorWIN\MagicMirror\AppPackages\MagicMirror_1.0.11.0_Debug_Test\MagicMirror_1.0.11.0_ARM_Debug.appxsym
+ResourcePack=C:\Users\imnai\source\repos\MagicMirrorWIN\MagicMirror\bin\ARM\Debug\MagicMirror_1.0.11.0_language-de.appx

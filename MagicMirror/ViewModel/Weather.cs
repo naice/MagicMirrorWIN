@@ -7,12 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MagicMirror.Configuration;
 using MagicMirror.Factory;
-using MagicMirror.Provider;
 using MagicMirror.Contracts;
 
 namespace MagicMirror.ViewModel
 {
-    public class Weather : BaseViewModel, IUpdateViewModel, ISpeechRecognitionResultGenerated
+    public class Weather : BaseViewModel, IUpdateViewModel
     {
         private string _BeaufortWindScale;
         public string BeaufortWindScale
@@ -196,18 +195,5 @@ namespace MagicMirror.ViewModel
             }
         }
         #endregion
-
-        public void SpeechRecognitionResultGenerated(SpeechRecognitionResult result)
-        {
-            if (result.IsCancel())
-            {
-                UI.EnsureOn(() => HideDetail());
-            }
-            else if (result.TextUpper == "WEATHER")
-            {
-                UI.EnsureOn(() => ViewDetail());
-                result.IsHandled = true;
-            }
-        }
     }
 }

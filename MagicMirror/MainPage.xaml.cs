@@ -27,13 +27,7 @@ namespace MagicMirror
 
         private void InitializeViewModel()
         {
-            var radioController = new Controller.MediaElementController(mediaElementRadio);
-            var videoController = new Controller.MediaElementController(mediaElementVideo);
-            var radio = new Radio(radioController);
-            radioController.FeedbackReciever = radio;
-            var video = new Video(videoController);
-            videoController.FeedbackReciever = video;
-            var main = new MainViewModel(video, radio);
+            var main = new MainViewModel();
 
             DataContext = main;
         }
