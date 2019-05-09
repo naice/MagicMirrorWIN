@@ -30,7 +30,7 @@ namespace MagicMirror.ViewModel
         
         private DayTime _complimentType = DayTime.NONE;
 
-        public async Task<object> ProcessData(Configuration.Configuration config)
+        public async Task<object> Update(Configuration.Configuration config)
         {
             await Task.Delay(100); // Maybe fetch from service? 
 

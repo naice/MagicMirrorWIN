@@ -276,30 +276,6 @@
                 </StackPanel>
             </controls:ContentSwitch>
         </Border>
-        
-        <!-- OVERLAY RADIO -->
-        <Border Grid.RowSpan="99" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-            <controls:ContentSwitch Show="{Binding Radio.IsPlaying}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Du hörst: " FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding Radio.RadioName}" FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
-                </StackPanel>
-            </controls:ContentSwitch>
-        </Border>
-
-        <!-- OVERLAY VIDEO -->
-        <Border Grid.RowSpan="99" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <controls:ContentSwitch Show="{Binding Video.ShowVideo}">
-                <Border Background="Black">
-                    <Grid>
-                        <toolkitControls:ImageEx IsCacheEnabled="True" PlaceholderSource="/Assets/youtube-512.png" Source="{Binding Video.Thumbnail}"/>
-                        <MediaElement x:Name="mediaElementVideo" />
-                    </Grid>
-                </Border>
-            </controls:ContentSwitch>
-        </Border>
-
-        <MediaElement x:Name="mediaElementRadio" Opacity="0"/>
 
         <!-- OVERLAY SPLASH SCREEN -->
         <controls:ContentSwitch Grid.RowSpan="99" Show="{Binding ShowSplashScreen}">

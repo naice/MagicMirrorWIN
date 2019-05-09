@@ -138,7 +138,7 @@ namespace MagicMirror.ViewModel
         public DateTime LastUpdate { get; set; } = DateTime.MinValue;
         public SemaphoreSlim UILock { get; set; } = new SemaphoreSlim(1, 1);
 
-        public async Task<object> ProcessData(Configuration.Configuration config)
+        public async Task<object> Update(Configuration.Configuration config)
         {
             return await _weatherFactory.GetWeather(config);
         }

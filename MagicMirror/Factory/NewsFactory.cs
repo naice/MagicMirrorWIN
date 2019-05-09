@@ -41,6 +41,7 @@ namespace MagicMirror.Factory
                             }
                             catch (Exception ex)
                             {
+                                Sentry.SentrySdk.CaptureException(ex);
                                 Log.w("Problem with newsfeed item {0}, {1}, {2}", item.Title, creator.Name, creator.Url);
                                 Log.e(ex);
                             }
@@ -50,6 +51,7 @@ namespace MagicMirror.Factory
                 }
                 catch (Exception ex)
                 {
+                    Sentry.SentrySdk.CaptureException(ex);
                     Log.w("Problem with newsfeed {0}, {1}", creator.Name, creator.Url);
                     Log.e(ex);
                 }

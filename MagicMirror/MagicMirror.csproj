@@ -139,7 +139,6 @@
     <Compile Include="ViewModel\CalendarItem.cs" />
     <Compile Include="ViewModel\Compliments.cs" />
     <Compile Include="ViewModel\DateTimeUpdate.cs" />
-    <Compile Include="ViewModel\SentryRuntimeReport.cs" />
     <Compile Include="ViewModel\SlideShow.cs" />
     <Compile Include="ViewModel\IUpdateViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -216,10 +215,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\API.YouTube\API.YouTube.csproj">
-      <Project>{62110201-8027-4665-b07a-16dc74cb48d9}</Project>
-      <Name>API.YouTube</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ConfigServer\ConfigServer.csproj">
       <Project>{3c78c63f-db30-453b-91d6-e02389b70361}</Project>
       <Name>ConfigServer</Name>

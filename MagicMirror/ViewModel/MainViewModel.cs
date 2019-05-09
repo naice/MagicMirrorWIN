@@ -85,13 +85,13 @@ namespace MagicMirror.ViewModel
         // this command will start our update mechanism and init some basics e.g. speech recognition
         public RelayCommand<object> Initzialize { get; set; }
         
-        private readonly IUpdateViewModel[] _updateViewModels;
+        private readonly ILazyTimedUpdate[] _lazyTimedUpdateables;
         private Task _updateTask;
 
         public MainViewModel()
         {
-            _updateViewModels = new IUpdateViewModel[] {
-                new DateTimeUpdate(), new SentryRuntimeReport(), Compliments, Calendar, Weather, News, SmartHome
+            _lazyTimedUpdateables = new ILazyTimedUpdate[] {
+                new DateTimeUpdate(), Compliments, Calendar, Weather, News, SmartHome
             };
 
             Initzialize = new RelayCommand<object>(() =>
@@ -149,18 +149,22 @@ namespace MagicMirror.ViewModel
         private async Task Process()
         {
             var config = App.ConfigStorage.Content;
-            foreach (var updateViewModel in _updateViewModels)
+            foreach (var lazyTimedUpdate in _lazyTimedUpdateables)
             {
                 var now = DateTimeFactory.Instance.Now;
-                if ((now - updateViewModel.LastUpdate) > updateViewModel.UpdateTimeout)
+                if ((now - lazyTimedUpdate.LastUpdate) <= lazyTimedUpdate.UpdateTimeout)
+                    continue;
+
+                Log.i($"Updating {lazyTimedUpdate.GetType().Name}");
+
                 {
-                    updateViewModel.LastUpdate = now;
+                    lazyTimedUpdate.LastUpdate = now;
 
                     object dat = null;
 
                     try
                     {
-                        dat = await updateViewModel.ProcessData(config);
+                        dat = await lazyTimedUpdate.Update(config);
                     }
                     catch (Exception ex)
                     {
@@ -168,7 +172,7 @@ namespace MagicMirror.ViewModel
                         Log.e(ex);
                     }                    
 
-                    if (dat != null)
+                    if (dat != null && lazyTimedUpdate is IUpdateViewModel updateViewModel)
                     {
                         await updateViewModel.UILock.WaitAsync();
                         try
@@ -180,7 +184,10 @@ namespace MagicMirror.ViewModel
                             SentrySdk.CaptureException(ex);
                             Log.e(ex);
                         }
-                        updateViewModel.UILock.Release();
+                        finally
+                        {
+                            updateViewModel.UILock.Release();
+                        }
                     }
                 }
             }

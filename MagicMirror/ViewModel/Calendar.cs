@@ -217,7 +217,7 @@ namespace MagicMirror.ViewModel
                 item.Time = string.Format("in {0} Jahren", dt.Year - now.Year);
         }
 
-        public async Task<object> ProcessData(Configuration.Configuration config)
+        public async Task<object> Update(Configuration.Configuration config)
         {
             List<CalendarItem> newCalendarItems = await _calendarFactory.GetFullCalendarList(config);
             var now = DateTimeFactory.Instance.Now;
