@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Manager
+namespace NcodedUniversal
 {
     public interface IDateTimeNowProvider
     {
@@ -35,8 +35,8 @@ namespace MagicMirror.Manager
 
     public class Scheduler
     {
-        private IDateTimeNowProvider _dateTimeProvider;
-        private List<Schedule> _schedules = new List<Schedule>();
+        private readonly IDateTimeNowProvider _dateTimeProvider;
+        private readonly List<Schedule> _schedules = new List<Schedule>();
         public ReadOnlyCollection<Schedule> Schedules { get { return _schedules.AsReadOnly(); } }
 
         public Scheduler() : this(new DefaultDateTimeProvider())
@@ -88,7 +88,6 @@ namespace MagicMirror.Manager
                         TryStartRecurringSchedule(schedule);
                     }
             });
-            //scheduledTask.Start(); Start may not be called on a promise-style task.
         }
 
         private void TryStartRecurringSchedule(Schedule schedule)

@@ -141,7 +141,7 @@ namespace MagicMirror.ViewModel
                 {
                     UpdateTime(item, now);
 
-                    if (item.Start < now.AddHours(-1.1))
+                    if (item.Start < date && item.End < date)
                         removeitems.Add(item);
                 }
 
@@ -172,11 +172,19 @@ namespace MagicMirror.ViewModel
             var nowDay = new DateTime(now.Year, now.Month, now.Day);
             var nowDayEnd = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
             var nowMonth = new DateTime(now.Year, now.Month, 1);
-            var nowMonthEnd = new DateTime(now.Year, now.Month + 1, 1).AddSeconds(-1);
+            var nowMonthEnd = new DateTime(now.Year, now.Month, 
+                DateTime.DaysInMonth(now.Year, now.Month), 23, 59, 59);
             var nowYear = new DateTime(now.Year, 1, 1);
             var nowYearEnd = new DateTime(now.Year + 1, 1, 1).AddSeconds(-1);
 
-            if (dt < now.AddMinutes(-1))
+            var endTodayBegin = item.Start.AddDays(1).AddMinutes(-1);
+            var endTodayEnd = item.Start.AddDays(1).AddMinutes(1);
+
+            if (item.Start.Date == now.Date && item.End > endTodayBegin && item.End < endTodayEnd)
+            {
+                item.Time = "heute ganztägig";
+            }
+            else if (dt < now.AddMinutes(-1))
             {
                 item.Time = string.Format("vor {0} Minuten", (int)(now - dt).TotalMinutes);
                 item.TimeBrush = "#ffFF3333";
@@ -209,16 +217,15 @@ namespace MagicMirror.ViewModel
                 item.Time = string.Format("in {0} Jahren", dt.Year - now.Year);
         }
 
-        public async Task<object> ProcessData(Configuration.Configuration config)
+        public async Task<object> Update(Configuration.Configuration config)
         {
             List<CalendarItem> newCalendarItems = await _calendarFactory.GetFullCalendarList(config);
             var now = DateTimeFactory.Instance.Now;
+            var today = now.Date;
             List<CalendarItem> filteredCalendarItems = new List<CalendarItem>();
             foreach (var item in newCalendarItems)
             {
-                var dt = item.Start;
-
-                if (now < dt)
+                if (item.Start >= today)
                 {
                     try
                     {
@@ -228,6 +235,7 @@ namespace MagicMirror.ViewModel
                     }
                     catch (Exception ex)
                     {
+                        Sentry.SentrySdk.CaptureException(ex);
                         Log.e(ex);
                     }
 

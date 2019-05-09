@@ -9,8 +9,11 @@
     xmlns:controlExtensions="using:MagicMirror.ControlExtensions"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:vm="using:MagicMirror.ViewModel"
     xmlns:im="using:Microsoft.Xaml.Interactions.Media"
-    DataContext="{StaticResource MainViewModel}"
+    xmlns:toolkitControls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ts="using:MagicMirror.TemplateSelector"
+    d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
     mc:Ignorable="d">
 
     <!-- this will start our updating logic for the mainviewmodel -->
@@ -21,15 +24,13 @@
     </i:Interaction.Behaviors>
 
     <Grid Background="#000000" Padding="30" >
-        <!-- for testing purpose -->
-        <i:Interaction.Behaviors>
-            <ic:EventTriggerBehavior EventName="PointerPressed">
-                <ic:InvokeCommandAction Command="{Binding Clicked}"/>
-            </ic:EventTriggerBehavior>
-        </i:Interaction.Behaviors> 
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>        
         <!-- TOPLEFT -->
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+        <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <!-- DATE -->
             <Grid>
                 <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeMedium}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Calendar.CurrentDateString}"/>
@@ -42,26 +43,46 @@
             </StackPanel>
             <!-- CALENDAR -->
             <ItemsControl ItemsSource="{Binding Calendar.CalendarItems}" Width="{StaticResource WidthCalendar}" HorizontalContentAlignment="Stretch">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Opacity="{Binding Opacity}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                <ItemsControl.ItemTemplateSelector>
+                    <ts:CalendarItemTemplateSelector>
+                        <ts:CalendarItemTemplateSelector.DefaultTemplate>
+                            <DataTemplate>
+                                <Grid Opacity="{Binding Opacity}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="CharacterEllipsis"
+                                    <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="CharacterEllipsis"
                                         Foreground="{Binding TextBrush}" Text="{Binding Text}"/>
 
-                            <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="None" Margin="16,0,0,0"
+                                    <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItem}" TextTrimming="None" Margin="16,0,0,0"
                                         Foreground="{Binding TimeBrush}" Text="{Binding Time}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                                </Grid>
+                            </DataTemplate>
+                        </ts:CalendarItemTemplateSelector.DefaultTemplate>
+                        <ts:CalendarItemTemplateSelector.AppointmentWithin6HoursOrToday>
+                            <DataTemplate>
+                                <Grid Opacity="{Binding Opacity}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItemLarge}" TextTrimming="CharacterEllipsis"
+                                        Foreground="{Binding TextBrush}" Text="{Binding Text}"/>
+
+                                    <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeCalendarItemLarge}" TextTrimming="None" Margin="16,0,0,0"
+                                        Foreground="{Binding TimeBrush}" Text="{Binding Time}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ts:CalendarItemTemplateSelector.AppointmentWithin6HoursOrToday>
+                    </ts:CalendarItemTemplateSelector>
+                </ItemsControl.ItemTemplateSelector>
             </ItemsControl>
         </StackPanel>
         <!-- TOPRIGHT -->
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right">
             <!-- WEATHER CONDITION -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Style="{StaticResource FontWeatherIcons}" FontSize="{StaticResource FontSizeWeatherIconSmall}" Foreground="{StaticResource ForegroundDimm}" Text="{Binding Weather.BeaufortWindScale}" VerticalAlignment="Center"/>
@@ -99,22 +120,53 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <!-- SMART HOME -->
+
+            <ItemsControl ItemsSource="{Binding SmartHome.TemperatureItems}" Width="{StaticResource WidthWeather}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeWeatherItemText}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                                Foreground="{StaticResource ForegroundDimm}" Text="{Binding Name}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeWeatherItemText}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                                Foreground="{StaticResource Foreground}" Text="{Binding Temperature}" Margin="5,0,0,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
         </StackPanel>
         <!-- CENTER -->
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="800"/>
+            </Grid.RowDefinitions>            
             <!-- COMPLIMENTS -->
-            <controls:ContentFadeItems Duration="600" SourceItems="{Binding Compliments.Items}">
+            <controls:ContentFadeItems Grid.Row="0" Duration="600" SourceItems="{Binding Compliments.Items}">
                 <controls:ContentFadeItems.ContentTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="White" FontSize="{StaticResource FontSizeLarge}"
                                    TextWrapping="Wrap" TextAlignment="Center"/>
                     </DataTemplate>
                 </controls:ContentFadeItems.ContentTemplate>
-            </controls:ContentFadeItems>
+            </controls:ContentFadeItems>            
+            <!-- SLIDE SHOW -->
+            <controls:ContentFade Grid.Row="1" Content="{Binding SlideShow.ImageSource}" Height="780" Width="1040">
+                <controls:ContentFade.ContentTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding}" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"  Height="780" Width="1040"/>
+                    </DataTemplate>
+                </controls:ContentFade.ContentTemplate>
+            </controls:ContentFade>
         </Grid>
 
         <!-- BOTTOM CENTER -->
-        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Center">
+        <Grid Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
             <!-- NEWS -->
             <controls:ContentFadeItems Duration="10" SourceItems="{Binding News.Items}" CurrentItem="{Binding News.CurrentNews, Mode=TwoWay}" >
                 <controls:ContentFadeItems.ContentTemplate>
@@ -127,7 +179,7 @@
         </Grid>
 
         <!-- OVERLAY WEBVIEW FOR NEWS -->
-        <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="140">
+        <Border Grid.RowSpan="99" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="140">
             <controls:ContentSwitch Show="{Binding News.ShowDetail}">
                 <Border Background="Black" BorderBrush="{StaticResource ForegroundDimm}" BorderThickness="2">
                     <Grid>
@@ -142,8 +194,9 @@
                 </Border>
             </controls:ContentSwitch>
         </Border>
+        
         <!-- OVERLAY FOR WEATHER -->
-        <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="840" Height="1000" >
+        <Border Grid.RowSpan="99" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="840" Height="1000" >
             <controls:ContentSwitch Show="{Binding Weather.ShowDetail}">
                 <Border Background="Black" BorderBrush="{StaticResource ForegroundDimm}" BorderThickness="2">
                     <Grid Margin="20,0">
@@ -215,7 +268,7 @@
         </Border>
 
         <!-- OVERLAY SPEECH REC. -->
-        <Border VerticalAlignment="Bottom" HorizontalAlignment="Right">
+        <Border Grid.RowSpan="99" VerticalAlignment="Bottom" HorizontalAlignment="Right">
             <controls:ContentSwitch Show="{Binding ShowListeningInfo}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Ich höre zu..." FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
@@ -223,21 +276,9 @@
                 </StackPanel>
             </controls:ContentSwitch>
         </Border>
-        
-        <!-- OVERLAY SPEECH REC. -->
-        <Border VerticalAlignment="Bottom" HorizontalAlignment="Left" DataContext="{StaticResource Playback}">
-            <controls:ContentSwitch Show="{Binding IsPlaying}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Du hörst: " FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding RadioName}" FontFamily="Assets/Font/HelveticaNeue-UltraLight.ttf#HelveticaNeue" Foreground="{StaticResource Foreground}" FontSize="15" VerticalAlignment="Center"/>
-                </StackPanel>
-            </controls:ContentSwitch>
-        </Border>
-
-        <MediaElement x:Name="mediaElementPlayback" Opacity="0"/>
 
         <!-- OVERLAY SPLASH SCREEN -->
-        <controls:ContentSwitch Show="{Binding ShowSplashScreen}">
+        <controls:ContentSwitch Grid.RowSpan="99" Show="{Binding ShowSplashScreen}">
             <Grid Background="#000000">
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <ProgressRing IsActive="True" Foreground="{StaticResource Foreground}" HorizontalAlignment="Center" Width="64" Height="64"/>
@@ -247,7 +288,7 @@
         </controls:ContentSwitch>
         
         <!-- OVERLAY SCREEN SAVER -->
-        <controls:ContentSwitch Show="{Binding ShowScreenSaver}">
+        <controls:ContentSwitch Grid.RowSpan="99" Show="{Binding ShowScreenSaver}">
             <Grid Background="#000000">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Style="{StaticResource FontLight}" FontSize="{StaticResource FontSizeLarge}" Foreground="{StaticResource Foreground}" Text="{Binding Calendar.CurrentDateTimeMinuteString}"/>

@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--<link rel="stylesheet" id="theme" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script crossorigin src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-jsonschema-form/dist/react-jsonschema-form.js"></script>-->
+    <link rel="stylesheet" id="theme" href="bootstrap.min.css">
+    <script src="jquery.min.js"></script>
+    <script src="react.development.js"></script>
+    <script src="react-dom.development.js"></script>
+    <script src="react-jsonschema-form.js"></script>
+    
+    <title>Configuration</title>
+</head>
+<body>
+    <div style="position:fixed; top:0; left:0; width:100%">
+        <div style="max-width:800px; margin: 0 auto">
+            <div id="AlertBoxHolder" style="margin:2em;">
+            </div>
+        </div>
+    </div>
+    <div style="width:100%">
+        <div style="max-width:800px; margin: 0 auto">
+            <div style="margin:2em;">
+                <div id="App">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // alias form.
+        const Form = JSONSchemaForm.default;
+        const log = (type) => console.log.bind(console, type);
+        var alertId = 0;
+
+        function AlertOut(text, type) {
+            var alertBoxId = "alertBox" + alertId++;
+            var alertBoxSelector = '#' + alertBoxId;
+            $('#AlertBoxHolder').append('<div id="' + alertBoxId + '" class="alert ' + type + '" style="display:none;">' + text + '</div>');
+            $(alertBoxSelector).fadeIn('slow', function () {
+                $(this).delay(1000).fadeOut('slow', function () {
+                    $(this).remove();
+                });
+            });
+        }
+        function ErrorOut(text) {
+            AlertOut(text, 'alert-danger');
+        }
+        function SuccessOut(text) {
+            AlertOut(text, 'alert-success');
+        }
+
+        function UpdateConfiguration(formData) {
+            var jsonText = JSON.stringify(formData.formData);
+            log("submit formdata: " + jsonText);
+
+            $.ajax({ url: "/UpdateConfiguration", data: jsonText, type: "POST" })
+                .done(function (responseObj) {
+                    if (!responseObj.Success) {
+                        ErrorOut(responseObj.UserHint);
+                    }
+                    else {
+                        SuccessOut("<strong>Updated!</strong>");
+                    }
+                })
+                .fail(function () {
+                    ErrorOut("Could not reach server. [CONNECTION]");
+                });
+        }
+
+        // request schema from api
+        $.ajax("/GetTemplate")
+            .done(function (responseObj) {
+                var formOpt = {
+                    'schema': JSON.parse(responseObj.JsonSchema),
+                    'onChange': log("changed"),
+                    'onSubmit': UpdateConfiguration,
+                    'onError': log("errors")
+                };
+
+                if (responseObj.UiSchema) {
+                    formOpt.uiSchema = JSON.parse(responseObj.UiSchema);
+                }
+
+                if (responseObj.CurrentState) {
+                    formOpt.formData = responseObj.CurrentState;
+                }
+
+                ReactDOM.render(
+                    React.createElement(Form, formOpt),
+                    document.getElementById("App")
+                );
+            })
+            .fail(function () {
+                $("#App").html('<div class="alert alert-danger">Could not get a Template. [CONNECTION]</div>');
+            });
+    </script>
+
+</body>
+</html>

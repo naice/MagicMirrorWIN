@@ -80,9 +80,7 @@ namespace MagicMirror
 
         private static void writeLine(LogType type, LogLevel level, string line)
         {
-            if (LogEvent != null)
-                LogEvent.Invoke(typeof(Log), new LogEventArgs() { Level = level, Message = line, Type = type });
-
+            LogEvent?.Invoke(typeof(Log), new LogEventArgs() { Level = level, Message = line, Type = type });
             Debug.WriteLine(line);
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,12 @@ namespace MagicMirror.Configuration
 
     public class Configuration
     {
+        // IMAGE LIBRARY
+
+        public bool SlideShowActivated { get; set; } = true;
+
+        // COMPLIMENTS
+
         public Dictionary<DayTime, List<string>> DayTimeCompliments { get; set; } = new Dictionary<DayTime, List<string>>() {
             {
                 DayTime.Morning,
@@ -53,12 +60,13 @@ namespace MagicMirror.Configuration
         };
 
         // SCREEN SAVER
+
         public TimeSpan ScreenSaverBegin { get; set; } = TimeSpan.FromHours(1);
         public TimeSpan ScreenSaverEnd { get; set; } = TimeSpan.FromHours(6);
 
         // CALENDAR CONFIG
 
-        public int MaxCalendarItems { get; set; } = 20;
+        public int MaxCalendarItems { get; set; } = 10;
         public List<CalendarAndColor> CalendarAndColor { get; set; } = new List<CalendarAndColor>() {
             new CalendarAndColor() {
                 URL = "https://www.google.com/calendar/ical/mhkpje7sser0a1q2b99urco728@group.calendar.google.com/public/basic.ics",
@@ -69,8 +77,8 @@ namespace MagicMirror.Configuration
                 Foreground = "#ffffffff",
             },
             new CalendarAndColor() {
-                URL = "http://i.cal.to/ical/209/emspielplanwmspielplan/em-2016-spielplan/60d77de2.ebaa43fa-b0ce3286.ics",
-                Foreground = "#ff00D95D",
+                URL = "https://calendar.google.com/calendar/ical/de.german%23holiday%40group.v.calendar.google.com/public/basic.ics",
+                Foreground = "#ffffcc00",
             },
         };
 
@@ -84,11 +92,11 @@ namespace MagicMirror.Configuration
         public string WeatherLanguage { get; set; } = "de";
 
         // NEWS CONFIG
-
+        [JsonIgnore]
         public Factory.RSSFeed.IRSSItemCreator[] NewsFeeds { get; set; } = new Factory.RSSFeed.IRSSItemCreator[]
         {
             new Factory.RSSFeed.RSSCreatorGolem(),
-            new Factory.RSSFeed.RSSCreatorT3N(),
+            //new Factory.RSSFeed.RSSCreatorT3N(),
         };
 
         // RADIO CONFIG
@@ -98,9 +106,8 @@ namespace MagicMirror.Configuration
             // EINS LIVE
             new RadioConfig() {
                 Name = "1Live",
-                PhoneticName = "ICELIVE",
-                URL = "http://www.wdr.de/wdrlive/media/einslive.m3u",
+                URL = "http://1live.akacast.akamaistream.net/7/706/119434/v1/gnl.akacast.akamaistream.net/1live",
             },
-        }; 
+        };
     }
 }

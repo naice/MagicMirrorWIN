@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicMirror.Manager
+namespace NcodedUniversal
 {
     public class Schedule
     {
@@ -36,18 +36,13 @@ namespace MagicMirror.Manager
         /// <param name="begin">The DateTime in future to trigger the schedules action.</param>
         public Schedule(Action action, DateTime begin)
         {
-            if (action == null)
-            {
-                throw new ArgumentNullException("action");
-            }
-
             if (begin == DateTime.MinValue)
             {
                 throw new ArgumentException("begin");
             }
 
             Begin = begin;
-            Action = action;
+            Action = action ?? throw new ArgumentNullException("action");
         }
 
         /// <summary>

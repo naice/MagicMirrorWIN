@@ -1,0 +1,12 @@
+﻿{
+    "MaxCalendarItems": {
+        "ui:widget": "updown",
+        "ui:placeholder": "20"
+    },
+    "ScreenSaverBegin": {
+        "ui:placeholder": "HH:mm:ss"
+    },
+    "ScreenSaverEnd": {
+        "ui:placeholder": "HH:mm:ss"
+    }
+}

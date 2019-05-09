@@ -17,32 +17,47 @@ namespace MagicMirror.Factory
             List<ViewModel.NewsItem> newsItems = new List<ViewModel.NewsItem>();
             foreach (var creator in config.NewsFeeds)
             {
-                var feed = await _SyndicationClient.RetrieveFeedAsync(creator.Url);
-
-                if (feed != null && feed.Items != null && feed.Items.Count > 0)
+                try
                 {
-                    foreach (var item in feed.Items)
+                    var feed = await _SyndicationClient.RetrieveFeedAsync(creator.Url);
+                    if (feed != null && feed.Items != null && feed.Items.Count > 0)
                     {
-                        ViewModel.NewsItem rssItem = new ViewModel.NewsItem()
+                        foreach (var item in feed.Items)
                         {
-                            Source = creator.Name,
-                            Title = item.Title?.Text ?? string.Empty,
-                        };
-                        string rawContent = item.Content?.Text ?? item.Summary?.Text ?? string.Empty;
-                        rssItem.ContentRaw = rawContent ?? rssItem.ContentRaw;
-                        rssItem.Created = item.PublishedDate.DateTime;
+                            try
+                            {
+                                ViewModel.NewsItem rssItem = new ViewModel.NewsItem()
+                                {
+                                    Source = creator.Name,
+                                    Title = item.Title?.Text ?? string.Empty,
+                                };
+                                string rawContent = item.Content?.Text ?? item.Summary?.Text ?? string.Empty;
+                                rssItem.ContentRaw = rawContent ?? rssItem.ContentRaw;
+                                rssItem.Created = item.PublishedDate.DateTime;
 
-                        rssItem = await creator.CreateItem(rssItem, item);
-
-                        rssItem.GenerateID();
-
-                        newsItems.Add(rssItem);                        
+                                rssItem = await creator.CreateItem(rssItem, item);
+                                rssItem.GenerateID();
+                                newsItems.Add(rssItem);
+                            }
+                            catch (Exception ex)
+                            {
+                                Sentry.SentrySdk.CaptureException(ex);
+                                Log.w("Problem with newsfeed item {0}, {1}, {2}", item.Title, creator.Name, creator.Url);
+                                Log.e(ex);
+                            }
+                        }
                     }
+
+                }
+                catch (Exception ex)
+                {
+                    Sentry.SentrySdk.CaptureException(ex);
+                    Log.w("Problem with newsfeed {0}, {1}", creator.Name, creator.Url);
+                    Log.e(ex);
                 }
             }
 
             newsItems.Sort((A, B) => A.Created.CompareTo(B.Created));
-
             return newsItems;
         }
     }

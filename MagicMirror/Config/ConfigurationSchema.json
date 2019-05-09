@@ -1,0 +1,118 @@
+﻿{
+    "title": "Magic Mirror WIN",
+    "type": "object",
+    "properties": {
+        "SlideShowActivated": {
+            "type": "boolean",
+            "title": "Enable Slide Show"
+        },
+        "DayTimeCompliments": {
+            "type": "object",
+            "title": "",
+            "properties": {
+                "Morning": {
+                    "type": "array",
+                    "title": "Morning Compliments",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Afternoon": {
+                    "type": "array",
+                    "title": "Afternoon Compliments",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Evening": {
+                    "type": "array",
+                    "title": "Evening Compliments",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "ScreenSaverBegin": {
+            "type": "string",
+            "title": "Screensaver Start"
+        },
+        "ScreenSaverEnd": {
+            "type": "string",
+            "title": "Screensaver End"
+        },
+        "MaxCalendarItems": {
+            "type": "integer",
+            "title": "Maximum Calendar Items"
+        },
+        "CalendarAndColor": {
+            "type": "array",
+            "title": "iCal Calendar",
+            "items": {
+                "type": "object",
+                "title": "Calendar",
+                "properties": {
+                    "URL": {
+                        "type": "string",
+                        "title": "iCal URL"
+                    },
+                    "Foreground": {
+                        "type": "string",
+                        "title": "Foreground Color"
+                    }
+                }
+            }
+        },
+        "WeatherAPIKey": {
+            "type": "string",
+            "title": "Open Weather Map API Key"
+        },
+        "WeatherAPIUrl": {
+            "type": "string",
+            "format": "uri",
+            "title": "Open Weather Map URL"
+        },
+        "WeatherCity": {
+            "type": "string",
+            "title": "City"
+        },
+        "WeatherCountry": {
+            "type": "string",
+            "title": "Country"
+        },
+        "WeatherUnits": {
+            "type": "string",
+            "title": "Units"
+        },
+        "WeatherLanguage": {
+            "type": "string",
+            "title": "Language (ISO)"
+        },
+        "Radios": {
+            "type": "array",
+            "title": "Radios",
+            "items": {
+                "type": "object",
+                "title": "Radio",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "PhoneticName": {
+                        "type": "string",
+                        "title": "Phonetic Name"
+                    },
+                    "URL": {
+                        "type": "string",
+                        "title": "Url"
+                    }
+                }
+            }
+        },
+        "AlexaCloudAPIKey": {
+            "type": "string",
+            "title": "API Key for Alexa Cloud API"
+        }
+    }
+}
