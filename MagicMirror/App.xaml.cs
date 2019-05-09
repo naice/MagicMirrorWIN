@@ -16,6 +16,7 @@ using MagicMirror.Contracts;
 using System.Net;
 using System.Collections.Generic;
 using Windows.Networking.Connectivity;
+using Sentry;
 
 namespace MagicMirror
 {
@@ -24,6 +25,7 @@ namespace MagicMirror
         public static CoreDispatcher Dispatcher { get; private set; }
         public static Storage<Configuration.Configuration> ConfigStorage => ConfigurationContract.ConfigurationStorage;
         private static ConfigurationContract ConfigurationContract = new ConfigurationContract();
+        private IDisposable _sentryDeferral;
 
         #region Default implementations
         private class JsonConvert : NcodedUniversal.Converter.IJsonConvert, IJsonConvert
@@ -67,6 +69,7 @@ namespace MagicMirror
                 }
                 catch (IOException ex)
                 {
+                    //Sentry.SentrySdk.CaptureException(ex);
                     Log.e(ex);
                 }
 
@@ -91,6 +94,8 @@ namespace MagicMirror
         /// <inheritdoc/>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            _sentryDeferral = SentrySdk.Init("https://66aa7ee7818e41cbb53f4fe8c7c75c6f@sentry.io/1452668");
+
             // defaults
             NcodedUniversal.Configuration.Begin()
                 .Set(new JsonConvert())
@@ -134,6 +139,12 @@ namespace MagicMirror
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+
+            if (_sentryDeferral != null)
+            {
+                _sentryDeferral.Dispose();
+                _sentryDeferral = null;
+            }
 
             deferral.Complete();
         }

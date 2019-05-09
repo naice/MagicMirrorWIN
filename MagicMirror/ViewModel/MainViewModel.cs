@@ -1,5 +1,6 @@
 ﻿using MagicMirror.Contracts;
 using MagicMirror.Factory;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,6 +32,8 @@ namespace MagicMirror.ViewModel
 
         // slide show
         public SlideShow SlideShow { get; private set; } = new SlideShow();
+
+        public SmartHome SmartHome { get; private set; } = new SmartHome();
 
         // splash
         private bool _ShowSplashScreen = true;
@@ -83,11 +86,12 @@ namespace MagicMirror.ViewModel
         public RelayCommand<object> Initzialize { get; set; }
         
         private readonly IUpdateViewModel[] _updateViewModels;
+        private Task _updateTask;
 
         public MainViewModel()
         {
             _updateViewModels = new IUpdateViewModel[] {
-                Compliments, Calendar, Weather, News
+                new DateTimeUpdate(), new SentryRuntimeReport(), Compliments, Calendar, Weather, News, SmartHome
             };
 
             Initzialize = new RelayCommand<object>(() =>
@@ -122,25 +126,23 @@ namespace MagicMirror.ViewModel
                 UI.EnsureOn(()=>SlideShow.Enable());
             }
 
-            await Task.Factory.StartNew(async() => {
+            _updateTask = Task.Factory.StartNew(async() => {
                 while (true)
                 {
                     try
                     {
-                        // todo: remove
                         await UI.EnsureOnAsync(() => this.ShowSplashScreen = false);
                         
                         await Process();
-                        await Task.Delay(60000);
-                        await DateTimeFactory.Instance.UpdateTimeAsync();
-
+                        await Task.Delay(500);
                     }
                     catch (Exception ex)
                     {
+                        Sentry.SentrySdk.CaptureException(ex);
                         Log.e(ex);
                     }
                 }
-            });
+            }, TaskCreationOptions.LongRunning);
         }
 
         #region DATA Processing
@@ -162,6 +164,7 @@ namespace MagicMirror.ViewModel
                     }
                     catch (Exception ex)
                     {
+                        SentrySdk.CaptureException(ex);
                         Log.e(ex);
                     }                    
 
@@ -174,6 +177,7 @@ namespace MagicMirror.ViewModel
                         }
                         catch (Exception ex)
                         {
+                            SentrySdk.CaptureException(ex);
                             Log.e(ex);
                         }
                         updateViewModel.UILock.Release();

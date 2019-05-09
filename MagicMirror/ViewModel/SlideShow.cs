@@ -96,7 +96,7 @@ namespace MagicMirror.ViewModel
                 imageFailedHandler = (_, __) =>
                 {
                     image.ImageFailed -= imageFailedHandler;
-                    SlideImage();
+                    _ = SlideImage();
                 };
                 image.ImageFailed += imageFailedHandler;
                 imageOpenedHandler = (_, __) =>

@@ -88,7 +88,6 @@ namespace NcodedUniversal
                         TryStartRecurringSchedule(schedule);
                     }
             });
-            //scheduledTask.Start(); Start may not be called on a promise-style task.
         }
 
         private void TryStartRecurringSchedule(Schedule schedule)

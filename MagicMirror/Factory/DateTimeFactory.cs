@@ -64,6 +64,7 @@ namespace MagicMirror.Factory
             }
             catch (Exception ex)
             {
+                Sentry.SentrySdk.CaptureException(ex);
                 Log.e(ex);
             }
         }

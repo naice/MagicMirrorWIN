@@ -120,6 +120,25 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <!-- SMART HOME -->
+
+            <ItemsControl ItemsSource="{Binding SmartHome.TemperatureItems}" Width="{StaticResource WidthWeather}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeWeatherItemText}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                                Foreground="{StaticResource ForegroundDimm}" Text="{Binding Name}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource FontMedium}" FontSize="{StaticResource FontSizeWeatherItemText}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                                Foreground="{StaticResource Foreground}" Text="{Binding Temperature}" Margin="5,0,0,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
         </StackPanel>
         <!-- CENTER -->
         <Grid Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">

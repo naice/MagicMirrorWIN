@@ -235,6 +235,7 @@ namespace MagicMirror.ViewModel
                     }
                     catch (Exception ex)
                     {
+                        Sentry.SentrySdk.CaptureException(ex);
                         Log.e(ex);
                     }
 
