@@ -48,14 +48,14 @@ namespace MagicMirror.Factory
             }
         }
 
-        public static class WIWeather
+        public static class WeatherIcons
         {
             public static string Sunrise { get; set; } = "\U0000f051";
             public static string Sunset { get; set; } = "\U0000f052";
 
             //public static string Sunrise { get; set; } = "\U0000";
 
-            public static readonly Dictionary<string, string> IconTable = new Dictionary<string, string>() {
+            private static readonly Dictionary<string, string> IconTable = new Dictionary<string, string>() {
                 {"01d","\U0000f00d"},
                 {"02d","\U0000f002"},
                 {"03d","\U0000f013"},
@@ -75,6 +75,17 @@ namespace MagicMirror.Factory
                 {"13n","\U0000f038"},
                 {"50n","\U0000f023"}
             };
+
+            public static string TryGetIcon(string key)
+            {
+                if (!IconTable.ContainsKey(key))
+                {
+                    Sentry.SentrySdk.CaptureMessage($"Unknown wether icon key {key}", Sentry.Protocol.SentryLevel.Warning);
+                    return "\U0000f07b";
+                }
+
+                return IconTable[key];
+            }
         }
 
 
@@ -93,16 +104,16 @@ namespace MagicMirror.Factory
             weather.BeaufortWindScale = WIWindBeaufort.Beaufort[WIWindBeaufort.KMHToBeaufort(currentWeather.Item.WindSpeed)];
             var now = DateTimeFactory.Instance.Now;
 
-            weather.SunState = WIWeather.Sunrise;
+            weather.SunState = WeatherIcons.Sunrise;
             weather.SunStateTime = currentWeather.Item.Sunrise.ToString("HH:mm");
             if (currentWeather.Item.Sunrise < now && currentWeather.Item.Sunset > now)
             {
-                weather.SunState = WIWeather.Sunset;
+                weather.SunState = WeatherIcons.Sunset;
                 weather.SunStateTime = currentWeather.Item.Sunset.ToString("HH:mm");
             }
 
             weather.Temperature = string.Format("{0:0.0}°", currentWeather.Item.Temp);
-            weather.WeatherIcon = WIWeather.IconTable[currentWeather.Item.Icon];
+            weather.WeatherIcon = WeatherIcons.TryGetIcon(currentWeather.Item.Icon);
 
             var forecastDaily = await WeatherNet.Clients.FiveDaysForecast.GetByCityNameDailyAsync(config.WeatherCity, config.WeatherCountry, config.WeatherLanguage, config.WeatherUnits);
             var forecastDetail = await WeatherNet.Clients.FiveDaysForecast.GetByCityNameAsync(config.WeatherCity, config.WeatherCountry, config.WeatherLanguage, config.WeatherUnits);
@@ -113,7 +124,7 @@ namespace MagicMirror.Factory
                 foreach (var item in forecastDaily.Items)
                 {
                     var forecast = new ViewModel.WeatherForecast();
-                    forecast.Icon = WIWeather.IconTable[item.Icon];
+                    forecast.Icon = WeatherIcons.TryGetIcon(item.Icon);
                     forecast.Day = item.Date.ToString("ddd.");
                     forecast.MaxTemp = string.Format("{0:0.0}°", item.TempMax);
                     forecast.MinTemp = string.Format("{0:0.0}°", item.TempMin);
@@ -140,7 +151,7 @@ namespace MagicMirror.Factory
                             ViewModel.WeatherForecastDetail detail = new ViewModel.WeatherForecastDetail();
                             detail.DateTime = itemdetail.Date;
                             detail.Time = itemdetail.Date.ToString("HH:mm");
-                            detail.Icon = WIWeather.IconTable[itemdetail.Icon];
+                            detail.Icon = WeatherIcons.TryGetIcon(itemdetail.Icon);
                             detail.Temp = string.Format("{0:0.0}°", itemdetail.Temp);
                             // TODO: MORE WEATHER INFO??
 
